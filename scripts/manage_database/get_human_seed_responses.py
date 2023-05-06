@@ -1,11 +1,18 @@
+"""
+Description: This script seeds the database with human responses to the AUT items
+
+Author: Joshua Ashkinaze
+
+Date: 05-05-2023
+"""
 import pandas as pd
 import random
 import logging
 import os
 
 def main():
-    logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO)
-
+    logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO,
+                        format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     random.seed(416)
 
     my_items = ["box", "fork", "lightbulb", "spoon", "table"]
@@ -52,6 +59,8 @@ def main():
     # Convert the list of dictionaries to a DataFrame
     assignments_df = pd.DataFrame(assignments)
     assignments_df.to_csv("../../data/seed_human_responses.csv")
+    logging.info("All good, got the seed human responses.")
+
 
     logging.info(f"Created human_responses.csv with {len(assignments_df)} rows.")
 
