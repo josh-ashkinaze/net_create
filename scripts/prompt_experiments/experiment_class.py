@@ -92,10 +92,7 @@ class PromptExperiment:
         date_string = now.strftime("%Y-%m-%d__%H.%M.%S")
         log_file = f"{self.title}_n{n_trials_per_combo}_{date_string}.log" if self.title else f"experiment_{date_string}.log"
         logging.basicConfig(filename=log_file, level=logging.INFO, filemode='w', format='%(asctime)s %(message)s')
-        results_file = f"results_{date_string}.jsonl"
-        results_file = f"{self.title}_n{n_trials_per_combo}_{date_string}.jsonl" if self.title else f"results_{date_string}.jsonl"
-
-
+        results_file = f"../../data/prompt_experiments/{self.title}_n{n_trials_per_combo}_{date_string}.jsonl" if self.title else f"results_{date_string}.jsonl"
         logging.info(f"n_trials_combo: {n_trials_per_combo}")
 
         should_get_examples = any('[EXAMPLES]' in prompt for prompt in self.prompts.values())
@@ -154,7 +151,7 @@ class PromptExperiment:
                         }
                         results.append(row)
                         total_counter += 1
-                        if total_counter % 100 == 0:
+                        if total_counter % 10 == 0:
                             logging.info(f"{total_counter} of {total_requests}")
 
                 condition_counter += 1
