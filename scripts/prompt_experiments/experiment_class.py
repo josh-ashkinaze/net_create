@@ -42,43 +42,47 @@ from tenacity import (
 
 
 class PromptExperiment:
-    def __init__(self, api_key, prompts, aut_items, example_df, title="", random_seed=416):
+    def __init__(self, api_key, prompts, aut_items, n_uses, example_df, title="", random_seed=416):
         self.api_key = api_key
         self.prompts = prompts
         self.aut_items = aut_items
+        self.n_uses = n_uses
         self.example_df = example_df
         self.random_seed = random_seed
         self.title = title
         random.seed(self.random_seed)
 
     def handle_prompt(self, args):
-        prompt_base, object_name, examples, n_examples, temperature, frequency_penalty, presence_penalty = args
-        prompt = self.make_prompt(prompt_base, object_name, examples, n_examples)
+        prompt_base, object_name, examples, n_examples, temperature, frequency_penalty, presence_penalty, n_uses = args
+        prompt = self.make_prompt(prompt_base, object_name, examples, n_examples, n_uses)
         response = self.generate_responses(prompt, temperature, frequency_penalty, presence_penalty)
         return response
 
-    def make_prompt(self, prompt_base, object_name, examples, n_examples):
+    def make_prompt(self, prompt_base, object_name, examples, n_examples, n_uses):
         prompt = prompt_base.replace("[OBJECT_NAME]", object_name)
-        prompt = prompt.replace("[N]", str(n_examples))
+        prompt = prompt.replace("[N]", str(n_uses))
         examples = " ".join(['\n- ' + item for item in examples]) + "\n"
         prompt = prompt.replace("[EXAMPLES]", examples)
+        #print("PROMPT", prompt)
         return prompt
 
     @retry(wait=wait_random_exponential(multiplier=30, min=1, max=60), stop=stop_after_attempt(30),
            before_sleep=before_sleep_log(logging, logging.INFO))
     def generate_responses(self, prompt, temperature, frequency_penalty, presence_penalty):
         openai.api_key = self.api_key
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
-            max_tokens=2000,
+        messages = openai.ChatCompletion.create(
+            temperature=temperature,
             frequency_penalty=frequency_penalty,
             presence_penalty=presence_penalty,
-            temperature=temperature,
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ]
         )
-        message = response["choices"][0]["text"]
-        print(message)
-        return message
+        msg = messages['choices'][0]['message']['content']
+        #print(msg)
+        return msg
 
     def get_examples(self, df, prompt, n_examples, seed=416):
         return df[df['prompt'] == prompt].sample(n_examples, random_state=seed)['response'].tolist()
@@ -129,7 +133,8 @@ class PromptExperiment:
                             len(examples),
                             temperature,
                             frequency_penalty,
-                            presence_penalty
+                            presence_penalty,
+                            self.n_uses
                         )
                         future = executor.submit(self.handle_prompt, args)
                         generated_response = future.result()
