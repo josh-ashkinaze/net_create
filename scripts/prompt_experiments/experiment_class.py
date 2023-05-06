@@ -140,6 +140,7 @@ class PromptExperiment:
                         generated_response = future.result()
 
                         row = {
+                            'aut_item': aut_item,
                             'prompt_condition': prompt_name,
                             'trial_no': trial,
                             'idx': condition_counter,
@@ -162,3 +163,4 @@ class PromptExperiment:
         with jsonlines.open(results_file, mode='w') as writer:
             for row in results:
                 writer.write(row)
+        logging.info("DONE WITH EXPERIMENT")
