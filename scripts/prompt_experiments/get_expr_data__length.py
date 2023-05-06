@@ -18,6 +18,8 @@ def run():
         "zero_shot_limit_length": "What are some creative uses for [OBJECT_NAME]? The goal is to come up with a creative idea that strikes people as clever, unusual, interesting, uncommon, humorous, innovative, or different. List [N] creative uses for [OBJECT_NAME]. Make sure each response is 12 words."
     }
     aut_items = ["brick"]
+    n_uses = 4
+
     grid_search = {
         "temperature": [0.6, 0.7, 0.8],
         "frequency_penalty": [1, 1.5],
@@ -27,6 +29,7 @@ def run():
     n_trials_per_combo = 1
     prompt_experiment = PromptExperiment(api_key=API_KEY,
                                          title="length",
+                                         n_uses =4,
                                          prompts=prompts,
                                          aut_items=aut_items,
                                          example_df=example_df,
