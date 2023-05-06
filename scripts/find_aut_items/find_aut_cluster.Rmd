@@ -1,8 +1,9 @@
 ---
 title: "Find cluster of AUT items"
 author: "Joshua Ashkinaze"
-date: "2023-03-31"
-output: html_document
+date: "2023-05-05"
+output:
+  pdf_document
 ---
 
 ```{r setup, include=FALSE}
