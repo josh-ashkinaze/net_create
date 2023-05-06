@@ -1,4 +1,5 @@
 /creds/netcreate-0335ce05e7ff.json
 /creds/openai_creds.json
 /data/prior_responses.csv
+creds/
 *.log
