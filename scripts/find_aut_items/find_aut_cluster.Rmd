@@ -132,6 +132,9 @@ cluster <-
 cluster <- sub("aut_item", "", cluster)
 print(cluster)
 
+write.csv(data.frame(aut_item = cluster), file = "../../data/chosen_aut_items.csv", row.names = FALSE)
+
+
 ```
 
 ```{r}
@@ -154,25 +157,3 @@ print(result_str)
 
 ```
 
-```{r cluster_graph}
-
-library(ggplot2)
-library(ggthemes)
-
-
-bold_labels <- ifelse(levels(factor(filtered_df
-$aut_item)) %in% cluster, "bold", "plain")
-
-ggplot(data=filtered_df
-, aes(y=reorder(aut_item, score), x=score)) + 
-  geom_boxplot() +
-  labs(x = "Score", y = "AUT Item") +
-  ggtitle("Distribution of Originality Scores on AUT Items") +
-  theme_few() +
-  scale_y_discrete(labels = levels(factor(filtered_df
-$aut_item)), breaks = levels(factor(filtered_df
-$aut_item))) + # Add this line to control y-axis labels
-  theme(axis.text.y = element_text(face = bold_labels)) # Add this line to apply bold labels conditionally
-ggsave(file.path("../../plots/prior_work_aut_dist_highlight.png"), dpi = 300, bg = 'transparent')
-
-```
