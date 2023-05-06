@@ -47,7 +47,7 @@ def main():
             for j in range(n_items):
                 response = responses.pop(0)
                 score = scores.pop(0)
-                assignments.append({'prompt': prompt, 'response': response.lower(), 'score':score, 'condition': condition})
+                assignments.append({'item': prompt, 'response': response.lower(), 'score':score, 'condition': condition})
 
     # Convert the list of dictionaries to a DataFrame
     assignments_df = pd.DataFrame(assignments)
