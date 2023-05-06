@@ -17,7 +17,7 @@ def run():
         "zero_shot": "What are some creative uses for [OBJECT_NAME]? The goal is to come up with a creative idea, which is an idea that strikes people as clever, unusual, interesting, uncommon, humorous, innovative, or different. List [N] creative uses for [OBJECT_NAME].",
         "zero_shot_limit_length": "What are some creative uses for [OBJECT_NAME]? The goal is to come up with a creative idea that strikes people as clever, unusual, interesting, uncommon, humorous, innovative, or different. List [N] creative uses for [OBJECT_NAME]. Make sure each response is 12 words."
     }
-    aut_items = ["brick"]
+    aut_items = pd.read_csv("../../data/chosen_aut_items.csv")["aut_item"].tolist()
     n_uses = 4
 
     grid_search = {
