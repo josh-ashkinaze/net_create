@@ -1,3 +1,5 @@
+import numpy as np
+
 from experiment_class import PromptExperiment
 import pandas as pd
 import random
@@ -5,6 +7,9 @@ import json
 
 def run():
     example_df = pd.read_csv("../../data/prior_responses.csv")
+    example_df['word_count'] = example_df['response'].apply(lambda x: len(x.split()))
+    mean_word_count = int(np.mean(example_df['word_count']))
+    print("Mean word count", mean_word_count)
     random_seed = 416
     random.seed(random_seed)
 
@@ -15,7 +20,7 @@ def run():
 
     prompts = {
         "zero_shot": "What are some creative uses for [OBJECT_NAME]? The goal is to come up with a creative idea, which is an idea that strikes people as clever, unusual, interesting, uncommon, humorous, innovative, or different. List [N] creative uses for [OBJECT_NAME].",
-        "zero_shot_limit_length": "What are some creative uses for [OBJECT_NAME]? The goal is to come up with a creative idea that strikes people as clever, unusual, interesting, uncommon, humorous, innovative, or different. List [N] creative uses for [OBJECT_NAME]. Make sure each response is 12 words."
+        "zero_shot_limit_length": "What are some creative uses for [OBJECT_NAME]? The goal is to come up with a creative idea that strikes people as clever, unusual, interesting, uncommon, humorous, innovative, or different. List [N] creative uses for [OBJECT_NAME]. Make sure each response is {} words.".format(mean_word_count),
     }
     aut_items = pd.read_csv("../../data/chosen_aut_items.csv")["aut_item"].tolist()
     n_uses = 4
