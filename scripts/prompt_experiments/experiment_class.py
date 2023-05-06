@@ -115,6 +115,7 @@ class PromptExperiment:
                                                                                          mode='w') as outfile:
             for aut_item in self.aut_items:
                 for trial in range(n_trials_per_combo):
+                    random.seed(condition_counter)
                     temperature = random.choice(grid_search['temperature'])
                     frequency_penalty = random.choice(grid_search['frequency_penalty'])
                     presence_penalty = random.choice(grid_search['presence_penalty'])
@@ -153,8 +154,6 @@ class PromptExperiment:
                         }
                         results.append(row)
                         total_counter += 1
-                        self.random_seed += 1
-                        random.seed(self.random_seed)
                         if total_counter % 100 == 0:
                             logging.info(f"{total_counter} of {total_requests}")
 
