@@ -4,8 +4,10 @@ from experiment_class import PromptExperiment
 import pandas as pd
 import random
 import json
+import argparse
 
-def run():
+
+def run(n_trials_per_combo=1):
     example_df = pd.read_csv("../../data/prior_responses.csv")
     example_df['word_count'] = example_df['response'].apply(lambda x: len(x.split()))
     mean_word_count = int(np.mean(example_df['word_count']))
@@ -31,7 +33,6 @@ def run():
         "presence_penalty": [1, 1.5],
         "n_examples": [4]
     }
-    n_trials_per_combo = 1
     prompt_experiment = PromptExperiment(api_key=API_KEY,
                                          title="length",
                                          n_uses =4,
@@ -42,4 +43,8 @@ def run():
     prompt_experiment.run(n_trials_per_combo=n_trials_per_combo, grid_search=grid_search)
 
 if __name__ == "__main__":
-    run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--trials", type=int, default=1,
+                        help="Number of trials per combination of prompt, item, and example count.")
+    args = parser.parse_args()
+    run(args.trials)
