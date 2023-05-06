@@ -142,14 +142,13 @@ def render_trial(condition_no):
         # Insert the participant's response into the BigQuery table
         row = {
             "item": item,
+            ""
             "response_id": str(uuid.uuid4()),
             "participant_id": participant_id,
             "condition_order": condition_no,
             "response_text": response_text,
             "response_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "condition": condition,
-            "source": source,
-            "label": label,
         }
         errors = client.insert_rows_json(table, [row])
         if not errors:
