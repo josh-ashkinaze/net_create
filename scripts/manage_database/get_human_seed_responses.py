@@ -28,7 +28,7 @@ def main():
     # Read in the data and filter to only include the relevant prompts
     df = pd.read_csv("../../data/prior_responses.csv")
     df = df[df['prompt'].isin(my_items)]
-    df = df.sample(frac=1, random_state=416)
+    df = df.sample(frac=1, random_state=417)
 
     # Initialize a list to hold the assignments
     assignments = []
