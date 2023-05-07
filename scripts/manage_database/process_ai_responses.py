@@ -62,9 +62,10 @@ def main(n_per_item, experiment_title, prompt_condition):
     prompt_expr = prompt_expr.query(f"prompt_condition=='{prompt_condition}'")
     prompt_expr['ideas'] = prompt_expr['output_responses'].apply(lambda x: extract_ideas(x))
     prompt_exploded = prompt_expr.explode('ideas')
-    prompt_exploded['ideas'] = prompt_exploded['ideas'].apply(lambda x: process_ideas(x))
+    prompt_exploded['response'] = prompt_exploded['ideas'].apply(lambda x: process_ideas(x))
     prompt_exploded_sample = prompt_exploded.groupby(by=['aut_item']).sample(n_per_item)
     prompt_exploded_sample['response_id'] = [f'ai_{str(i)}' for i in range(len(prompt_exploded_sample))]
+    prompt_exploded_sample.to_csv("../../data/ai_responses.csv", index=False)
     logging.info("Finished processing ideas.")
 
 if __name__ == '__main__':
