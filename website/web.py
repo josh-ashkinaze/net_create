@@ -21,6 +21,13 @@ import random
 import os
 import sys
 
+if 'DYNO' in os.environ:
+    is_local = False
+    ...
+else:
+    is_local = True
+
+
 # EXPERIMENT PARAMETERS
 ####################
 CONDITIONS = {
@@ -44,7 +51,10 @@ TEMP = {
 
 app = Flask(__name__)
 
-key_path = "creds/netcreate-0335ce05e7ff.json"
+if is_local:
+    key_path = "../creds/netcreate-0335ce05e7ff.json"
+else:
+    key_path = "creds/netcreate-0335ce05e7ff.json"
 credentials = service_account.Credentials.from_service_account_file(
     key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
 )
@@ -170,5 +180,8 @@ def thank_you():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host="0.0.0.0", port=port)
+    if is_local:
+        app.run(port=5029, debug=True)
+    else:
+        port = int(os.environ.get('PORT', 5000))
+        app.run(host="0.0.0.0", port=port)
