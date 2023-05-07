@@ -38,7 +38,7 @@ else:
 
 # EXPERIMENT PARAMETERS
 ####################
-SOURCE_LABEL = "For this object, we also asked AI to come up with ideas."
+SOURCE_LABEL = "For this object, we also asked AI to come up with ideas! "
 CONDITIONS = {
     'h': {'n_human': 6, 'n_ai': 0, 'label':False},
     'f_l': {'n_human': 4, 'n_ai': 2, 'label':True},
