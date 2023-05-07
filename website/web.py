@@ -23,7 +23,6 @@ import sys
 
 if 'DYNO' in os.environ:
     is_local = False
-    ...
 else:
     is_local = True
 
