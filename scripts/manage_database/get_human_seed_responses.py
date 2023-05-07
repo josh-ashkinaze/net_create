@@ -15,8 +15,6 @@ def main():
                         format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', filemode='w')
     random.seed(416)
 
-    my_items = ["box", "fork", "lightbulb", "spoon", "table"]
-
     n_items_per_condition = {
         "h": 6,
         "f_l": 2,
@@ -27,6 +25,7 @@ def main():
 
     # Read in the data and filter to only include the relevant prompts
     df = pd.read_csv("../../data/prior_responses.csv")
+    my_items = pd.read_csv("../../data/chosen_aut_items.csv")['aut_item'].tolist()
     df = df[df['prompt'].isin(my_items)]
 
     # Initialize a list to hold the assignments
