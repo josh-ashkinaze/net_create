@@ -4,7 +4,7 @@ from google.oauth2 import service_account
 import os
 
 # Set up logging
-logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO,
+logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO, filemode='w',
                     format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 def main():
