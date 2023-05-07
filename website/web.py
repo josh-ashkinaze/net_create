@@ -18,8 +18,6 @@ import uuid
 import time
 from datetime import datetime
 import random
-import os
-import sys
 
 # EXPERIMENT PARAMETERS
 ####################
@@ -44,12 +42,6 @@ TEMP = {
 
 app = Flask(__name__)
 
-# CHANGE WORKING DIRECTORY TO THE SCRIPT'S DIRECTORY
-# get the directory of the current script
-dir_path = os.path.dirname(os.path.abspath(sys.argv[0]))
-
-# change the working directory to the script's directory
-os.chdir(dir_path)
 key_path = "../creds/netcreate-0335ce05e7ff.json"
 credentials = service_account.Credentials.from_service_account_file(
     key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
