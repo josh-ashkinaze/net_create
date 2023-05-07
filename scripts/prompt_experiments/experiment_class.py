@@ -88,7 +88,7 @@ class PromptExperiment:
         #print(msg)
         return msg
 
-    def run(self, n_trials_per_combo, grid_search):
+    def run(self, n_trials_per_combo, llm_params):
         now = datetime.now()
         date_string = now.strftime("%Y-%m-%d__%H.%M.%S")
         log_file = f"{self.title}_n{n_trials_per_combo}_{date_string}.log" if self.title else f"experiment_{date_string}.log"
@@ -98,7 +98,7 @@ class PromptExperiment:
 
         should_get_examples = any('[EXAMPLES]' in prompt for prompt in self.prompts.values())
 
-        logging.info(f"grid_search parameters: {grid_search}")
+        logging.info(f"llm_params parameters: {llm_params}")
         logging.info(f"prompts: {self.prompts}")
         logging.info(f"AUT ITEMS: {self.aut_items}")
         total_requests = len(self.prompts) * len(self.aut_items) * n_trials_per_combo
@@ -114,9 +114,9 @@ class PromptExperiment:
             for aut_item in self.aut_items:
                 for trial in range(n_trials_per_combo):
                     random.seed(condition_counter)
-                    temperature = random.choice(grid_search['temperature'])
-                    frequency_penalty = random.choice(grid_search['frequency_penalty'])
-                    presence_penalty = random.choice(grid_search['presence_penalty'])
+                    temperature = random.choice(llm_params['temperature'])
+                    frequency_penalty = random.choice(llm_params['frequency_penalty'])
+                    presence_penalty = random.choice(llm_params['presence_penalty'])
 
                     if should_get_examples:
                         examples = self.get_examples(self.example_df, aut_item, seed=condition_counter)

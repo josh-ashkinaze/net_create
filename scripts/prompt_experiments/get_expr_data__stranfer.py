@@ -30,11 +30,10 @@ def run(n_trials_per_combo=1):
     aut_items = pd.read_csv("../../data/chosen_aut_items.csv")["aut_item"].tolist()
     n_uses = 4
 
-    grid_search = {
+    llm_params = {
         "temperature": [0.6, 0.7, 0.8],
         "frequency_penalty": [1, 1.5],
-        "presence_penalty": [1, 1.5],
-        "n_examples": [4]
+        "presence_penalty": [1, 1.5]
     }
     prompt_experiment = PromptExperiment(api_key=API_KEY,
                                          title="stransfer",
@@ -44,7 +43,7 @@ def run(n_trials_per_combo=1):
                                          aut_items=aut_items,
                                          example_df=example_df,
                                          random_seed=random_seed)
-    prompt_experiment.run(n_trials_per_combo=n_trials_per_combo, grid_search=grid_search)
+    prompt_experiment.run(n_trials_per_combo=n_trials_per_combo, llm_params=llm_params)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
