@@ -50,6 +50,7 @@ def main():
 
     # Concatenate all the DataFrames in assignments
     assignments_df = pd.concat(assignments)
+    assignments_df = assignments_df.rename(columns={'prompt': 'aut_item'})
 
     # Save the result
     assignments_df.to_csv("../../data/seed_human_responses.csv", index=False)
