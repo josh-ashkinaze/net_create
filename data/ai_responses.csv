@@ -1,0 +1,1001 @@
+aut_item,prompt_condition,trial_no,idx,examples,output_responses,n_examples,temperature,frequency_penalty,presence_penalty,ideas,response,response_id
+box,zero_limit,437,0,[],"1. Box fort for a cat.
+2. DIY mailbox for letters.
+3. Jewelry organizer with compartments.
+4. Decorative bookshelf storage cubes.",0,0.7000000000000001,1.5,1.0,box fort for a cat.,box fort for a cat.,ai_0
+box,zero_limit,102,0,[],"1. A box fort for adults.
+2. A box planter for gardening.
+3. A cat playhouse made from boxes.
+4. An art installation using cardboard boxes.",0,0.7000000000000001,1.5,1.0,a box planter for gardening.,a box planter for gardening.,ai_1
+box,zero_limit,50,0,[],"1. Box fort for indoor camping.
+2. Convert into a mini garden.
+3. Make a DIY mailbox house.
+4. Gift wrap it with fabric.",0,0.7000000000000001,1.5,1.0,make a diy mailbox house.,make a diy mailbox house.,ai_2
+box,zero_limit,961,0,[],"1. Box car for kids' playtime.
+2. DIY cat castle from boxes.
+3. Cardboard boat in the pool.
+4. Create a box puppet theater.",0,0.7000000000000001,1.5,1.0,create a box puppet theater.,create a box puppet theater.,ai_3
+box,zero_limit,910,0,[],"1. Box guitar - Create a musical instrument.
+2. Cat castle - Build a feline fortress.
+3. Time capsule - Store memories for future generations.
+4. Giant dice- Make oversized gaming accessories",0,0.7000000000000001,1.5,1.0,giant dice- make oversized gaming accessories,giant dice- make oversized gaming accessories,ai_4
+box,zero_limit,929,0,[],"1. A box as a puppet theater.
+2. Use the box to create a mini greenhouse.
+3. Make an improvised drum set with boxes of different sizes.
+4. Create a cardboard maze for kids or pets to play in and explore.",0,0.7000000000000001,1.5,1.0,use the box to create a mini greenhouse.,use the box to create a mini greenhouse.,ai_5
+box,zero_limit,829,0,[],"1. Box car for kids' playtime.
+2. Cat castle with cardboard boxes.
+3. DIY wall art display case.
+4. Portable mini-garden with planters inside the box.",0,0.7000000000000001,1.5,1.0,diy wall art display case.,diy wall art display case.,ai_6
+box,zero_limit,476,0,[],"1. Box car derby racer.
+2. DIY cat playhouse maze.
+3. Personalized treasure chest storage.
+4. Retro boombox speaker system.",0,0.7000000000000001,1.5,1.0,retro boombox speaker system.,retro boombox speaker system.,ai_7
+box,zero_limit,612,0,[],"1. ""Boxy"" planters for windowsills.
+2. A makeshift puppet theater stage.
+3. DIY cardboard castle playhouse.
+4. A unique gift wrapping alternative.",0,0.7000000000000001,1.5,1.0,"""boxy"" planters for windowsills.",boxy planters for windowsills.,ai_8
+box,zero_limit,943,0,[],"1. ""Box City"" - create a miniature city using different sized and shaped boxes as buildings.
+2. ""Box Maze"" - turn the box into a labyrinth by cutting out various routes inside.
+3. ""Cat Castle"" - stack up boxes of varying sizes to make an elaborate castle for your feline friend.
+4. ""Box Puppet Theater"" - cut out windows in the sides of the box, paint it like a theater, and put on puppet shows with your friends or family.",0,0.7000000000000001,1.5,1.0,"""box maze"" - turn the box into a labyrinth by cutting out various routes inside.",box maze - turn the box into a labyrinth by cutting out various routes inside.,ai_9
+box,zero_limit,762,0,[],"1. Box car derby racing vehicle.
+2. DIY cardboard maze for cats.
+3. Storage container turned mini garden.
+4. Transform into a wearable costume.",0,0.7000000000000001,1.5,1.0,transform into a wearable costume.,transform into a wearable costume.,ai_10
+box,zero_limit,534,0,[],"1. Portable mini-garden with soil.
+2. Make a giant Rubik's Cube.
+3. Turn into a cat house.
+4. Create DIY cardboard furniture set.",0,0.7000000000000001,1.5,1.0,make a giant rubik's cube.,make a giant rubik's cube.,ai_11
+box,zero_limit,746,0,[],"1. ""Box of Dreams"" - Decorate a box and fill it with slips of paper outlining your wildest dreams.
+2. ""Box Garden"" - Cut off the lid, line the bottom with plastic, and create a miniature garden inside.
+3. ""Box Car Wash"" - Use the box as a play area for kids to wash their toy cars in soapy water.
+4. ""Box Bookshelf"" - Stack several boxes together to make an unconventional bookshelf that doubles as decor.",0,0.7000000000000001,1.5,1.0,"""box of dreams"" - decorate a box and fill it with slips of paper outlining your wildest dreams.",box of dreams - decorate a box and fill it with slips of paper outlining your wildest dreams.,ai_12
+box,zero_limit,819,0,[],"1. Box guitar: Musical instrument made from cardboard.
+2. Cat castle: Turn the box into a feline fortress.
+3. Portable garden: Use as planter for herbs.
+4. DIY piñata: Fill with candy, smash it!",0,0.7000000000000001,1.5,1.0,box guitar: musical instrument made from cardboard.,box guitar: musical instrument made from cardboard.,ai_13
+box,zero_limit,632,0,[],"1. ""Boxy"" Halloween costume for kids.
+2. DIY cardboard maze for cats.
+3. Make a miniature cityscape diorama.
+4. Create a unique shadow puppet theater.",0,0.7000000000000001,1.5,1.0,create a unique shadow puppet theater.,create a unique shadow puppet theater.,ai_14
+box,zero_limit,973,0,[],"1. ""Box car"" Halloween costume.
+2. DIY cat playhouse from box.
+3. Box maze for small pets.
+4. Customizable cardboard photo booth backdrop.",0,0.7000000000000001,1.5,1.0,"""box car"" halloween costume.",box car halloween costume.,ai_15
+box,zero_limit,830,0,[],"1. ""Box car"" for a child's playtime.
+2. DIY storage container for books.
+3. Cut up and create origami art.
+4. Make a cat scratcher toy.",0,0.7000000000000001,1.5,1.0,cut up and create origami art.,cut up and create origami art.,ai_16
+box,zero_limit,547,0,[],"1. Box car derby racer.
+2. DIY shadow puppet theater.
+3. Biodegradable garden planter box.
+4. Instant cardboard fort hideout.",0,0.7000000000000001,1.5,1.0,biodegradable garden planter box.,biodegradable garden planter box.,ai_17
+box,zero_limit,926,0,[],"1. Box as a DIY toy.
+2. Box as a plant pot.
+3. Box as an art canvas.
+4. Box as a makeshift furniture.",0,0.7000000000000001,1.5,1.0,box as a plant pot.,box as a plant pot.,ai_18
+box,zero_limit,679,0,[],"1. Cozy cat hideaway, cardboard condo.
+2. DIY mini-garden, box planter bed.
+3. Box tower maze for hamsters.
+4. Cardboard costume: robot or castle!",0,0.7000000000000001,1.5,1.0,cardboard costume: robot or castle!,cardboard costume: robot or castle!,ai_19
+box,zero_limit,610,0,[],"1. ""Boxed"" garden for apartment dwellers.
+2. DIY cat castle with boxes.
+3. Box car derby race participant.
+4. Personalized gift box piñata surprise.",0,0.7000000000000001,1.5,1.0,diy cat castle with boxes.,diy cat castle with boxes.,ai_20
+box,zero_limit,755,0,[],"1. Portable pet house and carrier.
+2. DIY photo booth prop station.
+3. Upcycled cardboard guitar amplifier.
+4. Virtual reality headset storage container.",0,0.7000000000000001,1.5,1.0,diy photo booth prop station.,diy photo booth prop station.,ai_21
+box,zero_limit,327,0,[],"1. Box planters for a garden.
+2. A box fort for kids.
+3. A pet house with boxes.
+4. Box shelves for home decor.",0,0.7000000000000001,1.5,1.0,box shelves for home decor.,box shelves for home decor.,ai_22
+box,zero_limit,718,0,[],"1. Box maze for pet rodents.
+2. Box car costume for Halloween.
+3. Cardboard boat race challenge.
+4. DIY box guitar project.",0,0.7000000000000001,1.5,1.0,cardboard boat race challenge.,cardboard boat race challenge.,ai_23
+box,zero_limit,471,0,[],"1. Box as a DIY lampshade.
+2. Transform box into pet bed.
+3. Make a plant container box.
+4. Create cardboard castle playhouse.",0,0.7000000000000001,1.5,1.0,create cardboard castle playhouse.,create cardboard castle playhouse.,ai_24
+box,zero_limit,7,0,[],"1. Miniature city made from boxes.
+2. Box fort for indoor camping.
+3. Unique gift wrapping with boxes.
+4. DIY cat castle using boxes",0,0.7000000000000001,1.5,1.0,miniature city made from boxes.,miniature city made from boxes.,ai_25
+box,zero_limit,683,0,[],"1. Cardboard Box Fort for Kids
+2. DIY Cat Scratching Post 
+3. Portable Mini Garden Planter
+4. Customized Toy Car Garage",0,0.7000000000000001,1.5,1.0,portable mini garden planter,portable mini garden planter,ai_26
+box,zero_limit,696,0,[],"1. Box Puppet Theater: Cut out a window and decorate the box to create a portable puppet theater.
+2. Box Maze: Create a maze by cutting holes in various sides of the box and challenging someone to navigate through it blindfolded.
+3. Cat Castle: Stack multiple boxes together, cut out doorways, and create an elaborate castle for your feline friend.
+4. Time Capsule: Decorate the box with personal items or messages, seal it up tight, and bury it in a special location as a time capsule for future generations to discover.",0,0.7000000000000001,1.5,1.0,box maze: create a maze by cutting holes in various sides of the box and challenging someone to navigate through it blindfolded.,box maze: create a maze by cutting holes in various sides of the box and challenging someone to navigate through it blindfolded.,ai_27
+box,zero_limit,613,0,[],"1. A cat castle and nap zone.
+2. An indoor mini-garden planter.
+3. A DIY cardboard maze game.
+4. A portable solar oven cooker.",0,0.7000000000000001,1.5,1.0,a portable solar oven cooker.,a portable solar oven cooker.,ai_28
+box,zero_limit,123,0,[],"1. Box fort for a cat.
+2. Cardboard sled for winter fun.
+3. DIY photo booth prop box.
+4. Shoebox herb garden starter kit.",0,0.7000000000000001,1.5,1.0,cardboard sled for winter fun.,cardboard sled for winter fun.,ai_29
+box,zero_limit,148,0,[],"1. Box turned into a puppet stage.
+2. Box made into a mini garden.
+3. Use box to create DIY furniture.
+4. Transform box into an art canvas",0,0.7000000000000001,1.5,1.0,box turned into a puppet stage.,box turned into a puppet stage.,ai_30
+box,zero_limit,767,0,[],"1. Box car derby racer.
+2. Cat playhouse and nap spot.
+3. DIY shadow puppet theater.
+4. Vertical garden planter box.",0,0.7000000000000001,1.5,1.0,diy shadow puppet theater.,diy shadow puppet theater.,ai_31
+box,zero_limit,464,0,[],"1. ""Box of Dreams"" - A box filled with notes describing your wildest dreams and aspirations.
+2. ""Mystery Box"" - A box filled with random objects that can be used to inspire creativity or as a guessing game.
+3. ""Invisible Art Gallery"" - Use boxes to create an invisible wall installation where the art is on display inside the boxes.
+4. ""DIY Playhouse"" - Turn a large cardboard box into a playhouse for kids, complete with windows, doors, and decorations they can add themselves!",0,0.7000000000000001,1.5,1.0,"""diy playhouse"" - turn a large cardboard box into a playhouse for kids, complete with windows, doors, and decorations they can add themselves!","diy playhouse - turn a large cardboard box into a playhouse for kids, complete with windows, doors, and decorations they can add themselves!",ai_32
+box,zero_limit,242,0,[],"1. Box car derby racer
+2. Cat's private cardboard kingdom
+3. DIY box maze for kids 
+4. Portable home office cubicle",0,0.7000000000000001,1.5,1.0,diy box maze for kids,diy box maze for kids,ai_33
+box,zero_limit,560,0,[],"1. Cardboard racecar for kids.
+2. Transform into a mini-garden.
+3. Build a cat playhouse castle.
+4. Create a DIY photo booth.",0,0.7000000000000001,1.5,1.0,build a cat playhouse castle.,build a cat playhouse castle.,ai_34
+box,zero_limit,600,0,[],"1. Cardboard box maze for cats.
+2. Box fort with secret compartments.
+3. Customized cardboard box puppet theater.
+4. DIY shadow projection screen box.",0,0.7000000000000001,1.5,1.0,customized cardboard box puppet theater.,customized cardboard box puppet theater.,ai_35
+box,zero_limit,581,0,[],"1. Cozy cat bed hideaway.
+2. DIY cardboard play kitchen.
+3. Decorative wall art display.
+4. Clever storage for shoes",0,0.7000000000000001,1.5,1.0,cozy cat bed hideaway.,cozy cat bed hideaway.,ai_36
+box,zero_limit,858,0,[],"1. Box guitar: Turn a box into musical instrument.
+2. Shadow puppet theater: Create silhouettes for storytelling fun.
+3. Mini greenhouse: Grow plants in a small space.
+4. Cat castle: Stack and connect boxes for feline play land.",0,0.7000000000000001,1.5,1.0,cat castle: stack and connect boxes for feline play land.,cat castle: stack and connect boxes for feline play land.,ai_37
+box,zero_limit,873,0,[],"1. Box of memories: Create a shadow box with sentimental items.
+2. Cat castle: Stack and cut boxes for feline fun.
+3. Mini garden bed: Use as the base for a small raised garden.
+4. Cardboard arcade game machine: Build your own arcade-style games using cardboard boxes.",0,0.7000000000000001,1.5,1.0,cardboard arcade game machine: build your own arcade-style games using cardboard boxes.,cardboard arcade game machine: build your own arcade-style games using cardboard boxes.,ai_38
+box,zero_limit,359,0,[],"1. Box guitar: Make music instrument.
+2. Cat castle: Create feline fortress.
+3. DIY projector: Watch movies inside box.
+4. Box puppet theater: Put on a show!",0,0.7000000000000001,1.5,1.0,box guitar: make music instrument.,box guitar: make music instrument.,ai_39
+box,zero_limit,551,0,[],"1. A cardboard racecar for kids.
+2. A DIY cat playhouse tower.
+3. A retro-style camera obscura.
+4. An eco-friendly herb garden planter.",0,0.7000000000000001,1.5,1.0,a diy cat playhouse tower.,a diy cat playhouse tower.,ai_40
+box,zero_limit,57,0,[],"1. Box Puppet Theater: Cut out a section for a stage, decorate the exterior and interior with curtains and props, then put on an entertaining show!
+2. Cat Castle: Stack boxes of varying sizes to create an elaborate fortress for your furry feline friend.
+3. Box Car Derby: Create tiny race cars using cardboard boxes as the body, wheels made from bottle caps or paper plates, then zoom them down ramps.
+4. Box Garden Bed: Fill up large boxes with soil and plant flowers or vegetables inside – perfect for small spaces!",0,0.7000000000000001,1.5,1.0,box garden bed: fill up large boxes with soil and plant flowers or vegetables inside – perfect for small spaces!,box garden bed: fill up large boxes with soil and plant flowers or vegetables inside – perfect for small spaces!,ai_41
+box,zero_limit,852,0,[],"1. Box-shaped birdhouse for backyard.
+2. Cut box into puzzle pieces.
+3. Create a personalized shadow box.
+4. Fashion a cat playhouse hideaway.",0,0.7000000000000001,1.5,1.0,fashion a cat playhouse hideaway.,fashion a cat playhouse hideaway.,ai_42
+box,zero_limit,832,0,[],"1. ""Box Bed"" - Convert a large box into a cozy bed for your pet.
+2. ""Box Planters"" - Transform boxes into colorful and unique planters for indoor or outdoor use.
+3. ""Box Puppet Theater"" - Create an imaginative puppet theater by cutting out windows and curtains on the sides of a box.
+4. ""Box Maze Game"" - Build multiple boxes to create an exciting maze game that challenges players to find their way through the labyrinthine structure!",0,0.7000000000000001,1.5,1.0,"""box maze game"" - build multiple boxes to create an exciting maze game that challenges players to find their way through the labyrinthine structure!",box maze game - build multiple boxes to create an exciting maze game that challenges players to find their way through the labyrinthine structure!,ai_43
+box,zero_limit,932,0,[],"1. Miniature home for a cat.
+2. DIY photo booth prop backdrop.
+3. Customized gift wrapping station.
+4. Portable herb or garden bed.",0,0.7000000000000001,1.5,1.0,customized gift wrapping station.,customized gift wrapping station.,ai_44
+box,zero_limit,558,0,[],"1. ""Box car"" for a child's toy
+2. Cat playhouse or bed
+3. DIY gift wrapping station 
+4. Create a cardboard castle",0,0.7000000000000001,1.5,1.0,"""box car"" for a child's toy",box car for a child's toy,ai_45
+box,zero_limit,308,0,[],"1. Box as a mini-garden: Grow herbs in a cardboard box.
+2. Box car for kids: Turn it into a fun play vehicle.
+3. Shadow puppet theater box: Cut out shapes and create stories.
+4. Cat castle box fort: Stack boxes to make kitty towers.",0,0.7000000000000001,1.5,1.0,box as a mini-garden: grow herbs in a cardboard box.,box as a mini-garden: grow herbs in a cardboard box.,ai_46
+box,zero_limit,857,0,[],"1. A box as a musical instrument
+2. A box as a mini garden bed
+3. A box turned into a robot costume 
+4. Create a cardboard cat castle",0,0.7000000000000001,1.5,1.0,create a cardboard cat castle,create a cardboard cat castle,ai_47
+box,zero_limit,722,0,[],"1. A cardboard DIY birdhouse.
+2. A makeshift treasure chest prop.
+3. A personalized time capsule container.
+4. An upcycled cat scratcher toy.",0,0.7000000000000001,1.5,1.0,an upcycled cat scratcher toy.,an upcycled cat scratcher toy.,ai_48
+box,zero_limit,780,0,[],"1. Portable mini-garden with soil.
+2. DIY cardboard furniture for kids.
+3. Travel case for pet toys.
+4. Personalized mailbox with stickers.",0,0.7000000000000001,1.5,1.0,diy cardboard furniture for kids.,diy cardboard furniture for kids.,ai_49
+fork,zero_limit,278,1,[],"1. Fork as a hair accessory.
+2. Use forks as plant markers.
+3. Create fork jewelry or art.
+4. Make fork garden sculptures.",0,0.6000000000000001,1.0,1.5,fork as a hair accessory.,fork as a hair accessory.,ai_50
+fork,zero_limit,166,1,[],"1. Comb for doll's hair.
+2. Plant marker in garden soil.
+3. Mini easel for tiny paintings.
+4. Fishing tool to catch noodles.",0,0.6000000000000001,1.0,1.5,mini easel for tiny paintings.,mini easel for tiny paintings.,ai_51
+fork,zero_limit,827,1,[],"1. Fork as a hair accessory.
+2. Use fork tines to plant seeds.
+3. Make fork art prints.
+4. Create a musical instrument with forks.",0,0.6000000000000001,1.0,1.5,use fork tines to plant seeds.,use fork tines to plant seeds.,ai_52
+fork,zero_limit,755,1,[],"1. Forks as hair accessories.
+2. Mini fork plant markers.
+3. Fork handle coat hooks.
+4. Fork tine jewelry pendant.",0,0.6000000000000001,1.0,1.5,fork tine jewelry pendant.,fork tine jewelry pendant.,ai_53
+fork,zero_limit,695,1,[],"1. Mini plant holder for succulents.
+2. DIY hair accessory comb substitute.
+3. Unique wall art sculpture material.
+4. Creative cake decorating tool alternative.",0,0.6000000000000001,1.0,1.5,unique wall art sculpture material.,unique wall art sculpture material.,ai_54
+fork,zero_limit,902,1,[],"1. Miniature plant trellis: Use the tines of a fork to support small plants as they grow.
+2. Hair accessories holder: Stick the forks in a block of foam or cork and use them to hold hair ties, clips, and other small accessories.
+3. Cake decorating tool: Dip the tines of a fork in frosting or melted chocolate and drag it across cakes, cupcakes, or cookies for an interesting design.
+4. DIY jewelry maker's tool: Use the prongs on a fork to help make wire loops for creating earrings or necklaces.",0,0.6000000000000001,1.0,1.5,"hair accessories holder: stick the forks in a block of foam or cork and use them to hold hair ties, clips, and other small accessories.","hair accessories holder: stick the forks in a block of foam or cork and use them to hold hair ties, clips, and other small accessories.",ai_55
+fork,zero_limit,158,1,[],"1. Miniature gardening tool for succulents.
+2. DIY hair accessory with beads.
+3. Create a unique wall clock.
+4. Use as a knitting needle.",0,0.6000000000000001,1.0,1.5,miniature gardening tool for succulents.,miniature gardening tool for succulents.,ai_56
+fork,zero_limit,271,1,[],"1. Fork as a plant marker.
+2. Fork as a hair accessory.
+3. Fork as a mini easel for pictures or notes.
+4. Fork as a tool to create textured patterns in clay or dough.",0,0.6000000000000001,1.0,1.5,fork as a tool to create textured patterns in clay or dough.,fork as a tool to create textured patterns in clay or dough.,ai_57
+fork,zero_limit,666,1,[],"1. Miniature garden rake for succulents.
+2. Create a fork sculpture masterpiece.
+3. Use as a hair accessory.
+4. Fork-powered wind chime creation.",0,0.6000000000000001,1.0,1.5,fork-powered wind chime creation.,fork-powered wind chime creation.,ai_58
+fork,zero_limit,598,1,[],"1. Mini plant holder for succulents.
+2. Guitar pick or string cleaner.
+3. Hair accessory, fork hairpin!
+4. Fork-tipped chopsticks for sushi!",0,0.6000000000000001,1.0,1.5,mini plant holder for succulents.,mini plant holder for succulents.,ai_59
+fork,zero_limit,78,1,[],"1. Miniature garden rake for succulents.
+2. Create a unique piece of jewelry by bending the tines into an interesting shape.
+3. Use as a hair accessory or comb to create texture and volume in your hairstyle.
+4. Turn it into a miniature easel for displaying small pieces of art or photos on your desk or bookshelf.",0,0.6000000000000001,1.0,1.5,turn it into a miniature easel for displaying small pieces of art or photos on your desk or bookshelf.,turn it into a miniature easel for displaying small pieces of art or photos on your desk or bookshelf.,ai_60
+fork,zero_limit,591,1,[],"1. Miniature garden rake for succulents.
+2. Hair accessory to create texture.
+3. Fishing tool for small streams.
+4. Musical instrument by plucking tines.",0,0.6000000000000001,1.0,1.5,musical instrument by plucking tines.,musical instrument by plucking tines.,ai_61
+fork,zero_limit,682,1,[],"1. Fork as a hair accessory
+2. Use fork prongs to make patterns in playdough or clay
+3. Create unique plant markers by labeling forks and sticking them into soil 
+4. Use the tines of a fork to create textured designs on frosting for cakes or cupcakes",0,0.6000000000000001,1.0,1.5,fork as a hair accessory,fork as a hair accessory,ai_62
+fork,zero_limit,677,1,[],"1. Miniature garden tool for succulents.
+2. Create a unique necklace pendant.
+3. Use tines to make music.
+4. Fashion a fork bracelet accessory.",0,0.6000000000000001,1.0,1.5,use tines to make music.,use tines to make music.,ai_63
+fork,zero_limit,188,1,[],"1. Miniature garden rake for succulents.
+2. Hair accessory to hold updos.
+3. DIY guitar pick for musicians.
+4. Decorative wall art sculpture piece.",0,0.6000000000000001,1.0,1.5,miniature garden rake for succulents.,miniature garden rake for succulents.,ai_64
+fork,zero_limit,945,1,[],"1. Hair accessories: Use the prongs of a fork to create unique hairstyles.
+2. Plant markers: Label your garden by using a permanent marker on the handle of each fork.
+3. Jewelry holder: Display and organize your jewelry by sticking earrings, necklaces, and bracelets into the tines of a fork.
+4. Cake decorating tool: Drag the tines of a fork through icing to create intricate designs on cakes or cupcakes.",0,0.6000000000000001,1.0,1.5,hair accessories: use the prongs of a fork to create unique hairstyles.,hair accessories: use the prongs of a fork to create unique hairstyles.,ai_65
+fork,zero_limit,141,1,[],"1. Miniature garden tool for succulents.
+2. DIY hair accessory with beads.
+3. Musical instrument by plucking tines.
+4. Fork painting to create texture.",0,0.6000000000000001,1.0,1.5,miniature garden tool for succulents.,miniature garden tool for succulents.,ai_66
+fork,zero_limit,474,1,[],"1. Fork hair accessory for updos.
+2. Fork garden marker with labels.
+3. Fork paintbrush to create texture.
+4. Fork candle holder for ambiance.",0,0.6000000000000001,1.0,1.5,fork hair accessory for updos.,fork hair accessory for updos.,ai_67
+fork,zero_limit,501,1,[],"1. Make a Fork Guitar Pick.
+2. Create Art with Fork Tines.
+3. Use as Hair Accessory Comb.
+4. Fashion a Fork Garden Marker.",0,0.6000000000000001,1.0,1.5,create art with fork tines.,create art with fork tines.,ai_68
+fork,zero_limit,36,1,[],"1. Mini garden tool for succulents.
+2. Create a unique hair accessory.
+3. Use as a makeshift lockpick.
+4. Fork-based paintbrush for abstract art.",0,0.6000000000000001,1.0,1.5,fork-based paintbrush for abstract art.,fork-based paintbrush for abstract art.,ai_69
+fork,zero_limit,566,1,[],"1. Forks as plant markers.
+2. Fork art on canvas.
+3. Fork handle coat hooks.
+4. DIY fork jewelry holder.",0,0.6000000000000001,1.0,1.5,fork handle coat hooks.,fork handle coat hooks.,ai_70
+fork,zero_limit,651,1,[],"1. Earring holder for pierced ears.
+2. Garden tool for weeding small areas.
+3. Hair comb for tangled hair.
+4. Miniature sculpture tool for clay or dough.",0,0.6000000000000001,1.0,1.5,hair comb for tangled hair.,hair comb for tangled hair.,ai_71
+fork,zero_limit,300,1,[],"1. Miniature Garden Tool: Use the prongs of a fork to cultivate and plant small indoor herb gardens.
+2. DIY Wall Art: Arrange forks in an artistic pattern on a canvas or wood board, then paint them for unique wall decor.
+3. Hair Accessory Holder: Bend the prongs of a fork slightly outward, then use it to hold hair ties and clips in place on your vanity.
+4. Cake Decoration Tool: Dip the tines of a fork into frosting or melted chocolate, then drag across cakes or cupcakes for textured designs.",0,0.6000000000000001,1.0,1.5,miniature garden tool: use the prongs of a fork to cultivate and plant small indoor herb gardens.,miniature garden tool: use the prongs of a fork to cultivate and plant small indoor herb gardens.,ai_72
+fork,zero_limit,889,1,[],"1. DIY Fork Plant Markers
+2. Fork Guitar Pick 
+3. Miniature Fork Easel Stand
+4. Fruit Kebab Skewer Alternative",0,0.6000000000000001,1.0,1.5,miniature fork easel stand,miniature fork easel stand,ai_73
+fork,zero_limit,421,1,[],"1. Fork as a hair accessory.
+2. Make fork handle garden markers.
+3. Use forks to create art.
+4. Turn forks into unique jewelry.",0,0.6000000000000001,1.0,1.5,fork as a hair accessory.,fork as a hair accessory.,ai_74
+fork,zero_limit,585,1,[],"1. Miniature garden rake for succulents.
+2. DIY hair accessory holder stand.
+3. Unique book page turning tool.
+4. Artistic paintbrush alternative for texture.",0,0.6000000000000001,1.0,1.5,artistic paintbrush alternative for texture.,artistic paintbrush alternative for texture.,ai_75
+fork,zero_limit,895,1,[],"1. Fork as a hair accessory.
+2. Fork as a miniature rake.
+3. Fork to create food sculptures.
+4. Fork for tiny gardening projects.",0,0.6000000000000001,1.0,1.5,fork for tiny gardening projects.,fork for tiny gardening projects.,ai_76
+fork,zero_limit,818,1,[],"1. Fork as a plant marker.
+2. Create fork jewelry or art.
+3. Use a fork to comb hair.
+4. Make fork-chopstick hybrid utensils.",0,0.6000000000000001,1.0,1.5,make fork-chopstick hybrid utensils.,make fork-chopstick hybrid utensils.,ai_77
+fork,zero_limit,966,1,[],"1. Miniature garden tool for succulents.
+2. Create textured patterns in clay.
+3. Use as a makeshift hairpin.
+4. Make fork stamps for art projects.",0,0.6000000000000001,1.0,1.5,use as a makeshift hairpin.,use as a makeshift hairpin.,ai_78
+fork,zero_limit,856,1,[],"1. Fork as a tiny rake.
+2. Use fork to make jewelry.
+3. Create fork art sculptures.
+4. Turn forks into plant markers.",0,0.6000000000000001,1.0,1.5,turn forks into plant markers.,turn forks into plant markers.,ai_79
+fork,zero_limit,177,1,[],"1. Fork as a hair accessory.
+2. Use fork tines to plant seeds.
+3. Make a fork bow tie.
+4. Use forks as knitting needles.",0,0.6000000000000001,1.0,1.5,use forks as knitting needles.,use forks as knitting needles.,ai_80
+fork,zero_limit,457,1,[],"1. Mini plant holder for succulents.
+2. Create a fork sculpture display.
+3. Use as a hair accessory.
+4. Make tiny fork jewelry charms.",0,0.6000000000000001,1.0,1.5,use as a hair accessory.,use as a hair accessory.,ai_81
+fork,zero_limit,601,1,[],"1. Miniature garden rake for succulents.
+2. DIY hair accessory holder stand.
+3. Create a fork guitar pick.
+4. Use as an unconventional comb.",0,0.6000000000000001,1.0,1.5,create a fork guitar pick.,create a fork guitar pick.,ai_82
+fork,zero_limit,479,1,[],"1. Miniature garden rake for succulents.
+2. Make a fork guitar pick.
+3. Use as a hair accessory.
+4. Create a fork wind chime.",0,0.6000000000000001,1.0,1.5,miniature garden rake for succulents.,miniature garden rake for succulents.,ai_83
+fork,zero_limit,691,1,[],"1. Miniature garden rake for succulents.
+2. Musical instrument by scraping tines.
+3. DIY jewelry holder on wall.
+4. Hair accessory to create texture.",0,0.6000000000000001,1.0,1.5,musical instrument by scraping tines.,musical instrument by scraping tines.,ai_84
+fork,zero_limit,663,1,[],"1. Mini plant trellis for herbs.
+2. Fork sculpture on display.
+3. Forks as guitar picks.
+4. Use fork tines to knit.",0,0.6000000000000001,1.0,1.5,fork sculpture on display.,fork sculpture on display.,ai_85
+fork,zero_limit,404,1,[],"1. Fork as a makeshift comb.
+2. Use fork tines to plant seeds.
+3. Create a DIY fork necklace.
+4. Make miniature fork sculptures/artwork.",0,0.6000000000000001,1.0,1.5,use fork tines to plant seeds.,use fork tines to plant seeds.,ai_86
+fork,zero_limit,9,1,[],"1. Miniature garden rake for succulents.
+2. Hair accessory to hold updo.
+3. Fishing tool for catching insects.
+4. Paintbrush handle extender for precision.",0,0.6000000000000001,1.0,1.5,miniature garden rake for succulents.,miniature garden rake for succulents.,ai_87
+fork,zero_limit,897,1,[],"1. Miniature pitchfork for cupcakes.
+2. Hair comb for dollhouse people.
+3. Art tool for scratchboard designs.
+4. Fishing hook in a pinch.",0,0.6000000000000001,1.0,1.5,art tool for scratchboard designs.,art tool for scratchboard designs.,ai_88
+fork,zero_limit,544,1,[],"1. Fork as a hair accessory.
+2. Use fork to plant seeds.
+3. Create a fork sculpture.
+4. Make a musical instrument with forks.",0,0.6000000000000001,1.0,1.5,make a musical instrument with forks.,make a musical instrument with forks.,ai_89
+fork,zero_limit,485,1,[],"1. Mini garden rake for succulents.
+2. Create a fork sculpture display.
+3. Use as a hair accessory.
+4. DIY jewelry holder with corkboard.",0,0.6000000000000001,1.0,1.5,create a fork sculpture display.,create a fork sculpture display.,ai_90
+fork,zero_limit,196,1,[],"1. Miniature garden rake for succulents.
+2. DIY fork earrings or necklace.
+3. Use as a hair accessory comb.
+4. Create a unique wind chime.",0,0.6000000000000001,1.0,1.5,create a unique wind chime.,create a unique wind chime.,ai_91
+fork,zero_limit,235,1,[],"1. Miniature garden rake for plants.
+2. Hair accessory for updos.
+3. Musical instrument by tapping tines.
+4. DIY jewelry holder on wall.",0,0.6000000000000001,1.0,1.5,miniature garden rake for plants.,miniature garden rake for plants.,ai_92
+fork,zero_limit,872,1,[],"1. Mini plant holder for succulents.
+2. Hair accessory to hold updos.
+3. Musical instrument by scraping tines.
+4. DIY stencil for cake decorations.",0,0.6000000000000001,1.0,1.5,diy stencil for cake decorations.,diy stencil for cake decorations.,ai_93
+fork,zero_limit,469,1,[],"1. Create fork art sculptures.
+2. Use as a tiny rake.
+3. Make musical instrument with tines.
+4. Fashion fork jewelry pieces.",0,0.6000000000000001,1.0,1.5,make musical instrument with tines.,make musical instrument with tines.,ai_94
+fork,zero_limit,124,1,[],"1. Mini plant holder for succulents.
+2. DIY jewelry holder display stand.
+3. Use as a hair accessory comb.
+4. Create fork art on canvas.",0,0.6000000000000001,1.0,1.5,create fork art on canvas.,create fork art on canvas.,ai_95
+fork,zero_limit,221,1,[],"1. Mini garden tool for planting.
+2. DIY hair accessory holder stand.
+3. Unique wall art sculpture material.
+4. Fork-based musical instrument creation.",0,0.6000000000000001,1.0,1.5,unique wall art sculpture material.,unique wall art sculpture material.,ai_96
+fork,zero_limit,291,1,[],"1. As a tiny plant trellis.
+2. To create textured patterns in clay or playdough.
+3. As a makeshift lock pick.
+4. To make decorative fork jewelry.",0,0.6000000000000001,1.0,1.5,to create textured patterns in clay or playdough.,to create textured patterns in clay or playdough.,ai_97
+fork,zero_limit,356,1,[],"1. Miniature fork earrings for fashionistas.
+2. Forks as plant markers in gardens.
+3. Use a fork to create textured art pieces.
+4. Cut up old credit cards with a fork to protect your identity.",0,0.6000000000000001,1.0,1.5,use a fork to create textured art pieces.,use a fork to create textured art pieces.,ai_98
+fork,zero_limit,429,1,[],"1. Miniature garden rake for succulents.
+2. Create a unique piece of jewelry by bending the prongs into a pendant or earrings.
+3. Use as a hair accessory to hold up small braids or twists.
+4. Turn it upside down and use the handle to create textured patterns in clay or playdough art projects.",0,0.6000000000000001,1.0,1.5,miniature garden rake for succulents.,miniature garden rake for succulents.,ai_99
+lightbulb,zero_limit,936,2,[],"1. Mini terrarium inside lightbulb
+2. Lightbulb vase for small flowers
+3. Painted lightbulbs as Christmas ornaments
+4. Lightbulb oil lamp for camping",0,0.6000000000000001,1.0,1.0,lightbulb vase for small flowers,lightbulb vase for small flowers,ai_100
+lightbulb,zero_limit,187,2,[],"1. Miniature terrarium inside lightbulb.
+2. Light bulb vase for flowers.
+3. Paint and make Christmas ornaments.
+4. Hollow out, make a whistle.",0,0.6000000000000001,1.0,1.0,miniature terrarium inside lightbulb.,miniature terrarium inside lightbulb.,ai_101
+lightbulb,zero_limit,357,2,[],"1. Miniature terrarium or greenhouse.
+2. DIY oil lamp for emergencies.
+3. Lightbulb vase for small flowers.
+4. Unique Christmas tree ornament decoration.",0,0.6000000000000001,1.0,1.0,miniature terrarium or greenhouse.,miniature terrarium or greenhouse.,ai_102
+lightbulb,zero_limit,593,2,[],"1. Lightbulb fishbowl decoration.
+2. DIY lightbulb terrarium centerpiece.
+3. Lightbulb snow globe souvenir gift.
+4. Upcycled lightbulb oil lamp.",0,0.6000000000000001,1.0,1.0,lightbulb fishbowl decoration.,lightbulb fishbowl decoration.,ai_103
+lightbulb,zero_limit,361,2,[],"1. Mini terrarium: Fill with moss, rocks, and plants.
+2. DIY oil lamp: Use as a vessel for burning oil.
+3. Earring holder: Screw into wood for hanging jewelry.
+4. Snow globe: Fill with water and glitter for a unique decoration.",0,0.6000000000000001,1.0,1.0,diy oil lamp: use as a vessel for burning oil.,diy oil lamp: use as a vessel for burning oil.,ai_104
+lightbulb,zero_limit,445,2,[],"1. Lightbulb flower vase holder.
+2. Painted lightbulb Christmas ornaments.
+3. Hollowed-out lightbulb oil lamp.
+4. Lightbulb salt and pepper shakers.",0,0.6000000000000001,1.0,1.0,lightbulb salt and pepper shakers.,lightbulb salt and pepper shakers.,ai_105
+lightbulb,zero_limit,931,2,[],"1. Mini terrarium inside lightbulb.
+2. Lightbulb oil lamp for camping.
+3. Lightbulb bird feeder with seeds.
+4. Lightbulb vase for single flowers.",0,0.6000000000000001,1.0,1.0,lightbulb vase for single flowers.,lightbulb vase for single flowers.,ai_106
+lightbulb,zero_limit,94,2,[],"1. Lightbulb fish bowl centerpiece.
+2. DIY lightbulb terrarium garden.
+3. Lightbulb bird feeder dispenser.
+4. Mini lightbulb message in a bottle.",0,0.6000000000000001,1.0,1.0,diy lightbulb terrarium garden.,diy lightbulb terrarium garden.,ai_107
+lightbulb,zero_limit,576,2,[],"1. Mini plant terrarium display.
+2. DIY oil lamp project.
+3. Lightbulb hanging vase decoration.
+4. Unique Christmas ornament creation.",0,0.6000000000000001,1.0,1.0,mini plant terrarium display.,mini plant terrarium display.,ai_108
+lightbulb,zero_limit,253,2,[],"1. Tiny Terrarium with Lightbulb Base
+2. Lightbulb Vase for Small Flowers
+3. Hanging Lightbulb Bird Feeder 
+4. Painted Lightbulbs as Decorative Ornaments",0,0.6000000000000001,1.0,1.0,hanging lightbulb bird feeder,hanging lightbulb bird feeder,ai_109
+lightbulb,zero_limit,794,2,[],"1. Miniature plant terrarium inside.
+2. DIY oil lamp with wick.
+3. Lightbulb birdhouse for decoration.
+4. Bulb-shaped salt and pepper shakers.",0,0.6000000000000001,1.0,1.0,diy oil lamp with wick.,diy oil lamp with wick.,ai_110
+lightbulb,zero_limit,762,2,[],"1. Miniature flower vase
+2. Unique Christmas ornament 
+3. DIY snow globe base 
+4. Hanging bird feeder",0,0.6000000000000001,1.0,1.0,diy snow globe base,diy snow globe base,ai_111
+lightbulb,zero_limit,442,2,[],"1. ""Mini terrarium inside lightbulb""
+2. ""Hanging vase for small flowers""
+3. ""Lightbulb birdhouse with tiny door""
+4. ""DIY oil lamp with wick""",0,0.6000000000000001,1.0,1.0,"""lightbulb birdhouse with tiny door""",lightbulb birdhouse with tiny door,ai_112
+lightbulb,zero_limit,549,2,[],"1. Mini terrarium or vase holder.
+2. DIY oil lamp base.
+3. Lightbulb shaped birdhouse feeder.
+4. Hanging lightbulb planter display.",0,0.6000000000000001,1.0,1.0,hanging lightbulb planter display.,hanging lightbulb planter display.,ai_113
+lightbulb,zero_limit,169,2,[],"1. Lightbulb flower vase centerpiece.
+2. DIY lightbulb terrarium decoration.
+3. Lightbulb oil lamp for camping.
+4. Recycled lightbulb salt and pepper shakers.",0,0.6000000000000001,1.0,1.0,lightbulb oil lamp for camping.,lightbulb oil lamp for camping.,ai_114
+lightbulb,zero_limit,931,2,[],"1. Mini terrarium inside lightbulb.
+2. Lightbulb oil lamp for camping.
+3. Lightbulb bird feeder with seeds.
+4. Lightbulb vase for single flowers.",0,0.6000000000000001,1.0,1.0,lightbulb bird feeder with seeds.,lightbulb bird feeder with seeds.,ai_115
+lightbulb,zero_limit,102,2,[],"1. Miniature terrarium inside lightbulb.
+2. Lightbulb vase for small flowers.
+3. Painted lightbulbs as unique ornaments.
+4. DIY snow globe with lightbulb.",0,0.6000000000000001,1.0,1.0,lightbulb vase for small flowers.,lightbulb vase for small flowers.,ai_116
+lightbulb,zero_limit,607,2,[],"1. Miniature terrarium inside bulb.
+2. Lightbulb vase for small flowers.
+3. Painted lightbulbs as decorative art.
+4. Lightbulb fish tank or aquarium.",0,0.6000000000000001,1.0,1.0,lightbulb vase for small flowers.,lightbulb vase for small flowers.,ai_117
+lightbulb,zero_limit,884,2,[],"1. Mini terrarium inside lightbulb.
+2. Lightbulb vase for small flowers.
+3. DIY snow globe with lightbulb.
+4. Lightbulb oil lamp for emergencies.",0,0.6000000000000001,1.0,1.0,diy snow globe with lightbulb.,diy snow globe with lightbulb.,ai_118
+lightbulb,zero_limit,601,2,[],"1. Mini terrarium or plant holder.
+2. Unique candle holder centerpiece.
+3. DIY snow globe decoration.
+4. Creative hanging vase display.",0,0.6000000000000001,1.0,1.0,unique candle holder centerpiece.,unique candle holder centerpiece.,ai_119
+lightbulb,zero_limit,900,2,[],"1. Lightbulb vase for flowers.
+2. Lightbulb salt and pepper shakers.
+3. Lightbulb fish tank decoration.
+4. Lightbulb photo frame holder.",0,0.6000000000000001,1.0,1.0,lightbulb vase for flowers.,lightbulb vase for flowers.,ai_120
+lightbulb,zero_limit,459,2,[],"1. Lightbulb vase for flowers.
+2. Use as a DIY birdhouse.
+3. Create a unique Christmas ornament.
+4. Turn into a mini terrarium.",0,0.6000000000000001,1.0,1.0,use as a diy birdhouse.,use as a diy birdhouse.,ai_121
+lightbulb,zero_limit,156,2,[],"1. Miniature terrarium
+2. Whimsical snow globe
+3. DIY oil lamp 
+4. Funky vase",0,0.6000000000000001,1.0,1.0,whimsical snow globe,whimsical snow globe,ai_122
+lightbulb,zero_limit,182,2,[],"1. DIY terrarium with lightbulb base.
+2. Lightbulb vase for small flowers.
+3. Decorative lightbulb birdhouse with perch.
+4. Lightbulb salt and pepper shakers.",0,0.6000000000000001,1.0,1.0,lightbulb salt and pepper shakers.,lightbulb salt and pepper shakers.,ai_123
+lightbulb,zero_limit,743,2,[],"1. Miniature terrarium inside bulb.
+2. Lightbulb vase for small flowers.
+3. Paint abstract art on bulb.
+4. Fill with candy as gift.",0,0.6000000000000001,1.0,1.0,miniature terrarium inside bulb.,miniature terrarium inside bulb.,ai_124
+lightbulb,zero_limit,775,2,[],"1. Miniature terrarium 
+2. DIY snow globe 
+3. Hanging vase or planter 
+4. Unique Christmas ornament",0,0.6000000000000001,1.0,1.0,miniature terrarium,miniature terrarium,ai_125
+lightbulb,zero_limit,585,2,[],"1. Miniature terrarium inside the bulb.
+2. Fill with colored sand art.
+3. Make a quirky pendant light.
+4. Create a unique Christmas ornament.",0,0.6000000000000001,1.0,1.0,create a unique christmas ornament.,create a unique christmas ornament.,ai_126
+lightbulb,zero_limit,121,2,[],"1. Lightbulb terrarium: Create a miniature garden inside the bulb.
+2. Lightbulb vase: Use as an unconventional floral display.
+3. Lightbulb fish tank: Transform into a tiny aquarium.
+4. Lightbulb bird feeder: Fill with seeds for feathered friends.",0,0.6000000000000001,1.0,1.0,lightbulb vase: use as an unconventional floral display.,lightbulb vase: use as an unconventional floral display.,ai_127
+lightbulb,zero_limit,0,2,[],"1. Miniature terrarium inside bulb.
+2. Hanging vase for small flowers.
+3. DIY snow globe with glitter.
+4. Decorative oil lamp centerpiece.",0,0.6000000000000001,1.0,1.0,hanging vase for small flowers.,hanging vase for small flowers.,ai_128
+lightbulb,zero_limit,668,2,[],"1. Lightbulb vase centerpiece decoration
+2. Lightbulb fish tank ornament display
+3. Lightbulb bird feeder dispenser holder
+4. Lightbulb oil lamp lantern alternative",0,0.6000000000000001,1.0,1.0,lightbulb oil lamp lantern alternative,lightbulb oil lamp lantern alternative,ai_129
+lightbulb,zero_limit,50,2,[],"1. Miniature terrarium inside bulb.
+2. Lightbulb vase for single flower.
+3. Painted lightbulbs as hanging art.
+4. Lightbulb snow globe decoration.",0,0.6000000000000001,1.0,1.0,miniature terrarium inside bulb.,miniature terrarium inside bulb.,ai_130
+lightbulb,zero_limit,232,2,[],"1. Miniature terrarium inside lightbulb.
+2. Lightbulb vase for small flowers.
+3. Hanging lightbulb bird feeder.
+4. Lightbulb salt and pepper shakers.",0,0.6000000000000001,1.0,1.0,hanging lightbulb bird feeder.,hanging lightbulb bird feeder.,ai_131
+lightbulb,zero_limit,369,2,[],"1. Miniature terrarium for succulents.
+2. DIY snow globe with glitter.
+3. Make a unique Christmas ornament.
+4. Fashion statement as earrings.",0,0.6000000000000001,1.0,1.0,fashion statement as earrings.,fashion statement as earrings.,ai_132
+lightbulb,zero_limit,889,2,[],"1. Lightbulb planter: Fill with soil, plant seeds.
+2. Lightbulb vase: Hang upside-down, insert flowers.
+3. Lightbulb terrarium: Add moss, small plants.
+4. Lightbulb fish tank: Fill with water, add fish.",0,0.6000000000000001,1.0,1.0,"lightbulb planter: fill with soil, plant seeds.","lightbulb planter: fill with soil, plant seeds.",ai_133
+lightbulb,zero_limit,459,2,[],"1. Lightbulb vase for flowers.
+2. Use as a DIY birdhouse.
+3. Create a unique Christmas ornament.
+4. Turn into a mini terrarium.",0,0.6000000000000001,1.0,1.0,lightbulb vase for flowers.,lightbulb vase for flowers.,ai_134
+lightbulb,zero_limit,827,2,[],"1. DIY mini terrarium holder
+2. Light bulb vase centerpiece
+3. Painted light bulb ornaments
+4. Hanging light bulb planter",0,0.6000000000000001,1.0,1.0,painted light bulb ornaments,painted light bulb ornaments,ai_135
+lightbulb,zero_limit,480,2,[],"1. Miniature terrarium inside bulb
+2. Bulb-shaped birdhouse for garden
+3. Lightbulb fish tank decoration 
+4. Recycled lightbulb vase centerpiece",0,0.6000000000000001,1.0,1.0,lightbulb fish tank decoration,lightbulb fish tank decoration,ai_136
+lightbulb,zero_limit,304,2,[],"1. Miniature terrarium
+2. Decorative vase centerpiece
+3. DIY oil lamp
+4. Hanging bird feeder",0,0.6000000000000001,1.0,1.0,miniature terrarium,miniature terrarium,ai_137
+lightbulb,zero_limit,603,2,[],"1. Lightbulb terrarium: Create a mini ecosystem inside the bulb.
+2. Lightbulb vase: Cut off the top and use as a quirky vase for small flowers.
+3. Lightbulb fish tank: Transform it into a unique home for your pet fish.
+4. Lightbulb planters: Hang them in groups to create an interesting vertical garden display.",0,0.6000000000000001,1.0,1.0,lightbulb terrarium: create a mini ecosystem inside the bulb.,lightbulb terrarium: create a mini ecosystem inside the bulb.,ai_138
+lightbulb,zero_limit,796,2,[],"1. Lightbulb terrarium: Create a tiny garden inside the bulb.
+2. Lightbulb vase: Fill with water and use as a unique flower vase.
+3. Lightbulb fish tank: Turn it into a miniature aquarium.
+4. Lightbulb bird feeder: Hang outside, fill with seeds for feathered friends.",0,0.6000000000000001,1.0,1.0,lightbulb fish tank: turn it into a miniature aquarium.,lightbulb fish tank: turn it into a miniature aquarium.,ai_139
+lightbulb,zero_limit,232,2,[],"1. Miniature terrarium inside lightbulb.
+2. Lightbulb vase for small flowers.
+3. Hanging lightbulb bird feeder.
+4. Lightbulb salt and pepper shakers.",0,0.6000000000000001,1.0,1.0,miniature terrarium inside lightbulb.,miniature terrarium inside lightbulb.,ai_140
+lightbulb,zero_limit,941,2,[],"1. Miniature terrarium inside lightbulb.
+2. Lightbulb vase for single stem.
+3. Fill with candy as gift.
+4. Plant herbs in lightbulbs indoors.",0,0.6000000000000001,1.0,1.0,plant herbs in lightbulbs indoors.,plant herbs in lightbulbs indoors.,ai_141
+lightbulb,zero_limit,592,2,[],"1. Mini terrarium inside lightbulb.
+2. Lightbulb vase for small flowers.
+3. Lightbulb bird feeder or bath.
+4. Cut lightbulbs into drinking glasses.",0,0.6000000000000001,1.0,1.0,mini terrarium inside lightbulb.,mini terrarium inside lightbulb.,ai_142
+lightbulb,zero_limit,262,2,[],"1. Miniature terrarium
+2. DIY snow globe 
+3. Hanging vase for flowers 
+4. Decorative oil lamp",0,0.6000000000000001,1.0,1.0,miniature terrarium,miniature terrarium,ai_143
+lightbulb,zero_limit,890,2,[],"1. Miniature terrarium or ecosystem.
+2. DIY flower vase or planter.
+3. Unique Christmas ornament decoration.
+4. Artistic paperweight or bookend.",0,0.6000000000000001,1.0,1.0,artistic paperweight or bookend.,artistic paperweight or bookend.,ai_144
+lightbulb,zero_limit,615,2,[],"1. Miniature terrarium inside the bulb.
+2. Use as a vase centerpiece.
+3. DIY snow globe with bulb.
+4. Lightbulb-shaped salt and pepper shakers.",0,0.6000000000000001,1.0,1.0,use as a vase centerpiece.,use as a vase centerpiece.,ai_145
+lightbulb,zero_limit,830,2,[],"1. ""Lightbulb vase for floral decor.""
+2. ""Hollowed lightbulbs as mini planters.""
+3. ""DIY oil lamp from bulb.""
+4. ""Mini terrarium inside lightbulb.""",0,0.6000000000000001,1.0,1.0,"""hollowed lightbulbs as mini planters.""",hollowed lightbulbs as mini planters.,ai_146
+lightbulb,zero_limit,263,2,[],"1. DIY terrarium with lightbulb base.
+2. Lightbulb vase for single stem.
+3. Unique Christmas tree ornament crafting.
+4. Hollowed-out lightbulbs as miniature planters.",0,0.6000000000000001,1.0,1.0,unique christmas tree ornament crafting.,unique christmas tree ornament crafting.,ai_147
+lightbulb,zero_limit,38,2,[],"1. Lightbulb fish tank decoration
+2. Hanging lightbulb flower vase
+3. Lightbulb salt and pepper shakers
+4. Miniature lightbulb plant terrarium",0,0.6000000000000001,1.0,1.0,hanging lightbulb flower vase,hanging lightbulb flower vase,ai_148
+lightbulb,zero_limit,675,2,[],"1. Miniature terrarium inside bulb.
+2. Paint bulbs to make ornaments.
+3. Fill with candy as gifts.
+4. Use as unique planters indoors.",0,0.6000000000000001,1.0,1.0,fill with candy as gifts.,fill with candy as gifts.,ai_149
+spoon,zero_limit,632,3,[],"1. Miniature plant pot holder.
+2. DIY jewelry mold maker.
+3. Spoon puppet theater prop.
+4. Ice cream cone stabilizer stand.",0,0.6000000000000001,1.0,1.5,diy jewelry mold maker.,diy jewelry mold maker.,ai_150
+spoon,zero_limit,219,3,[],"1. Spoon as a microphone stand.
+2. Use spoon to mix paint.
+3. Create spoon puppets for storytelling.
+4. Play spoons like an instrument.",0,0.6000000000000001,1.0,1.5,use spoon to mix paint.,use spoon to mix paint.,ai_151
+spoon,zero_limit,513,3,[],"1. Spoon guitar pick substitute.
+2. DIY spoon handle magnifying glass.
+3. Miniature garden planting tool alternative.
+4. Spoon puppet show prop accessory.",0,0.6000000000000001,1.0,1.5,diy spoon handle magnifying glass.,diy spoon handle magnifying glass.,ai_152
+spoon,zero_limit,343,3,[],"1. Spoon as a plant marker.
+2. Spoon as a guitar pick.
+3. Spoon as a doorstopper.
+4. Spoon as a mini shovel.",0,0.6000000000000001,1.0,1.5,spoon as a guitar pick.,spoon as a guitar pick.,ai_153
+spoon,zero_limit,268,3,[],"1. Spoon microphone for singing practice.
+2. Use spoon as a bookmark.
+3. Make spoon puppets for storytelling.
+4. Create unique wind chimes with spoons.",0,0.6000000000000001,1.0,1.5,make spoon puppets for storytelling.,make spoon puppets for storytelling.,ai_154
+spoon,zero_limit,402,3,[],"1. Miniature shovel for gardening.
+2. DIY stamping tool for crafts.
+3. Unique hair accessory or clip.
+4. Creative musical instrument with tapping sounds.",0,0.6000000000000001,1.0,1.5,miniature shovel for gardening.,miniature shovel for gardening.,ai_155
+spoon,zero_limit,132,3,[],"1. Spoon as mini shovel digger.
+2. Use spoon to carve soap.
+3. Play musical spoons percussion instrument.
+4. Make spoon plant markers labels.",0,0.6000000000000001,1.0,1.5,spoon as mini shovel digger.,spoon as mini shovel digger.,ai_156
+spoon,zero_limit,342,3,[],"1. Miniature garden shovel substitute.
+2. Musical instrument for percussion sounds.
+3. DIY jewelry maker's tool kit.
+4. Impromptu tongue depressor alternative.",0,0.6000000000000001,1.0,1.5,diy jewelry maker's tool kit.,diy jewelry maker's tool kit.,ai_157
+spoon,zero_limit,205,3,[],"1. Miniature plant pot holder.
+2. DIY jewelry maker's tool.
+3. Impromptu guitar pick substitute.
+4. Soup bowl scraper extender.",0,0.6000000000000001,1.0,1.5,impromptu guitar pick substitute.,impromptu guitar pick substitute.,ai_158
+spoon,zero_limit,815,3,[],"1. Spoon as a mini shovel.
+2. Use spoon to make music.
+3. Create art with spoon stamps.
+4. Make a DIY spoon lamp.",0,0.6000000000000001,1.0,1.5,create art with spoon stamps.,create art with spoon stamps.,ai_159
+spoon,zero_limit,667,3,[],"1. Spoon as a mini shovel.
+2. Use spoon to hang jewelry.
+3. Create spoon puppets for kids.
+4. Spoon becomes a plant marker.",0,0.6000000000000001,1.0,1.5,create spoon puppets for kids.,create spoon puppets for kids.,ai_160
+spoon,zero_limit,768,3,[],"1. Fork substitute for tiny hands.
+2. DIY plant potting tool.
+3. Make a musical instrument.
+4. Spoon carving art project material.",0,0.6000000000000001,1.0,1.5,fork substitute for tiny hands.,fork substitute for tiny hands.,ai_161
+spoon,zero_limit,373,3,[],"1. Spoon as a mini shovel.
+2. Turn spoon into jewelry pendant.
+3. Use spoon to make music.
+4. Create tiny spoon sculptures.",0,0.6000000000000001,1.0,1.5,create tiny spoon sculptures.,create tiny spoon sculptures.,ai_162
+spoon,zero_limit,188,3,[],"1. Spoon as a plant marker
+2. Spoon for cake decorating
+3. Spoon as a makeshift lockpick
+4. Spoon to create textured art",0,0.6000000000000001,1.0,1.5,spoon as a plant marker,spoon as a plant marker,ai_163
+spoon,zero_limit,425,3,[],"1. Spoon microphone for singing karaoke.
+2. Spoon catapult for launching small objects.
+3. Spoon handle as a plant marker.
+4. Spoon drumsticks for playing music.",0,0.6000000000000001,1.0,1.5,spoon handle as a plant marker.,spoon handle as a plant marker.,ai_164
+spoon,zero_limit,210,3,[],"1. Spoon as a microphone stand.
+2. Use spoon to plant seeds.
+3. Create spoon puppets for storytelling.
+4. Turn spoons into wind chimes.",0,0.6000000000000001,1.0,1.5,use spoon to plant seeds.,use spoon to plant seeds.,ai_165
+spoon,zero_limit,297,3,[],"1. Spoon as a plant marker.
+2. Spoon for carving soap sculptures.
+3. Spoon to make mini sandcastles.
+4. Spoon as a DIY jewelry mold.",0,0.6000000000000001,1.0,1.5,spoon for carving soap sculptures.,spoon for carving soap sculptures.,ai_166
+spoon,zero_limit,747,3,[],"1. Spoon as a plant marker.
+2. Use spoon to make jewelry.
+3. Spoon for digging small holes.
+4. Play music with spoons.",0,0.6000000000000001,1.0,1.5,use spoon to make jewelry.,use spoon to make jewelry.,ai_167
+spoon,zero_limit,894,3,[],"1. Spoon as a plant marker.
+2. Spoon for digging small holes.
+3. Spoon as a DIY jewelry mold.
+4. Spoon to make mini sandcastles.",0,0.6000000000000001,1.0,1.5,spoon as a diy jewelry mold.,spoon as a diy jewelry mold.,ai_168
+spoon,zero_limit,611,3,[],"1. Miniature shovel for bonsai gardens.
+2. Musical instrument to tap rhythms.
+3. DIY candle holder with wax.
+4. Paint stirrer or palette knife.",0,0.6000000000000001,1.0,1.5,musical instrument to tap rhythms.,musical instrument to tap rhythms.,ai_169
+spoon,zero_limit,843,3,[],"1. Spoon as a mini shovel.
+2. Use spoon to plant seeds.
+3. Create a spoon puppet show.
+4. Turn spoons into wind chimes.",0,0.6000000000000001,1.0,1.5,spoon as a mini shovel.,spoon as a mini shovel.,ai_170
+spoon,zero_limit,774,3,[],"1. Spoon as a mini shovel.
+2. Make spoon jewelry or art.
+3. Use as a makeshift screwdriver.
+4. Play musical spoons percussion instrument.",0,0.6000000000000001,1.0,1.5,play musical spoons percussion instrument.,play musical spoons percussion instrument.,ai_171
+spoon,zero_limit,2,3,[],"1. Spoon as a plant marker.
+2. Use spoon to make music.
+3. Spoon as a mini shovel.
+4. Create spoon puppets for storytelling.",0,0.6000000000000001,1.0,1.5,create spoon puppets for storytelling.,create spoon puppets for storytelling.,ai_172
+spoon,zero_limit,185,3,[],"1. Miniature plant pot holder.
+2. DIY candle wick centering tool.
+3. Precision cookie dough scooper.
+4. Hair curling wand alternative.",0,0.6000000000000001,1.0,1.5,precision cookie dough scooper.,precision cookie dough scooper.,ai_173
+spoon,zero_limit,855,3,[],"1. Spoon as a plant marker.
+2. Make spoon puppets for kids.
+3. Use spoon to create art.
+4. Spoon as an ear cleaner.",0,0.6000000000000001,1.0,1.5,use spoon to create art.,use spoon to create art.,ai_174
+spoon,zero_limit,528,3,[],"1. Spoon as a plant marker.
+2. Spoon for cookie dough scooping.
+3. Spoon to create abstract art.
+4. Spoon as a hair accessory holder.",0,0.6000000000000001,1.0,1.5,spoon to create abstract art.,spoon to create abstract art.,ai_175
+spoon,zero_limit,550,3,[],"1. Spoon microphone for karaoke
+2. Spoon plant markers in garden
+3. Spoon handle for DIY hooks
+4. Spoon art on canvas",0,0.6000000000000001,1.0,1.5,spoon art on canvas,spoon art on canvas,ai_176
+spoon,zero_limit,32,3,[],"1. Spoon as a plant marker.
+2. Create spoon puppets for kids.
+3. Use spoons to make wind chimes.
+4. Spoon carving for art projects.",0,0.6000000000000001,1.0,1.5,use spoons to make wind chimes.,use spoons to make wind chimes.,ai_177
+spoon,zero_limit,836,3,[],"1. Spoon as a plant marker.
+2. Spoon to create textured art.
+3. Spoon for digging small holes.
+4. Spoon as a mini shovel.",0,0.6000000000000001,1.0,1.5,spoon as a mini shovel.,spoon as a mini shovel.,ai_178
+spoon,zero_limit,908,3,[],"1. Spoon as a plant marker.
+2. Use spoon to make music.
+3. Create spoon art sculptures.
+4. Make a spoon chandelier decoration.",0,0.6000000000000001,1.0,1.5,use spoon to make music.,use spoon to make music.,ai_179
+spoon,zero_limit,478,3,[],"1. Spoon as a plant marker.
+2. Spoon as a cookie cutter.
+3. Spoon as a tiny shovel.
+4. Spoon as a hair accessory holder.",0,0.6000000000000001,1.0,1.5,spoon as a cookie cutter.,spoon as a cookie cutter.,ai_180
+spoon,zero_limit,348,3,[],"1. Spoon microphone for karaoke night.
+2. Spoon plant markers for gardeners.
+3. Spoon handle magnifying glass DIY project.
+4. Spoon sculpture art exhibit centerpiece.",0,0.6000000000000001,1.0,1.5,spoon sculpture art exhibit centerpiece.,spoon sculpture art exhibit centerpiece.,ai_181
+spoon,zero_limit,708,3,[],"1. Spoon as a mini shovel.
+2. Use spoon to make music.
+3. A spoon can be used for gardening purposes.
+4. Spoon as a makeshift screwdriver.",0,0.6000000000000001,1.0,1.5,use spoon to make music.,use spoon to make music.,ai_182
+spoon,zero_limit,384,3,[],"1. Spoon as a plant marker.
+2. Spoon for painting texture effects.
+3. Spoon to create mini sculptures.
+4. Spoon for making homemade jewelry.",0,0.6000000000000001,1.0,1.5,spoon for making homemade jewelry.,spoon for making homemade jewelry.,ai_183
+spoon,zero_limit,629,3,[],"1. Spoon as a plant marker.
+2. Use spoon to create art.
+3. Spoon for DIY jewelry making.
+4. Turn spoon into an instrument.",0,0.6000000000000001,1.0,1.5,spoon for diy jewelry making.,spoon for diy jewelry making.,ai_184
+spoon,zero_limit,421,3,[],"1. Mini plant pot scoop.
+2. DIY jewelry mold shaper.
+3. Soup can tab lifter.
+4. Ice cream cone holder stand.",0,0.6000000000000001,1.0,1.5,soup can tab lifter.,soup can tab lifter.,ai_185
+spoon,zero_limit,329,3,[],"1. Spoon microphone for karaoke night.
+2. Use spoon as a plant marker.
+3. Create spoon puppets for storytelling.
+4. Make a spoon wind chime.",0,0.6000000000000001,1.0,1.5,use spoon as a plant marker.,use spoon as a plant marker.,ai_186
+spoon,zero_limit,699,3,[],"1. Spoon as a plant marker.
+2. Spoon for hand massage tool.
+3. Spoon as a makeshift lockpick.
+4. Use spoon to create art.",0,0.6000000000000001,1.0,1.5,use spoon to create art.,use spoon to create art.,ai_187
+spoon,zero_limit,48,3,[],"1. Spoon guitar pick alternative.
+2. Spoon plant marker substitute.
+3. Use spoon as doorstop wedge.
+4. Create spoon wind chimes art.",0,0.6000000000000001,1.0,1.5,spoon plant marker substitute.,spoon plant marker substitute.,ai_188
+spoon,zero_limit,771,3,[],"1. Miniature shovel for ants.
+2. DIY plant marker with handle.
+3. Spoon guitar pick substitute.
+4. Unique hair accessory or clip.",0,0.6000000000000001,1.0,1.5,miniature shovel for ants.,miniature shovel for ants.,ai_189
+spoon,zero_limit,5,3,[],"1. Spoon as a plant marker.
+2. Spoon as a guitar pick.
+3. Spoon to make mini snowman.
+4. Spoon for homemade bath salts.",0,0.6000000000000001,1.0,1.5,spoon for homemade bath salts.,spoon for homemade bath salts.,ai_190
+spoon,zero_limit,148,3,[],"1. Miniature shovel for ants.
+2. DIY plant marker holder.
+3. Handy earwax removal tool.
+4. Unique musical instrument accessory.",0,0.6000000000000001,1.0,1.5,miniature shovel for ants.,miniature shovel for ants.,ai_191
+spoon,zero_limit,225,3,[],"1. Miniature shovel for digging holes.
+2. DIY plant marker with engraved names.
+3. Spoon catapult for launching small objects.
+4. Fashion a spoon into jewelry.",0,0.6000000000000001,1.0,1.5,fashion a spoon into jewelry.,fashion a spoon into jewelry.,ai_192
+spoon,zero_limit,497,3,[],"1. Spoon as a mini shovel.
+2. Use spoon to make music.
+3. Spoon for precision painting.
+4. Turn spoon into a bookmark.",0,0.6000000000000001,1.0,1.5,use spoon to make music.,use spoon to make music.,ai_193
+spoon,zero_limit,779,3,[],"1. Miniature shovel for ants.
+2. DIY candle holder handle.
+3. Hair curling wand substitute.
+4. Cat toy on a string.",0,0.6000000000000001,1.0,1.5,miniature shovel for ants.,miniature shovel for ants.,ai_194
+spoon,zero_limit,23,3,[],"1. Miniature shovel for gardening.
+2. DIY stamping tool for crafts.
+3. Spoon percussion instrument in band.
+4. Unique hair accessory or clipper.",0,0.6000000000000001,1.0,1.5,unique hair accessory or clipper.,unique hair accessory or clipper.,ai_195
+spoon,zero_limit,461,3,[],"1. Spoon as a plant marker.
+2. Use spoon to curl hair.
+3. Spoon for DIY candle making.
+4. Create unique spoon jewelry pieces.",0,0.6000000000000001,1.0,1.5,use spoon to curl hair.,use spoon to curl hair.,ai_196
+spoon,zero_limit,78,3,[],"1. Spoon as a plant marker.
+2. Use spoon to make jewelry.
+3. Create unique spoon handle art.
+4. Spoon for mini easel stand.",0,0.6000000000000001,1.0,1.5,spoon as a plant marker.,spoon as a plant marker.,ai_197
+spoon,zero_limit,508,3,[],"1. Miniature shovel for ants.
+2. DIY plant marker in soil.
+3. Impromptu drumstick during dinner.
+4. Sculpture tool for food art.",0,0.6000000000000001,1.0,1.5,diy plant marker in soil.,diy plant marker in soil.,ai_198
+spoon,zero_limit,473,3,[],"1. Mini shovel for bonsai trees.
+2. DIY plant marker with engraving.
+3. Make a spoon puppet show.
+4. Spoon as a musical instrument.",0,0.6000000000000001,1.0,1.5,spoon as a musical instrument.,spoon as a musical instrument.,ai_199
+table,zero_limit,208,4,[],"1. Tabletop garden for herbs.
+2. Convert into a mini bar.
+3. Use as an easel stand.
+4. Create a DIY ping-pong table.",0,0.6000000000000001,1.5,1.0,convert into a mini bar.,convert into a mini bar.,ai_200
+table,zero_limit,201,4,[],"1. Table as a vertical garden.
+2. Table turned into a swing.
+3. Coffee table with built-in aquarium.
+4. Multipurpose modular table for storage and seating",0,0.6000000000000001,1.5,1.0,table turned into a swing.,table turned into a swing.,ai_201
+table,zero_limit,887,4,[],"1. Tabletop garden display for herbs.
+2. Convert into a ping pong table.
+3. DIY light fixture with legs.
+4. Transform into an oversized puzzle.",0,0.6000000000000001,1.5,1.0,tabletop garden display for herbs.,tabletop garden display for herbs.,ai_202
+table,zero_limit,727,4,[],"1. Table turned into a swing.
+2. Convert table to vertical garden.
+3. Transform table into musical instrument.
+4. Use table as giant canvas.",0,0.6000000000000001,1.5,1.0,use table as giant canvas.,use table as giant canvas.,ai_203
+table,zero_limit,355,4,[],"1. Table turned into a swing.
+2. Table transformed into a garden.
+3. Table used as an easel.
+4. Table converted to a fort.",0,0.6000000000000001,1.5,1.0,table used as an easel.,table used as an easel.,ai_204
+table,zero_limit,579,4,[],"1. Table becomes a vertical garden.
+2. Turn table into an easel.
+3. Transform table into a swing.
+4. Create a tabletop aquarium display.",0,0.6000000000000001,1.5,1.0,turn table into an easel.,turn table into an easel.,ai_205
+table,zero_limit,497,4,[],"1. Table as a vertical garden
+2. Convert table into a swing
+3. Use table as a canvas 
+4. Turn table into an aquarium",0,0.6000000000000001,1.5,1.0,turn table into an aquarium,turn table into an aquarium,ai_206
+table,zero_limit,734,4,[],"1. Table as Vertical Garden Display
+2. Foldable Table turned Origami Station
+3. Interactive Projection Surface for Gaming 
+4. Convertible Ping Pong/Pool Table",0,0.6000000000000001,1.5,1.0,table as vertical garden display,table as vertical garden display,ai_207
+table,zero_limit,796,4,[],"1. Table turned into a swing.
+2. A table transformed into shelves.
+3. Table converted to a sandbox.
+4. Table used as an easel.",0,0.6000000000000001,1.5,1.0,table turned into a swing.,table turned into a swing.,ai_208
+table,zero_limit,136,4,[],"1. Table as a vertical garden
+2. Table turned into a swing
+3. Table transformed into a chalkboard
+4. Table converted to an aquarium",0,0.6000000000000001,1.5,1.0,table transformed into a chalkboard,table transformed into a chalkboard,ai_209
+table,zero_limit,517,4,[],"1. Table as a vertical garden
+2. Table converted into a hammock
+3. Tabletop transformed into a chalkboard 
+4. Suspended table for small spaces",0,0.6000000000000001,1.5,1.0,suspended table for small spaces,suspended table for small spaces,ai_210
+table,zero_limit,951,4,[],"1. Table as a vertical garden
+2. Turn table into a swing
+3. Table transformed into a fort
+4. Use table as an easel",0,0.6000000000000001,1.5,1.0,table as a vertical garden,table as a vertical garden,ai_211
+table,zero_limit,931,4,[],"1. Table aquarium centerpiece display.
+2. Convert table into vertical garden.
+3. Interactive LED ping pong table.
+4. Portable folding picnic table cooler.",0,0.6000000000000001,1.5,1.0,convert table into vertical garden.,convert table into vertical garden.,ai_212
+table,zero_limit,812,4,[],"1. Table-turned-swing for backyard fun.
+2. Convert table into vertical garden.
+3. Transform table into a chalkboard.
+4. Make modular coffee-table puzzle game.",0,0.6000000000000001,1.5,1.0,make modular coffee-table puzzle game.,make modular coffee-table puzzle game.,ai_213
+table,zero_limit,99,4,[],"1. Table as a vertical garden.
+2. Table converted to a swing.
+3. Table turned into a bookshelf.
+4. Table transformed into an aquarium stand.",0,0.6000000000000001,1.5,1.0,table turned into a bookshelf.,table turned into a bookshelf.,ai_214
+table,zero_limit,414,4,[],"1. Table turned into a swing
+2. Coffee table with built-in aquarium
+3. Folding table transformed into artwork
+4. Table converted to indoor garden",0,0.6000000000000001,1.5,1.0,folding table transformed into artwork,folding table transformed into artwork,ai_215
+table,zero_limit,680,4,[],"1. Vertical garden display stand.
+2. DIY ping pong table top.
+3. Tabletop Christmas tree holder.
+4. Customized puzzle assembly surface.",0,0.6000000000000001,1.5,1.0,customized puzzle assembly surface.,customized puzzle assembly surface.,ai_216
+table,zero_limit,445,4,[],"1. Table turned into a bookshelf.
+2. Table converted to a garden bed.
+3. Table transformed into an easel.
+4. Table repurposed as a ping-pong table.",0,0.6000000000000001,1.5,1.0,table converted to a garden bed.,table converted to a garden bed.,ai_217
+table,zero_limit,18,4,[],"1. Table as a vertical garden
+2. Table turned into a swing
+3. Table transformed into a bookshelf 
+4. Table used as an easel",0,0.6000000000000001,1.5,1.0,table as a vertical garden,table as a vertical garden,ai_218
+table,zero_limit,944,4,[],"1. Table turned into a swing.
+2. Table transformed into a garden.
+3. Table converted to an aquarium.
+4. Table used as a ping-pong table",0,0.6000000000000001,1.5,1.0,table converted to an aquarium.,table converted to an aquarium.,ai_219
+table,zero_limit,256,4,[],"1. Portable workspace on-the-go.
+2. Transform into a vertical garden.
+3. Turn it into an outdoor bar.
+4. Build a table swing set.",0,0.6000000000000001,1.5,1.0,portable workspace on-the-go.,portable workspace on-the-go.,ai_220
+table,zero_limit,117,4,[],"1. Portable Mini Golf Course
+2. Vertical Garden Display Stand
+3. Interactive Art Installation Base
+4. Home Theater Snack Bar",0,0.6000000000000001,1.5,1.0,home theater snack bar,home theater snack bar,ai_221
+table,zero_limit,607,4,[],"1. Table tennis as a desk
+2. Aquarium coffee table centerpiece 
+3. Multi-level garden display stand
+4. Interactive LED light show surface",0,0.6000000000000001,1.5,1.0,aquarium coffee table centerpiece,aquarium coffee table centerpiece,ai_222
+table,zero_limit,203,4,[],"1. Table turned into a garden
+2. Table transformed into a bookshelf
+3. Table converted to an art easel 
+4. Table made into a ping-pong table",0,0.6000000000000001,1.5,1.0,table turned into a garden,table turned into a garden,ai_223
+table,zero_limit,7,4,[],"1. Table turned into a garden
+2. Table transformed into a bookshelf 
+3. Table converted to an art easel 
+4. Table repurposed as a pet bed",0,0.6000000000000001,1.5,1.0,table repurposed as a pet bed,table repurposed as a pet bed,ai_224
+table,zero_limit,341,4,[],"1. Table as a vertical garden.
+2. Table turned into a swing.
+3. Transform table into a chalkboard.
+4. Use table as an aquarium stand.",0,0.6000000000000001,1.5,1.0,transform table into a chalkboard.,transform table into a chalkboard.,ai_225
+table,zero_limit,256,4,[],"1. Portable workspace on-the-go.
+2. Transform into a vertical garden.
+3. Turn it into an outdoor bar.
+4. Build a table swing set.",0,0.6000000000000001,1.5,1.0,build a table swing set.,build a table swing set.,ai_226
+table,zero_limit,176,4,[],"1. Tabletop garden for herbs.
+2. Convert into a chalkboard surface.
+3. Build a table fort.
+4. Create a vertical bookshelf display.",0,0.6000000000000001,1.5,1.0,build a table fort.,build a table fort.,ai_227
+table,zero_limit,536,4,[],"1. Vertical garden display table.
+2. Interactive light-up dance floor.
+3. Foldable ping-pong table desk.
+4. Floating bedside nightstand shelf.",0,0.6000000000000001,1.5,1.0,interactive light-up dance floor.,interactive light-up dance floor.,ai_228
+table,zero_limit,216,4,[],"1. Vertical garden display table.
+2. Interactive LED light-up table.
+3. Swing set dining table hybrid.
+4. Magnetic puzzle-solving tabletop game.",0,0.6000000000000001,1.5,1.0,swing set dining table hybrid.,swing set dining table hybrid.,ai_229
+table,zero_limit,342,4,[],"1. Portable ping pong game table.
+2. Transform into a vertical garden.
+3. Turn it into a chalkboard surface.
+4. Convert to an indoor sandbox.",0,0.6000000000000001,1.5,1.0,convert to an indoor sandbox.,convert to an indoor sandbox.,ai_230
+table,zero_limit,495,4,[],"1. Tabletop Zen garden display.
+2. Convert into a standing desk.
+3. Coffee table turned board game hub.
+4. Transform into an indoor sandbox.",0,0.6000000000000001,1.5,1.0,coffee table turned board game hub.,coffee table turned board game hub.,ai_231
+table,zero_limit,486,4,[],"1. Table Aquarium: Convert a table into an aquarium.
+2. Table Swing: Transform your table into a swing.
+3. Table Garden: Create a tabletop garden with your table.
+4. Table Art Studio: Turn your table into an art studio by adding storage and supplies shelves to it.",0,0.6000000000000001,1.5,1.0,table aquarium: convert a table into an aquarium.,table aquarium: convert a table into an aquarium.,ai_232
+table,zero_limit,197,4,[],"1. Table as a vertical garden
+2. Convert table into ping pong 
+3. Turn table into a swing
+4. Use tabletop as magnetic board",0,0.6000000000000001,1.5,1.0,table as a vertical garden,table as a vertical garden,ai_233
+table,zero_limit,473,4,[],"1. Table turned into a swing.
+2. Table transformed into a garden bed.
+3. Table converted to an aquarium.
+4. Table repurposed as a bookshelf.",0,0.6000000000000001,1.5,1.0,table transformed into a garden bed.,table transformed into a garden bed.,ai_234
+table,zero_limit,777,4,[],"1. Vertical garden display table.
+2. Tabletop mini golf course.
+3. Interactive projection mapping surface.
+4. Portable folding ping pong table.",0,0.6000000000000001,1.5,1.0,interactive projection mapping surface.,interactive projection mapping surface.,ai_235
+table,zero_limit,966,4,[],"1. Table-turned-swing for backyard fun.
+2. DIY coffee table aquarium centerpiece.
+3. Hanging garden on tabletop surface.
+4. Transform into a chalkboard canvas.",0,0.6000000000000001,1.5,1.0,transform into a chalkboard canvas.,transform into a chalkboard canvas.,ai_236
+table,zero_limit,676,4,[],"1. Tabletop Zen garden display.
+2. Convertible ping-pong and dining table.
+3. Vertical indoor herb garden stand.
+4. Portable mini bar cart station.",0,0.6000000000000001,1.5,1.0,portable mini bar cart station.,portable mini bar cart station.,ai_237
+table,zero_limit,288,4,[],"1. Table-turned-swing for backyard fun.
+2. Table-as-art-display for gallery show.
+3. Table-converted-to-ping pong table.
+4. Table-top garden for urban farming.",0,0.6000000000000001,1.5,1.0,table-turned-swing for backyard fun.,table-turned-swing for backyard fun.,ai_238
+table,zero_limit,244,4,[],"1. Table-turned-swing for backyard fun.
+2. Aquarium table adds underwater ambiance.
+3. Interactive light-up table for parties.
+4. Foldable picnic table turns into backpack",0,0.6000000000000001,1.5,1.0,table-turned-swing for backyard fun.,table-turned-swing for backyard fun.,ai_239
+table,zero_limit,17,4,[],"1. Table as a vertical garden.
+2. Table transformed into a swing.
+3. Table turned into an aquarium.
+4. Coffee table with built-in fireplace.",0,0.6000000000000001,1.5,1.0,table turned into an aquarium.,table turned into an aquarium.,ai_240
+table,zero_limit,417,4,[],"1. Table as a vertical garden
+2. Table turned into a swing
+3. Table transformed into a bookshelf 
+4. Table repurposed as an easel",0,0.6000000000000001,1.5,1.0,table repurposed as an easel,table repurposed as an easel,ai_241
+table,zero_limit,864,4,[],"1. Table-turned-swing for backyard fun.
+2. Convert into a vertical garden.
+3. Add wheels and make mobile workspace.
+4. Turn upside down, create fort!",0,0.6000000000000001,1.5,1.0,table-turned-swing for backyard fun.,table-turned-swing for backyard fun.,ai_242
+table,zero_limit,483,4,[],"1. Table turned into a swing.
+2. Table transformed into a garden bed.
+3. Table converted to an art easel.
+4. Table used as a ping-pong table top",0,0.6000000000000001,1.5,1.0,table transformed into a garden bed.,table transformed into a garden bed.,ai_243
+table,zero_limit,962,4,[],"1. Table as a vertical garden.
+2. Table turned into a swing.
+3. Table with built-in aquarium.
+4. Table transformed into a car track",0,0.6000000000000001,1.5,1.0,table turned into a swing.,table turned into a swing.,ai_244
+table,zero_limit,877,4,[],"1. Tabletop garden for herbs.
+2. Convert into a ping-pong table.
+3. Create a DIY light fixture.
+4. Turn it into an art easel.",0,0.6000000000000001,1.5,1.0,convert into a ping-pong table.,convert into a ping-pong table.,ai_245
+table,zero_limit,382,4,[],"1. Table transformed into a swing.
+2. Turn table into an easel.
+3. Use as a giant puzzle board.
+4. Convert table to vertical garden.",0,0.6000000000000001,1.5,1.0,use as a giant puzzle board.,use as a giant puzzle board.,ai_246
+table,zero_limit,549,4,[],"1. Portable mini garden display
+2. Tabletop ping pong arena
+3. DIY magnetic board game surface 
+4. Convert into a cozy bench",0,0.6000000000000001,1.5,1.0,convert into a cozy bench,convert into a cozy bench,ai_247
+table,zero_limit,15,4,[],"1. Table-turned-ping-pong table.
+2. Vertical garden display on tabletop.
+3. DIY light-up coffee table.
+4. Interactive projection mapping surface.",0,0.6000000000000001,1.5,1.0,interactive projection mapping surface.,interactive projection mapping surface.,ai_248
+table,zero_limit,85,4,[],"1. Table-turned-swing for backyard fun.
+2. Transform table into vertical garden.
+3. Convert table to interactive art installation.
+4. Use as base for DIY sandbox",0,0.6000000000000001,1.5,1.0,use as base for diy sandbox,use as base for diy sandbox,ai_249
