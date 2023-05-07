@@ -7,57 +7,72 @@ Description: This is a Flask web application that runs a web experiment.
 * The application collects participants' responses and stores them in a Google BigQuery database.
 * The experiment counterbalances across different conditions and stimuli
 * The experiment has four routes:  the consent form, the start of the experiment, the trials themselves, and the thank you page.
-"""
 
-# TODO add GPT prompts
+# Condition defintions:
+# - 6 human-only ideas
+# - f, l: few (2) AI ideas / many (4) human ideas, labeled
+# - f, u: few (2) AI ideas / many (4) human ideas, unlabled
+# - m, l: many (4) AI ideas / few (2) human ideas, labled
+# - m, u: many (4) AI ideas / few (2) human ideas, unlabled
+
+"""
 
 from google.cloud import bigquery
 from flask import Flask, render_template, request, redirect, url_for
 from google.oauth2 import service_account
 import uuid
+import pandas as pd
 import time
 from datetime import datetime
 import random
 import os
 import sys
 
+# Figure out if we're running locally or on Heroku. This will matter for file paths.
 if 'DYNO' in os.environ:
     is_local = False
+    file_prefix = ""
 else:
     is_local = True
-
+    file_prefix = "../"
 
 # EXPERIMENT PARAMETERS
 ####################
 CONDITIONS = {
-    'hh': {'source': 'human', 'label': 'humans'},
-    'ha': {'source': 'human', 'label': 'artificial intelligence'},
-    'aa': {'source': 'ai', 'label': 'artificial intelligence'},
-    'ah': {'source': 'ai', 'label': 'humans'}
+    'h': {'n_human': '6', 'n_ai': '0', 'label':False},
+    'f_l': {'n_human': '4', 'n_ai': '2', 'label':True},
+    'f_u': {'n_human': '4', 'n_ai': '2', 'label': False},
+    'm_l': {'n_human': '2', 'n_ai': '4', 'label': True},
+    'm_u': {'n_human': '2', 'n_ai': '4', 'label': False},
 }
-ITEMS = ['a book', 'a bottle', 'a fork', 'a tire']
-
+ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
+AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
+print(AI_IDEAS_DF)
 N_EXAMPLES = 5
 ####################
 
 
+# EXPERIMENT PARAMETERS
+####################
 # INIT DICT TO KEEP TRACK OF INFO FOR EACH PARTICIPANT
 TEMP = {
     "item_order": None, # Order of items
     "condition_order": None, # Order of experimental conditions
     "participant_id": None, # Unique participant ID
 }
+####################
 
+
+# Initialize the Flask application
 app = Flask(__name__)
 
-if is_local:
-    key_path = "../creds/netcreate-0335ce05e7ff.json"
-else:
-    key_path = "creds/netcreate-0335ce05e7ff.json"
+# BigQuery credentials
+key_path = file_prefix + "creds/netcreate-0335ce05e7ff.json"
 credentials = service_account.Credentials.from_service_account_file(
     key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
 )
 
+# BigQuery connection
 client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 dataset = client.dataset("net_expr")
 table = dataset.table("trials")
@@ -128,20 +143,25 @@ def render_trial(condition_no):
         pass
 
     # Retrieve the necessary information from the global TEMP variable
-    label = CONDITIONS[TEMP['condition_order'][condition_no]]['label']
-    source = CONDITIONS[TEMP['condition_order'][condition_no]]['source']
     participant_id = TEMP['participant_id']
     condition = TEMP['condition_order'][condition_no]
+    to_label = CONDITIONS[condition]['label']
+    human_ideas = CONDITIONS[condition]['n_human']
+    ai_ideas = CONDITIONS[condition]['n_ai']
     item = TEMP['item_order'][condition_no]
 
     # If the HTTP method is GET, render the render_trial template
     if request.method == "GET":
         time.sleep(0.1)
-        rows = list(client.query(
-            f"SELECT response_text FROM `net_expr.trials` WHERE (item = '{item}' AND condition = '{condition}') ORDER BY response_date DESC LIMIT {N_EXAMPLES}").result())
-        responses = [row['response_text'] for row in rows]
-        print("responses", responses)
-        return render_template('render_trial.html', item=item, label=label, rows=responses, condition_no=condition_no)
+        human_rows = [row['response_text'] for row in list(client.query(
+            f"SELECT response_text FROM `net_expr.trials` WHERE (item = '{item}' AND condition = '{condition}') ORDER BY response_date DESC LIMIT {human_ideas}").result())]
+        ai_rows = AI_IDEAS_DF.query("aut_item=='lightbulb'").sample(2)['response'].tolist()
+        if to_label:
+            human_rows = [row + " (Source: HUMAN)" for row in human_rows]
+            ai_rows = [row + " (Source: AI)" for row in ai_rows]
+        rows = ai_rows + human_rows
+        print("responses", rows)
+        return render_template('render_trial.html', item=item, rows=rows, condition_no=condition_no)
 
     # If the HTTP method is POST, insert the participant's response into the BigQuery table
     # then increment the condition_no and redirect to the next render_trial
