@@ -11,11 +11,22 @@ logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.
 def truncate_table(credentials, dataset_id, table_id):
     client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 
-    # Delete all rows from the table
+    # Get a reference to the table
     table_ref = client.dataset(dataset_id).table(table_id)
-    delete_query = f"DELETE FROM `{table_ref.project}.{table_ref.dataset_id}.{table_ref.table_id}` WHERE 1=1"
-    query_job = client.query(delete_query)
-    query_job.result()
+    table = client.get_table(table_ref)
+
+    # Create a new table with the same schema as the old table
+    new_table_id = f"{table_id}_temp"
+    new_table_ref = client.dataset(dataset_id).table(new_table_id)
+    new_table = bigquery.Table(new_table_ref, schema=table.schema)
+    client.create_table(new_table)
+
+    # Delete the old table
+    client.delete_table(table)
+
+    # Rename the new table to the original table name
+    new_table.table_id = table_id
+    client.update_table(new_table, ["table_id"])
 
     logging.info(f"All rows truncated from {dataset_id}.{table_id}")
 
