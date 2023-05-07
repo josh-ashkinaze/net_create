@@ -38,12 +38,13 @@ else:
 
 # EXPERIMENT PARAMETERS
 ####################
+SOURCE_LABEL = "For this object, we also asked AI to come up with ideas."
 CONDITIONS = {
-    'h': {'n_human': '6', 'n_ai': '0', 'label':False},
-    'f_l': {'n_human': '4', 'n_ai': '2', 'label':True},
-    'f_u': {'n_human': '4', 'n_ai': '2', 'label': False},
-    'm_l': {'n_human': '2', 'n_ai': '4', 'label': True},
-    'm_u': {'n_human': '2', 'n_ai': '4', 'label': False},
+    'h': {'n_human': 6, 'n_ai': 0, 'label':False},
+    'f_l': {'n_human': 4, 'n_ai': 2, 'label':True},
+    'f_u': {'n_human': 4, 'n_ai': 2, 'label': False},
+    'm_l': {'n_human': 2, 'n_ai': 4, 'label': True},
+    'm_u': {'n_human': 2, 'n_ai': 4, 'label': False},
 }
 ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
@@ -155,13 +156,13 @@ def render_trial(condition_no):
         time.sleep(0.1)
         human_rows = [row['response_text'] for row in list(client.query(
             f"SELECT response_text FROM `net_expr.trials` WHERE (item = '{item}' AND condition = '{condition}') ORDER BY response_date DESC LIMIT {human_ideas}").result())]
-        ai_rows = AI_IDEAS_DF.query("aut_item=='lightbulb'").sample(2)['response'].tolist()
+        ai_rows = AI_IDEAS_DF.query("aut_item=='lightbulb'").sample(ai_ideas)['response'].tolist()
         if to_label:
             human_rows = [row + " (Source: HUMAN)" for row in human_rows]
             ai_rows = [row + " (Source: AI)" for row in ai_rows]
         rows = ai_rows + human_rows
         print("responses", rows)
-        return render_template('render_trial.html', item=item, rows=rows, condition_no=condition_no)
+        return render_template('render_trial.html', item=item, rows=rows, condition_no=condition_no, label=SOURCE_LABEL if to_label else "")
 
     # If the HTTP method is POST, insert the participant's response into the BigQuery table
     # then increment the condition_no and redirect to the next render_trial
@@ -200,7 +201,7 @@ def thank_you():
 
 if __name__ == '__main__':
     if is_local:
-        app.run(port=5029, debug=True)
+        app.run(port=5028, debug=True)
     else:
         port = int(os.environ.get('PORT', 5000))
         app.run(host="0.0.0.0", port=port)
