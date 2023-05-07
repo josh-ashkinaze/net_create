@@ -27,7 +27,7 @@ class TableNotFoundError(Exception):
 
 # If you delete and remake the table in BigQuery, you'll need to wait a bit to add rows to the table, hence
 # the sleep and retry logic below.
-@retry(wait=wait_fixed(300), stop=tenacity.stop_after_attempt(12), retry_error_callback=lambda x: logging.info(x))
+#@retry(wait=wait_fixed(300), stop=tenacity.stop_after_attempt(12), retry_error_callback=lambda x: logging.info(x))
 def seed_database():
     key_path = "../../creds/netcreate-0335ce05e7ff.json"
     credentials = service_account.Credentials.from_service_account_file(
@@ -36,7 +36,10 @@ def seed_database():
 
     client = bigquery.Client(credentials=credentials, project=credentials.project_id)
     dataset = client.dataset("net_expr")
+    logging.info("Dataset reference created")
+
     table = dataset.table("trials")
+    logging.info("Table reference created")
 
     # Read the CSV file and insert the rows into the BigQuery table
     with open("../../data/seed_human_responses.csv", newline="") as csvfile:
@@ -47,7 +50,7 @@ def seed_database():
         for row in reader:
             # Create a dictionary with the required BigQuery fields and their respective values
             bq_row = {
-                "item": row["item"],
+                "item": row["aut_item"],
                 "response_id": str(uuid.uuid4()),
                 "participant_id": "seed",
                 "condition_order": 1,

@@ -1,4 +1,4 @@
-Unnamed: 0,src,question,prompt,response,id,target,participant,response_num,count,split,condition
+Unnamed: 0,src,question,aut_item,response,id,target,participant,response_num,count,split,condition
 11267,betal18,What is a surprising use for a BOX?,box,hold clothes,betal18_box-9814,1.0,betal182061,,,train,h
 14823,snb17,What is a surprising use for a BOX?,box,hot sauce,snb17_box-8d04,1.7,snb1798,,,train,h
 16274,snb17,What is a surprising use for a BOX?,box,as a shadow,snb17_box-3d5f,2.0,snb1765,,,train,h
