@@ -9,9 +9,46 @@
           crossorigin="anonymous">
     <style>
       body {
-        background-color: #2D3142;
-        color: #FFFBFE;
+        background-color: #F7F7FF;
+        color: #272727;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin-top: 2rem;
       }
+
+      h3 {
+        color: #1F4287;
+        border-bottom: 3px solid #1F4287;
+        display: inline-block;
+        padding-bottom: 5px;
+      }
+
+      h4 {
+        color: #1F4287;
+        font-weight: bold;
+        margin-top: 2rem;
+      }
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+
+      .container {
+        max-width: 800px;
+      }
+
+      .btn-primary {
+        background-color: #1F4287;
+        border-color: #1F4287;
+        border-radius: 25px;
+        padding: 10px 30px;
+      }
+
+      .btn-primary:hover {
+        background-color: #0E2A56;
+        border-color: #0E2A56;
+      }
+
     </style>
   </head>
   <body class="container py-4">
@@ -19,13 +56,14 @@
     <p>For this task, you should write down original and creative uses for a <strong>{{ item }}</strong>. </p>
     <p>Certainly there are common, unoriginal ways to use a <strong>{{ item }}</strong>. </p>
     <p>But for this task, write down the most unusual, creative, and uncommon use you can think of. </p>
-    <p>Here are some previous responses. {{ label }}</p>
+
+    <h4>{{ label }}Here are some other responses:</h4>
     <ul>
       {% for row in rows %}
       <li><strong>{{ row }}</strong></li>
       {% endfor %}
     </ul>
-      <form action="{{ url_for('render_trial', condition_no=condition_no) }}" method="post" class="mt-20">
+    <form action="{{ url_for('render_trial', condition_no=condition_no) }}" method="post" class="mt-20">
       <div class="form-group">
         <input type="text" class="form-control" name="participant_response" required>
       </div>
