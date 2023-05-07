@@ -156,7 +156,7 @@ def render_trial(condition_no):
         time.sleep(0.1)
         human_rows = [row['response_text'] for row in list(client.query(
             f"SELECT response_text FROM `net_expr.trials` WHERE (item = '{item}' AND condition = '{condition}') ORDER BY response_date DESC LIMIT {human_ideas}").result())]
-        ai_rows = AI_IDEAS_DF.query("aut_item=='lightbulb'").sample(ai_ideas)['response'].tolist()
+        ai_rows = AI_IDEAS_DF.query("aut_item=='{}'".format(item)).sample(ai_ideas)['response'].tolist()
         if to_label:
             human_rows = [row + " (Source: HUMAN)" for row in human_rows]
             ai_rows = [row + " (Source: AI)" for row in ai_rows]
@@ -201,7 +201,7 @@ def thank_you():
 
 if __name__ == '__main__':
     if is_local:
-        app.run(port=5028, debug=True)
+        app.run(port=5025, debug=True)
     else:
         port = int(os.environ.get('PORT', 5000))
         app.run(host="0.0.0.0", port=port)
