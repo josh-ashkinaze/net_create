@@ -17,7 +17,7 @@ def delete_rows(credentials, dataset_id, table_id):
     schema = table.schema
 
     # Delete rows where participant_id is 'test'
-    delete_query = f"DELETE FROM `{table_ref.project}.{table_ref.dataset_id}.{table_ref.table_id}` WHERE participant_id = 'test'"
+    delete_query = f"DELETE FROM `{table_ref.project}.{table_ref.dataset_id}.{table_ref.table_id}` WHERE participant_id = 'seed'"
     query_job = client.query(delete_query)
     query_job.result()
 
