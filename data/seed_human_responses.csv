@@ -1,91 +1,91 @@
 ,item,response,score,condition
-0,box,making a home for a small animal,1.7,h
-1,box,for hiding something,1.5,h
-2,box,play inside of,1.0,h
-3,box,essential moving tool,2.4,h
-4,box,cut it and fold it into an umbrella to keep you dry,3.0,h
-5,box,stand on it,2.0,h
-6,box,to use as a flyswatter,1.3,f_l
-7,box,decor,1.6,f_l
-8,box,hide and go seek,3.2,f_u
-9,box,step,3.3,f_u
-10,box,play armor,2.1,m_l
-11,box,a cardboard home for my dolls,2.8,m_l
-12,box,cut it up to make other things,2.7,m_l
-13,box,play place for kids,1.1,m_l
-14,box,hide inside it to scare people,2.3,m_u
-15,box,dice,2.5,m_u
-16,box,use to test paints,1.8,m_u
-17,box,fairy village,2.2,m_u
-18,fork,fling food,2.8,h
-19,fork,garden marker,3.2,h
-20,fork,dig,2.5,h
-21,fork,balance on finger,1.7,h
-22,fork,poking things,2.0,h
-23,fork,tear,2.7,h
-24,fork,pry open stuff,1.5,f_l
-25,fork,test,1.3,f_l
-26,fork,to use as a utensil,3.0,f_u
-27,fork,flipping rocks,3.3,f_u
-28,fork,cooking utensil,1.0,m_l
-29,fork,bend the metal to make sculpture,3.5,m_l
-30,fork,to dine,3.7,m_l
-31,fork,use to eat my food,4.5,m_l
-32,fork,make designs in sand,4.8,m_u
-33,fork,clean fingernals,3.8,m_u
-34,fork,weaving something,4.0,m_u
-35,fork,to stab someone,2.2,m_u
-36,lightbulb,make it look like a flower now put it in the garden and at night you are perfect!,3.0,h
-37,lightbulb,an idea,2.4,h
-38,lightbulb,it can be used as a bookmaker,3.9,h
-39,lightbulb,a surprising way to a lightbulb is to get a balloon and cut it in half and put it on the lightbulb so the room can be colorful.,2.7,h
-40,lightbulb,put led lights in it and it will shine different colors,3.3,h
-41,lightbulb,a lightbulb party,3.6,h
-42,lightbulb,put it on your friend's feet,1.3,f_l
-43,lightbulb,make it as you think mind,4.1,f_l
-44,lightbulb,make a lightbulb burst into pieces while it reconstructs itself back together.,3.7,f_u
-45,lightbulb,it could be for a project when you spray paint it and put it as my factory top,1.6,f_u
-46,lightbulb,you could paint different colors on a white light bulb and then turn it on.,2.1,m_l
-47,lightbulb,we could carry one around and then whenever we have an idea we just hold it above our head haha,2.6,m_l
-48,lightbulb,you can use it by using it like a water bottle,3.4,m_l
-49,lightbulb,to have light,4.4,m_l
-50,lightbulb,you could use it for your phone and hook it up and it will light up when done charging,3.2,m_u
-51,lightbulb,putting it in a toilet,2.3,m_u
-52,lightbulb,i would put in my backpack so it can glow,1.9,m_u
-53,lightbulb,you could get rid of the wires and etc. and use the glass as a mini cup,1.7,m_u
-54,spoon,by double up the spoon into one spoon to two spoon,2.4,h
-55,spoon,eat a burger with a spoon,4.1,h
-56,spoon,i think a surprising use for a spoon would be to make glasses out of them if they were plastic spoons.,3.0,h
-57,spoon,to make a glass app,3.3,h
-58,spoon,using it as a knife,2.7,h
-59,spoon,to bend it and use it to scratch your back,3.7,h
-60,spoon,use it as a weapon,2.3,f_l
-61,spoon,you can make a slingshot,2.1,f_l
-62,spoon,to brush with it,3.6,f_u
-63,spoon,glue the leftover lights and make a lantern.,1.3,f_u
-64,spoon,i will use it as a shovel.,1.9,m_l
-65,spoon,a knife for cutting food.,4.3,m_l
-66,spoon,act like there is soap on the spoon,3.9,m_l
-67,spoon,use it to drink water in it,2.6,m_l
-68,spoon,to dig with it.,3.4,m_u
-69,spoon,you can try to stand on it,4.4,m_u
-70,spoon,make into a beautiful princess,1.2,m_u
-71,spoon,make it a launcher.,4.8,m_u
-72,table,eat on,1.3,h
-73,table,wind break,3.5,h
-74,table,drying rack,2.5,h
-75,table,stand on,2.8,h
-76,table,door block,1.7,h
-77,table,operating table,2.0,h
-78,table,it can be used as a sitting chair,1.5,f_l
-79,table,building a model,1.0,f_l
-80,table,cook on,4.8,f_u
-81,table,to eat on,3.8,f_u
-82,table,a raft,1.2,m_l
-83,table,bench press,4.0,m_l
-84,table,drawing,3.2,m_l
-85,table,building puzzles,3.3,m_l
-86,table,doing schoolwork,2.7,m_u
-87,table,prepare food on,1.8,m_u
-88,table,create a clubhouse,4.5,m_u
-89,table,flooring,3.0,m_u
+0,box,eat it,2.3,h
+1,box,a home for a bunny,1.3,h
+2,box,degradable planting container,3.6,h
+3,box,a gown,3.0,h
+4,box,car companion,2.1,h
+5,box,taking up space,1.7,h
+6,box,shelf,1.6,f_l
+7,box,chair,1.0,f_l
+8,box,cat,1.4,f_u
+9,box,waste disposal,2.7,f_u
+10,box,wrap presents in,1.5,m_l
+11,box,dog cage,1.8,m_l
+12,box,tape,2.4,m_l
+13,box,hang it from a tree with snacks in it,2.2,m_l
+14,box,platter,2.0,m_u
+15,box,make a dog house,4.0,m_u
+16,box,altar,2.6,m_u
+17,box,add wheels for clown car,2.8,m_u
+18,fork,projectile,3.0,h
+19,fork,open the can with,1.0,h
+20,fork,eating utensil,3.8,h
+21,fork,decorative repurposing as wall hooks,2.8,h
+22,fork,poke someone with it,4.0,h
+23,fork,launcher,1.7,h
+24,fork,picture hanger,2.5,f_l
+25,fork,press a pie,3.5,f_l
+26,fork,toothpick,2.7,f_u
+27,fork,paper holder,1.5,f_u
+28,fork,to grab things,2.2,m_l
+29,fork,to grasop something,3.7,m_l
+30,fork,scoop dog food,3.2,m_l
+31,fork,use it like a whisk to mix foods,3.3,m_l
+32,fork,pick er upper,2.3,m_u
+33,fork,dinner,2.0,m_u
+34,fork,conduct electricity,4.3,m_u
+35,fork,head scratcher,1.8,m_u
+36,lightbulb,put it in a cup,3.0,h
+37,lightbulb,use it for a big thing like using 100 light bulbs in your room and make the whole room light up.,1.9,h
+38,lightbulb,marry it and have a wedding.,4.1,h
+39,lightbulb,to turn it on,1.3,h
+40,lightbulb,to take it to the moon.,3.6,h
+41,lightbulb,you can but the light bulb shining through glass so it can bring out beautiful colors. ,3.2,h
+42,lightbulb,a logo,3.3,f_l
+43,lightbulb,it's a magic orb when you see it glowing it shows your future.,3.9,f_l
+44,lightbulb,put it on your head and then you will have a great idea,2.4,f_u
+45,lightbulb,using it for ideas,2.7,f_u
+46,lightbulb,make it into junk,2.1,m_l
+47,lightbulb,electric circuit,1.6,m_l
+48,lightbulb,paint it,4.3,m_l
+49,lightbulb,the ones that turn to different colors,1.7,m_l
+50,lightbulb,make it go on and off like a disco ball.,2.6,m_u
+51,lightbulb,use your imagination to make it feel like your a police officer with a flashlight trying to find a suspect.,3.4,m_u
+52,lightbulb,color it blue and red then turn it on,1.0,m_u
+53,lightbulb,punch the lightbulb,4.8,m_u
+54,spoon,curve the spoon and use it as a hanger,3.9,h
+55,spoon,glue the leftover lights and make a lantern.,3.7,h
+56,spoon,tap a metal cup with a spoon to make little tunes,2.4,h
+57,spoon,you can use it as a mini catapult,2.8,h
+58,spoon,a dart,3.0,h
+59,spoon,use like a pencil,3.3,h
+60,spoon,to make sporky.,2.7,f_l
+61,spoon,it could make magical ice cream,4.7,f_l
+62,spoon,to bend it,4.1,f_u
+63,spoon,get two spoons then get glue and put some glue on the inside and put the other spoon on it with the handle facing away. then make a helicopter and have spoons be the propeller.,2.1,f_u
+64,spoon,fling it.,3.4,m_l
+65,spoon,to make a glass app,1.9,m_l
+66,spoon,bend it and make it look like a human,3.2,m_l
+67,spoon,to use it as a fork.,3.6,m_l
+68,spoon,using it to make a mini catapult,1.3,m_u
+69,spoon,a catapult,4.6,m_u
+70,spoon,a washing machine.,1.2,m_u
+71,spoon,a mini cannon with only two parts.,4.3,m_u
+72,table,game night,1.8,h
+73,table,use as a table to do homework,1.5,h
+74,table,seat,2.0,h
+75,table,meetings,1.0,h
+76,table,for ironing,2.5,h
+77,table,for painting,1.2,h
+78,table,forreading,3.3,f_l
+79,table,lunch,4.0,f_l
+80,table,eating on,1.3,f_u
+81,table,sleeping,2.3,f_u
+82,table,to use as a decoration,4.5,m_l
+83,table,use as tent,2.7,m_l
+84,table,meeting place,3.0,m_l
+85,table,set things upon,3.5,m_l
+86,table,platform,3.2,m_u
+87,table,putting a sewing machine on,3.8,m_u
+88,table,battering ram,3.7,m_u
+89,table,scratch my back with,2.8,m_u
