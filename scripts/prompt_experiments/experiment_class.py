@@ -42,29 +42,33 @@ from tenacity import (
 
 
 class PromptExperiment:
-    def __init__(self, api_key, prompts, aut_items, n_uses, example_df, title="", random_seed=416):
+    def __init__(self, api_key, prompts, aut_items, n_uses, example_df, n_examples, title="", random_seed=416):
         self.api_key = api_key
         self.prompts = prompts
         self.aut_items = aut_items
         self.n_uses = n_uses
         self.example_df = example_df
+        self.n_examples = n_examples
         self.random_seed = random_seed
         self.title = title
         random.seed(self.random_seed)
 
     def handle_prompt(self, args):
-        prompt_base, object_name, examples, n_examples, temperature, frequency_penalty, presence_penalty, n_uses = args
-        prompt = self.make_prompt(prompt_base, object_name, examples, n_examples, n_uses)
+        prompt_base, object_name, examples, temperature, frequency_penalty, presence_penalty, n_uses = args
+        prompt = self.make_prompt(prompt_base, object_name, examples, n_uses)
         response = self.generate_responses(prompt, temperature, frequency_penalty, presence_penalty)
         return response
 
-    def make_prompt(self, prompt_base, object_name, examples, n_examples, n_uses):
+    def make_prompt(self, prompt_base, object_name, examples, n_uses):
         prompt = prompt_base.replace("[OBJECT_NAME]", object_name)
         prompt = prompt.replace("[N]", str(n_uses))
         examples = " ".join(['\n- ' + item for item in examples]) + "\n"
         prompt = prompt.replace("[EXAMPLES]", examples)
-        #print("PROMPT", prompt)
+        print("PROMPT", prompt)
         return prompt
+
+    def get_examples(self, df, prompt, seed=416):
+        return df[df['prompt'] == prompt].sample(self.n_examples, random_state=seed)['response'].tolist()
 
     @retry(wait=wait_random_exponential(multiplier=30, min=1, max=60), stop=stop_after_attempt(30),
            before_sleep=before_sleep_log(logging, logging.INFO))
@@ -83,9 +87,6 @@ class PromptExperiment:
         msg = messages['choices'][0]['message']['content']
         #print(msg)
         return msg
-
-    def get_examples(self, df, prompt, n_examples, seed=416):
-        return df[df['prompt'] == prompt].sample(n_examples, random_state=seed)['response'].tolist()
 
     def run(self, n_trials_per_combo, grid_search):
         now = datetime.now()
@@ -118,8 +119,7 @@ class PromptExperiment:
                     presence_penalty = random.choice(grid_search['presence_penalty'])
 
                     if should_get_examples:
-                        n_examples = random.choice(grid_search['n_examples'])
-                        examples = self.get_examples(self.example_df, aut_item, n_examples, seed=condition_counter)
+                        examples = self.get_examples(self.example_df, aut_item, seed=condition_counter)
                     else:
                         examples = []
 
@@ -128,7 +128,6 @@ class PromptExperiment:
                             prompt_base,
                             "a " + aut_item,
                             examples,
-                            len(examples),
                             temperature,
                             frequency_penalty,
                             presence_penalty,
