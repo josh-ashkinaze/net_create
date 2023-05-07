@@ -38,6 +38,7 @@ def run(n_trials_per_combo=1):
     }
     prompt_experiment = PromptExperiment(api_key=API_KEY,
                                          title="stransfer",
+                                         n_examples=4,
                                          n_uses =4,
                                          prompts=prompts,
                                          aut_items=aut_items,
