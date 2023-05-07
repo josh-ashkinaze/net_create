@@ -19,7 +19,8 @@ def seed_database():
 
     # Set up logging
     logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO,
-                        format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+                        format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S',
+                        filemode='w')
 
     # Sleep because once you create a table it can't automatically be accessed by BQ for some reason
     logging.info("Sleeping for 400 seconds...")

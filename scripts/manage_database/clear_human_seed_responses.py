@@ -6,7 +6,7 @@ import os
 # Set up logging
 LOG_FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO,
-                    format=LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S')
+                    format=LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S', filemode='w')
 
 def delete_rows(credentials, dataset_id, table_id):
     client = bigquery.Client(credentials=credentials, project=credentials.project_id)

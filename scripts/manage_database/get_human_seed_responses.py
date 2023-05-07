@@ -12,7 +12,7 @@ import os
 
 def main():
     logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO,
-                        format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+                        format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', filemode='w')
     random.seed(416)
 
     my_items = ["box", "fork", "lightbulb", "spoon", "table"]
