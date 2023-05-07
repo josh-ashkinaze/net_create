@@ -16,15 +16,10 @@ import time
 
 
 def seed_database():
-
     # Set up logging
     logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO,
                         format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S',
                         filemode='w')
-
-    # Sleep because once you create a table it can't automatically be accessed by BQ for some reason
-    logging.info("Sleeping for 400 seconds...")
-    time.sleep(400)
 
     key_path = "../../creds/netcreate-0335ce05e7ff.json"
     credentials = service_account.Credentials.from_service_account_file(
@@ -34,7 +29,6 @@ def seed_database():
     client = bigquery.Client(credentials=credentials, project=credentials.project_id)
     dataset = client.dataset("net_expr")
     table = dataset.table("trials")
-
 
     # Read the CSV file and insert the rows into the BigQuery table
     with open("../../data/seed_human_responses.csv", newline="") as csvfile:
