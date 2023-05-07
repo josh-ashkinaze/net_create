@@ -21,7 +21,7 @@ def delete_rows(credentials, dataset_id, table_id):
     query_job = client.query(delete_query)
     query_job.result()
 
-    logging.info(f"All rows with participant_id='test' deleted from {dataset_id}.{table_id}")
+    logging.info(f"All rows with participant_id='seed' deleted from {dataset_id}.{table_id}")
 
 if __name__ == "__main__":
     key_path = "../../creds/netcreate-0335ce05e7ff.json"

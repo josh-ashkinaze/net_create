@@ -41,7 +41,7 @@ def seed_database():
             bq_row = {
                 "item": row["item"],
                 "response_id": str(uuid.uuid4()),
-                "participant_id": "test",
+                "participant_id": "seed",
                 "condition_order": 1,
                 "response_text": row["response"],
                 "response_date": response_date.strftime("%Y-%m-%d %H:%M:%S"),
