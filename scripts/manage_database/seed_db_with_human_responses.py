@@ -7,6 +7,7 @@ Date: 05-05-2023
 """
 
 import csv
+import uuid
 import logging
 from datetime import datetime, timedelta
 from google.cloud import bigquery
@@ -39,7 +40,7 @@ def seed_database():
             # Create a dictionary with the required BigQuery fields and their respective values
             bq_row = {
                 "item": row["item"],
-                "response_id": "test",
+                "response_id": str(uuid.uuid4()),
                 "participant_id": "test",
                 "condition_order": 1,
                 "response_text": row["response"],
