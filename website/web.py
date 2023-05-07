@@ -11,8 +11,8 @@ Description: This is a Flask web application that runs a web experiment.
 
 # TODO add GPT prompts
 
-from flask import Flask, render_template, request, redirect, url_for
 from google.cloud import bigquery
+from flask import Flask, render_template, request, redirect, url_for
 from google.oauth2 import service_account
 import uuid
 import time
