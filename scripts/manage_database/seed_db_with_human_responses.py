@@ -17,6 +17,8 @@ logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.
 class TableNotFoundError(Exception):
     pass
 
+# If you delete and remake the table in BigQuery, you'll need to wait a bit to add rows to the table, hence
+# the sleep and retry logic below.
 @retry(wait=wait_fixed(300), stop=tenacity.stop_after_attempt(12), retry_error_callback=lambda x: logging.info(x))
 def seed_database():
     key_path = "../../creds/netcreate-0335ce05e7ff.json"
