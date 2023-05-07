@@ -109,7 +109,7 @@ class PromptExperiment:
         total_counter = 0
 
         with concurrent.futures.ThreadPoolExecutor(
-                max_workers=multiprocessing.cpu_count() - 1) as executor, jsonlines.open(results_file,
+                max_workers=4) as executor, jsonlines.open(results_file,
                                                                                          mode='w') as outfile:
             for aut_item in self.aut_items:
                 for trial in range(n_trials_per_combo):
