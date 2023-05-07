@@ -10,10 +10,10 @@ Description: This is a Flask web application that runs a web experiment.
 
 # Condition defintions:
 # - 6 human-only ideas
-# - f, l: few (2) AI ideas / many (4) human ideas, labeled
-# - f, u: few (2) AI ideas / many (4) human ideas, unlabled
-# - m, l: many (4) AI ideas / few (2) human ideas, labled
-# - m, u: many (4) AI ideas / few (2) human ideas, unlabled
+# - f, l: few (2) AI ideas / many (4) human ideas, labeled source
+# - f, u: few (2) AI ideas / many (4) human ideas, unlabled source
+# - m, l: many (4) AI ideas / few (2) human ideas, labled source
+# - m, u: many (4) AI ideas / few (2) human ideas, unlabled source
 
 """
 
