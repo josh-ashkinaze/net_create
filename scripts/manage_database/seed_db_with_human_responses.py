@@ -1,3 +1,11 @@
+"""
+Author: Joshua Ashkinaze
+Date: 2023-05-07
+
+Description: This script seeds the trials table with human seed responses. It includes logic to
+wait for the table to be ready to accept rows.
+"""
+
 import csv
 import uuid
 import logging

@@ -1,3 +1,10 @@
+"""
+Author: Joshua Ashkinaze
+Date: 2023-05-07
+
+Description: This script selects a sample of prior responses to be added to the database, assigns these responses to conditions
+"""
+
 import pandas as pd
 import random
 import logging
