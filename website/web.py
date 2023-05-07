@@ -8,16 +8,25 @@ Description: This is a Flask web application that runs a web experiment.
 * The experiment counterbalances across different conditions and stimuli
 * The experiment has four routes:  the consent form, the start of the experiment, the trials themselves, and the thank you page.
 """
+
+# TODO add GPT prompts
+
 from google.cloud import bigquery
 from flask import Flask, render_template, request, redirect, url_for
 from google.oauth2 import service_account
 import uuid
-import os
 import time
 from datetime import datetime
 import random
-from dotenv import load_dotenv
-load_dotenv()
+import os
+import sys
+
+if 'DYNO' in os.environ:
+    is_local = False
+    ...
+else:
+    is_local = True
+
 
 # EXPERIMENT PARAMETERS
 ####################
@@ -40,15 +49,12 @@ TEMP = {
     "participant_id": None, # Unique participant ID
 }
 
-# SETUP ENVIORMENT VARIABLES
-
-# Different path depending on whether we're running locally or on the server
 app = Flask(__name__)
-if os.environ.get("ENV") == "local":
+
+if is_local:
     key_path = "../creds/netcreate-0335ce05e7ff.json"
 else:
     key_path = "creds/netcreate-0335ce05e7ff.json"
-
 credentials = service_account.Credentials.from_service_account_file(
     key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
 )
@@ -174,4 +180,8 @@ def thank_you():
 
 
 if __name__ == '__main__':
-    app.run(port=5029, debug=True)
+    if is_local:
+        app.run(port=5029, debug=True)
+    else:
+        port = int(os.environ.get('PORT', 5000))
+        app.run(host="0.0.0.0", port=port)
