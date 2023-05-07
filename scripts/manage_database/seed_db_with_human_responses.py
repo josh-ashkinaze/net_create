@@ -56,6 +56,7 @@ def seed_database():
                 "condition": row["condition"],
                 "world": 1
             }
+            logging.info(f"Attempting to insert row: {bq_row}")
 
             # Insert the row into the BigQuery table
             try:
@@ -63,13 +64,14 @@ def seed_database():
                 if not errors:
                     logging.info(f"Row has been added: {bq_row}")
                 else:
-                    logging.error(f"Encountered errors while inserting rows: {errors}")
+                    logging.info(f"Encountered errors while inserting rows: {errors}")
             except Exception as e:
                 error_msg = str(e)
                 logging.info(f"Encountered exception: {error_msg}. Will sleep for 5 minutes and retry.")
                 if "Table" in error_msg and "not found" in error_msg:
                     raise TableNotFoundError(error_msg)
                 else:
+                    logging.info("Will retry because of exception {}".format(error_msg))
                     raise e
 
             # Increment the response_date by 1 minute
