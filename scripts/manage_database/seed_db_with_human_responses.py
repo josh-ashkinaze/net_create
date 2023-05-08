@@ -7,13 +7,11 @@ wait for the table to be ready to accept rows.
 """
 
 import csv
-import uuid
 import logging
 from datetime import datetime, timedelta
 from google.cloud import bigquery
 from google.oauth2 import service_account
 import os
-import time
 
 import tenacity
 from tenacity import retry, wait_fixed
@@ -51,7 +49,7 @@ def seed_database():
             # Create a dictionary with the required BigQuery fields and their respective values
             bq_row = {
                 "item": row["aut_item"],
-                "response_id": str(uuid.uuid4()),
+                "response_id": row['response_id'],
                 "participant_id": "seed",
                 "condition_order": 1,
                 "response_text": row["response"],
