@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import requests
+import tenacity  # Don't forget to import tenacity
 import logging
 import math
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -14,6 +15,10 @@ class RateLimitError(Exception):
             logger.info("Rate limit error")
 
 
+@tenacity.retry(stop=tenacity.stop_after_attempt(5),  # Change the number of attempts as needed
+                wait=tenacity.wait_fixed(60),  # Change the wait time between retries as needed
+                retry=tenacity.retry_if_exception_type(RateLimitError),
+                reraise=True)
 def score_aut_responses(response_tupples, logger=None):
     """Score a list of response tupples (prompt, response) using the OpenScoring API."""
     base_url = "https://openscoring.du.edu/llm"
