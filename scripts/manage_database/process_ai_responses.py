@@ -49,6 +49,7 @@ def extract_ideas(text):
 
 def process_ideas(x):
     x = x.replace('"', '')
+    x = x.rstrip('.')
     return x
 
 
