@@ -22,7 +22,6 @@ def make_aesthetic():
     plt.rcParams['axes.titlesize'] = 24
 
 def load_data(comparison, prefix="../"):
-    prefix = "../"
     if comparison == "human":
         return np.array(pd.read_csv(prefix + "data/prior_responses.csv")['target'].tolist())
     elif comparison == "AI":
