@@ -158,8 +158,9 @@ def render_trial(condition_no):
             f"SELECT response_text FROM `net_expr.trials` WHERE (item = '{item}' AND condition = '{condition}') ORDER BY response_date DESC LIMIT {human_ideas}").result())]
         ai_rows = AI_IDEAS_DF.query("aut_item=='{}'".format(item)).sample(ai_ideas)['response'].tolist()
         if to_label:
-            human_rows = [row + " (Source: HUMAN)" for row in human_rows]
-            ai_rows = [row + " (Source: AI)" for row in ai_rows]
+            human_rows = [row + ' <span style="color: #1F4287;">(Source: Human)</span>' for row in human_rows]
+            ai_rows = [row + ' <span style="color: #1F4287;">(Source: A.I)</span>' for row in ai_rows]
+
         rows = ai_rows + human_rows
         print("responses", rows)
         return render_template('render_trial.html', item=item, rows=rows, condition_no=condition_no, label=SOURCE_LABEL if to_label else "")

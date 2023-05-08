@@ -58,7 +58,7 @@
 <h4>{{ label }} Here are some other responses:</h4>
 <ul>
     {% for row in rows %}
-    <li><strong>{{ row }}</strong></li>
+    <li>{{ row|safe }}</li>
     {% endfor %}
 </ul>
 <form action="{{ url_for('render_trial', condition_no=condition_no) }}" method="post" class="mt-20">
