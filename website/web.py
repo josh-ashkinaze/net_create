@@ -27,7 +27,7 @@ from datetime import datetime
 import random
 import os
 import sys
-from render_graph import graph_score  # import the graph_score function from render_graph.py
+from render_graph import make_graphs  # import the comparison_graph function from render_graph.py
 
 
 # Figure out if we're running locally or on Heroku. This will matter for file paths.
@@ -197,14 +197,13 @@ def thank_you():
     participant_responses = session['responses']  # example participant_responses
     comparison = "human"  # example comparison
     participant_responses = list(zip(session['item_order'], session['responses']))
+    participant_conditions = session['condition_order']
+    human_graph, ai_graph, human_ai_graph = make_graphs(participant_responses, participant_conditions, file_prefix)
 
     # Generate the human comparison graph
-    img_base64_human = graph_score(participant_responses, "human", prefix=
-                                   file_prefix)
 
     # Generate the AI comparison graph
-    img_base64_ai = graph_score(participant_responses, "AI", prefix=file_prefix)
-    return render_template('thank_you.html', img_base64_human=img_base64_human, img_base64_ai=img_base64_ai)
+    return render_template('thank_you.html', img_base64_human=human_graph, img_base64_ai=ai_graph, img_base64_human_ai=human_ai_graph)
 
 
 if __name__ == '__main__':
