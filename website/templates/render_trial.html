@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Experiment</title>
@@ -8,65 +8,64 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
     <style>
-      body {
-        background-color: #F7F7FF;
-        color: #272727;
-        font-family: Arial, sans-serif;
-        line-height: 1.6;
-        margin-top: 5rem;
-      }
+        body {
+          background-image: linear-gradient(to top right, #E5BEED, #FFD23F);
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          margin-top: 5rem;
+          min-height: 100vh;
+        }
 
-      h3 {
-        color: #1F4287;
-        border-bottom: 3px solid #1F4287;
-        display: inline-block;
-        padding-bottom: 5px;
-      }
+        h3 {
+            color: #1F4287;
+            border-bottom: 3px solid #1F4287;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
 
-      h4 {
-        color: #1F4287;
-        margin-top: 2rem;
-      }
+        h4 {
+            color: #1F4287;
+            margin-top: 2rem;
+        }
 
-      li {
-        margin-bottom: 0.5rem;
-      }
+        li {
+            margin-bottom: 0.5rem;
+        }
 
-      .container {
-        max-width: 800px;
-      }
+        .container {
+            max-width: 800px;
+        }
 
-      .btn-primary {
-        background-color: #1F4287;
-        border-color: #1F4287;
-        border-radius: 25px;
-        padding: 10px 30px;
-      }
+        .btn-primary {
+            background-color: #1F4287;
+            border-color: #1F4287;
+            border-radius: 25px;
+            padding: 10px 30px;
+        }
 
-      .btn-primary:hover {
-        background-color: #0E2A56;
-        border-color: #0E2A56;
-      }
+        .btn-primary:hover {
+            background-color: #0E2A56;
+            border-color: #0E2A56;
+        }
 
     </style>
-  </head>
-  <body class="container py-4">
-    <h3>Generate creative uses for a <strong>{{ item }}</strong>.</h3>
-    <p>For this task, you should write down original and creative uses for a <strong>{{ item }}</strong>. </p>
-    <p>Certainly there are common, unoriginal ways to use a <strong>{{ item }}</strong>. </p>
-    <p>But for this task, write down the most unusual, creative, and uncommon use you can think of. </p>
-
-    <h4>{{ label }}Here are some other responses:</h4>
-    <ul>
-      {% for row in rows %}
-      <li><strong>{{ row }}</strong></li>
-      {% endfor %}
-    </ul>
-    <form action="{{ url_for('render_trial', condition_no=condition_no) }}" method="post" class="mt-20">
-      <div class="form-group">
+</head>
+<body class="container py-4">
+<h3>Generate creative uses for a <strong>{{ item }}</strong>.</h3>
+<p>For this task, you should write down original and creative uses for a <strong>{{ item }}</strong>. </p>
+<p>Certainly there are common, unoriginal ways to use a <strong>{{ item }}</strong>. </p>
+<p>But for this task, write down the most unusual, creative, and uncommon use you can think of. </p>
+<h4>{{ label }} Here are some other responses:</h4>
+<ul>
+    {% for row in rows %}
+    <li><strong>{{ row }}</strong></li>
+    {% endfor %}
+</ul>
+<form action="{{ url_for('render_trial', condition_no=condition_no) }}" method="post" class="mt-20">
+    <div class="form-group">
         <input type="text" class="form-control" name="participant_response" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-  </body>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</body>
 </html>
