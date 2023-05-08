@@ -10,7 +10,7 @@
     <style>
       body {
         min-height: 100vh;
-        background-image: linear-gradient(to top left, #E5BEED, #FFD23F);
+        background-color: #FFFFFF;
         color: #272727;
         font-family: Arial, sans-serif;
         line-height: 1.6;
@@ -28,9 +28,30 @@
         max-width: 800px;
       }
 
+      /* Add this CSS to control the size of the image */
+      img {
+        width: 100%; /* adjust the width as needed */
+        height: auto;
+      }
+
+      /* Footer styles */
+      footer {
+        font-size: 0.9em;
+        margin-top: 2rem;
+        text-align: center;
+      }
     </style>
   </head>
   <body class="container py-4">
     <h1 class="mb-4">Thank you for participating!</h1>
+    <h2>Human Comparison</h2>
+    <img src="data:image/png;base64,{{ img_base64_human }}" alt="Human Comparison Graph">
+    <h2>AI Comparison</h2>
+    <img src="data:image/png;base64,{{ img_base64_ai }}" alt="AI Comparison Graph">
+
+    <!-- Add the footer with the desired content -->
+    <footer>
+      Creativity was measured using the model from: Organisciak, Peter, Selcuk Acar, Denis Dumas, and Kelly Berthiaume. "Beyond semantic distance: automated scoring of divergent thinking greatly improves with large language models." Pre-print (2022). We queried the public API available at: <a href="https://openscoring.du.edu/">https://openscoring.du.edu/</a>
+    </footer>
   </body>
 </html>
