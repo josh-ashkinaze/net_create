@@ -21,14 +21,14 @@ def make_aesthetic():
     plt.rcParams['axes.titlepad'] = 20
     plt.rcParams['axes.titlesize'] = 24
 
-def load_data(comparison):
+def load_data(comparison, prefix="../"):
     prefix = "../"
     if comparison == "human":
-        return np.array(pd.read_csv("../data/prior_responses.csv")['target'].tolist())
+        return np.array(pd.read_csv(prefix + "data/prior_responses.csv")['target'].tolist())
     elif comparison == "AI":
-        return np.array(pd.read_csv("../data/scored_ai_responses.csv")['originality'].tolist())
+        return np.array(pd.read_csv(prefix + "data/scored_ai_responses.csv")['originality'].tolist())
 
-def graph_score(participant_responses, comparison):
+def graph_score(participant_responses, comparison, prefix="../"):
     participant_scores= my_utils.batch_score_responses(participant_responses)['originality'].tolist()
     make_aesthetic()
     mean_score = np.mean(participant_scores)
