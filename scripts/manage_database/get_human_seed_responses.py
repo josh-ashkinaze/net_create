@@ -18,10 +18,10 @@ def main():
 
     n_items_per_condition = {
         "h": 6,
-        "f_l": 2,
-        "f_u": 2,
-        "m_l": 4,
-        "m_u": 4
+        "f_l": 4,
+        "f_u": 4,
+        "m_l": 2,
+        "m_u": 2
     }
 
     # Read in the data
