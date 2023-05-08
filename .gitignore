@@ -1,5 +1,4 @@
 /creds/google_creds.json
 /creds/openai_creds.json
-/data/prior_responses.csv
 creds/
 *.log

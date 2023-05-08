@@ -21,6 +21,7 @@ from google.cloud import bigquery
 from flask import Flask, render_template, request, redirect, url_for, session
 from google.oauth2 import service_account
 import uuid
+import json
 import pandas as pd
 import time
 from datetime import datetime
@@ -60,10 +61,15 @@ app = Flask(__name__)
 app.secret_key = 'k'
 
 # BigQuery credentials
-key_path = file_prefix + "creds/google_creds.json"
-credentials = service_account.Credentials.from_service_account_file(
-    key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
-)
+
+if not is_local:
+    json_key = json.loads(os.environ['GOOGLE_CREDS'])
+    credentials = service_account.Credentials.from_service_account_info(json_key)
+else:
+    key_path = "../creds/google_creds.json"
+    credentials = service_account.Credentials.from_service_account_file(
+        key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
 
 # BigQuery connection
 client = bigquery.Client(credentials=credentials, project=credentials.project_id)
