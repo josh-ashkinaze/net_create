@@ -27,6 +27,8 @@ from datetime import datetime
 import random
 import os
 import sys
+from render_graph import graph_score  # import the graph_score function from render_graph.py
+
 
 # Figure out if we're running locally or on Heroku. This will matter for file paths.
 if 'DYNO' in os.environ:
@@ -48,8 +50,6 @@ CONDITIONS = {
 }
 ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
-print(AI_IDEAS_DF)
-N_EXAMPLES = 5
 ####################
 
 
@@ -156,6 +156,7 @@ def render_trial(condition_no):
             ai_rows = [row + ' <span style="color: #1F4287;">(Source: <strong>A.I</strong>)</span>' for row in ai_rows]
 
         rows = ai_rows + human_rows
+        random.shuffle(rows)
         print("responses", rows)
         return render_template('render_trial.html', item=item, rows=rows, condition_no=condition_no, label=SOURCE_LABEL if to_label else "")
 
@@ -166,6 +167,8 @@ def render_trial(condition_no):
         # Retrieve the participant's response
         response_text = request.form.get('participant_response')
         session['responses'].append(response_text)
+        session.modified = True  # Explicitly mark the session as modified
+        print("printing responses", session['responses'])
 
         # Insert the participant's response into the BigQuery table
         row = {
@@ -186,13 +189,21 @@ def render_trial(condition_no):
 
         # Redirect to next condition_no
         return redirect(url_for('render_trial', condition_no=condition_no + 1, method="GET"))
-    
 
 
 @app.route("/thank-you")
 def thank_you():
     """Thank you page"""
-    return render_template('thank_you.html')
+    participant_responses = session['responses']  # example participant_responses
+    comparison = "human"  # example comparison
+    participant_responses = list(zip(session['item_order'], session['responses']))
+
+    # Generate the human comparison graph
+    img_base64_human = graph_score(participant_responses, "human")
+
+    # Generate the AI comparison graph
+    img_base64_ai = graph_score(participant_responses, "AI")
+    return render_template('thank_you.html', img_base64_human=img_base64_human, img_base64_ai=img_base64_ai)
 
 
 if __name__ == '__main__':
