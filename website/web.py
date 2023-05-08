@@ -18,7 +18,7 @@ Description: This is a Flask web application that runs a web experiment.
 """
 
 from google.cloud import bigquery
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from google.oauth2 import service_account
 import uuid
 import pandas as pd
@@ -53,19 +53,11 @@ N_EXAMPLES = 5
 ####################
 
 
-# EXPERIMENT PARAMETERS
-####################
-# INIT DICT TO KEEP TRACK OF INFO FOR EACH PARTICIPANT
-TEMP = {
-    "item_order": None, # Order of items
-    "condition_order": None, # Order of experimental conditions
-    "participant_id": None, # Unique participant ID
-}
-####################
 
 
 # Initialize the Flask application
 app = Flask(__name__)
+app.secret_key = 'k'
 
 # BigQuery credentials
 key_path = file_prefix + "creds/netcreate-0335ce05e7ff.json"
@@ -97,13 +89,14 @@ def start_experiment():
     From there, `render_trial' will recursively call itself to display all trials until the experiment is done.
 
     """
-    TEMP['participant_id'] = str(uuid.uuid4())
+    session['participant_id'] = str(uuid.uuid4())
     item_order = list(ITEMS)
     random.shuffle(item_order)
     condition_order = list(CONDITIONS.keys())
     random.shuffle(condition_order)
-    TEMP['condition_order'] = condition_order
-    TEMP['item_order'] = item_order
+    session['condition_order'] = condition_order
+    session['item_order'] = item_order
+    session['responses'] = []
     return redirect(url_for('render_trial', condition_no=0, method="GET"))
 
 
@@ -144,12 +137,12 @@ def render_trial(condition_no):
         pass
 
     # Retrieve the necessary information from the global TEMP variable
-    participant_id = TEMP['participant_id']
-    condition = TEMP['condition_order'][condition_no]
+    participant_id = session['participant_id']
+    condition = session['condition_order'][condition_no]
     to_label = CONDITIONS[condition]['label']
     human_ideas = CONDITIONS[condition]['n_human']
     ai_ideas = CONDITIONS[condition]['n_ai']
-    item = TEMP['item_order'][condition_no]
+    item = session['item_order'][condition_no]
 
     # If the HTTP method is GET, render the render_trial template
     if request.method == "GET":
@@ -172,6 +165,7 @@ def render_trial(condition_no):
 
         # Retrieve the participant's response
         response_text = request.form.get('participant_response')
+        session['responses'].append(response_text)
 
         # Insert the participant's response into the BigQuery table
         row = {
@@ -203,7 +197,7 @@ def thank_you():
 
 if __name__ == '__main__':
     if is_local:
-        app.run(port=5025, debug=True)
+        app.run(port=5027, debug=True)
     else:
         port = int(os.environ.get('PORT', 5000))
         app.run(host="0.0.0.0", port=port)
