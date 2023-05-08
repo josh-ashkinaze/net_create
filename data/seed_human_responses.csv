@@ -1,91 +1,91 @@
-Unnamed: 0,src,question,aut_item,response,id,target,participant,response_num,count,split,condition
-11267,betal18,What is a surprising use for a BOX?,box,hold clothes,betal18_box-9814,1.0,betal182061,,,train,h
-14823,snb17,What is a surprising use for a BOX?,box,hot sauce,snb17_box-8d04,1.7,snb1798,,,train,h
-16274,snb17,What is a surprising use for a BOX?,box,as a shadow,snb17_box-3d5f,2.0,snb1765,,,train,h
-9018,snb17,What is a surprising use for a BOX?,box,stack,snb17_box-abbc,1.3,snb1791,,,train,h
-18252,betal18,What is a surprising use for a BOX?,box,Cubby,betal18_box-1bf2,1.3,betal182104,,,train,h
-2122,snbmo09,What is a surprising use for a BOX?,box,use it as an oven,snbmo09_box-d15b,2.7,snbmo0997,1.0,,test,h
-10277,snb17,What is a surprising use for a BOX?,box,tree,snb17_box-0429,1.3,snb1718,,,train,f_l
-14814,snbmo09,What is a surprising use for a BOX?,box,make a sculpture,snbmo09_box-0f91,2.0,snbmo099,10.0,,train,f_l
-3914,betal18,What is a surprising use for a BOX?,box,To use as a peg leg,betal18_box-2d6b,3.3,betal182026,,,val,f_u
-17758,snbmo09,What is a surprising use for a BOX?,box,to play pretend with,snbmo09_box-ebf4,1.5,snbmo0918,8.0,,train,f_u
-3916,snb17,What is a surprising use for a BOX?,box,As a shape shifter,snb17_box-3b07,2.0,snb1793,,,val,m_l
-17764,snbmo09,What is a surprising use for a BOX?,box,to hide in (hide and go seek),snbmo09_box-84c1,1.2,snbmo0921,4.0,,train,m_l
-7785,betal18,What is a surprising use for a BOX?,box,Picture frame,betal18_box-73c3,2.4,betal182139,,,train,m_l
-3004,snbmo09,What is a surprising use for a BOX?,box,prayer box - stick prayers in them,snbmo09_box-f802,1.5,snbmo09162,2.0,,test,m_l
-4238,snb17,What is a surprising use for a BOX?,box,Storing stuff,snb17_box-a2c8,1.0,snb17148,,,train,m_u
-4652,betal18,What is a surprising use for a BOX?,box,Canvas,betal18_box-e7dd,1.3,betal182023,,2.0,train,m_u
-10415,snb17,What is a surprising use for a BOX?,box,platter,snb17_box-506e,1.7,snb1735,,,train,m_u
-17316,betal18,What is a surprising use for a BOX?,box,interdimensional portal,betal18_box-351b,3.3,betal182044,,,train,m_u
-8961,dod20,What is a surprising use for a FORK?,fork,use as a shovel for ga,dod20_fork-3493,2.3,dod2028,3.0,,train,h
-4060,dod20,What is a surprising use for a FORK?,fork,something to throw,dod20_fork-af5a,2.5,dod2038,6.0,,train,h
-1715,dod20,What is a surprising use for a FORK?,fork,use to cut a package,dod20_fork-156b,3.3,dod2084,2.0,,test,h
-12594,dod20,What is a surprising use for a FORK?,fork,making tic tac toe symbols on cookies,dod20_fork-0c90,2.8,dod2090,3.0,,train,h
-16205,dod20,What is a surprising use for a FORK?,fork,comb,dod20_fork-b244,3.5,dod2059,1.0,5.0,train,h
-7645,dod20,What is a surprising use for a FORK?,fork,use as windchime,dod20_fork-9ccd,4.0,dod2057,0.0,,train,h
-5851,dod20,What is a surprising use for a FORK?,fork,tool to make textured swirls in the ceiling,dod20_fork-1c39,4.0,dod2076,7.0,,train,f_l
-10825,dod20,What is a surprising use for a FORK?,fork,to eat with,dod20_fork-c244,1.0,dod2038,0.0,,train,f_l
-5893,dod20,What is a surprising use for a FORK?,fork,used for eating,dod20_fork-2b19,1.0,dod2029,1.0,,train,f_u
-15655,dod20,What is a surprising use for a FORK?,fork,balloon popper,dod20_fork-f88a,2.5,dod2073,5.0,,train,f_u
-5938,dod20,What is a surprising use for a FORK?,fork,carver,dod20_fork-332c,3.5,dod207,0.0,,train,m_l
-11646,dod20,What is a surprising use for a FORK?,fork,miniature slingshot,dod20_fork-d09c,4.0,dod2060,3.0,,train,m_l
-18843,dod20,What is a surprising use for a FORK?,fork,magic trick,dod20_fork-a027,3.7,dod2024,6.0,,train,m_l
-376,dod20,What is a surprising use for a FORK?,fork,shredder,dod20_fork-e3e4,2.5,dod2073,3.0,,test,m_l
-3630,dod20,What is a surprising use for a FORK?,fork,picture holder,dod20_fork-98c7,4.0,dod2061,3.0,,val,m_u
-10015,dod20,What is a surprising use for a FORK?,fork,utensil,dod20_fork-0b67,1.0,dod2077,0.0,3.0,train,m_u
-19738,dod20,What is a surprising use for a FORK?,fork,use to make holes in a potato before microwaving,dod20_fork-2787,1.5,dod2084,4.0,,train,m_u
-898,dod20,What is a surprising use for a FORK?,fork,moving food from one container to another,dod20_fork-d7e1,1.5,dod2043,4.0,,test,m_u
-14421,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,to put gummies in,motesf_lightbulb-85ca,3.3,motesff718,4.0,,train,h
-15511,motesp,What is a surprising use for a LIGHT BULB?,lightbulb,It can be used for a heat source because it emits heat when on for a long time and then you can use it like a campfire.,motesp-g1_lightbulb-16AA,3.4,16AA,,,train,h
-3367,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,Use the inner part of it and attach it to something like a lunch pail or something and find a way to power it. Then the light will produce light energy and heat to keep your food warm and make it easier to find things. then you can use the glass to cover the lower part to cover the food so you don't burn your hand getting it.,motesf_lightbulb-086b,4.1,motesf9a11,5.0,,val,h
-18209,motesp,What is a surprising use for a LIGHT BULB?,lightbulb,You could use a light bulb to make a fake torch for caves. ,motesp-g1_lightbulb-10KS,3.0,10KS,,,train,h
-12664,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,smash then blame your sister,motesf_lightbulb-648f,2.7,motesf0613,2.0,,train,h
-6216,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,Throw it on the ground so it can makes a nice sound.,motesf_lightbulb-20de,2.1,motesf5b8a,2.0,,train,h
-2102,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,use it in a circuit,motesf_lightbulb-613b,3.0,motesf5737,3.0,,test,f_l
-8698,motesp,What is a surprising use for a LIGHT BULB?,lightbulb,You can take a light bulb and draw a cityscape on a few of them. Plug them in to the wall at night and now you have decorations and a cool night light.,motesp-g1_lightbulb-11KS,3.4,11KS,,,train,f_l
-16903,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,you can use it to play with,motesf_lightbulb-a8e1,2.4,motesfec89,4.0,,train,f_u
-10212,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,put a lightbulb on the roof,motesf_lightbulb-be1d,2.1,motesfb73c,2.0,,train,f_u
-12822,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,you can use a light bulb to make a fire,motesf_lightbulb-794b,3.3,motesfd1f4,7.0,,train,m_l
-2148,motesp,What is a surprising use for a LIGHT BULB?,lightbulb,"Try to break the lightbulb and then put it under a blanket on a bed and then when someone lays on their blanket, they will get electrocuted. ",motesp-g1_lightbulb-26YK,3.7,26YK,,,test,m_l
-18228,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,we can break the glass surrounding the lightbulb and use it for art or a puzzle.,motesf_lightbulb-ab39,3.0,motesfbeed,2.0,,train,m_l
-857,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,Smashing the lightbulb,motesf_lightbulb-1b1e,2.1,motesfa4f2,8.0,,test,m_l
-14119,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,my surprising way to use a light bulb is to touch it when it’s hot and act like I'm burnt to have free candy,motesf_lightbulb-456a,3.3,motesf19f3,2.0,,train,m_u
-1054,motesp,What is a surprising use for a LIGHT BULB?,lightbulb,You can make a book made out of light bulbs.,motesp-g1_lightbulb-2WL,3.9,2WL,,,test,m_u
-3268,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,idea hat,motesf_lightbulb-bdd9,2.7,motesf13f9,2.0,,val,m_u
-13228,motesf,What is a surprising use for a LIGHT BULB?,lightbulb,To put food in it,motesf_lightbulb-e96d,3.3,motesff717,7.0,,train,m_u
-9838,motesf,What is a surprising use for a SPOON?,spoon,"Put something in the head of the spoon, pull it back, let it go and the thing will fly away.",motesf_spoon-1b96,2.7,motesf6855,4.0,,train,h
-1874,motesf,What is a surprising use for a SPOON?,spoon,nails,motesf_spoon-2e9c,4.1,motesf63dc,5.0,,test,h
-5846,motesf,What is a surprising use for a SPOON?,spoon,that you can bend the spoon,motesf_spoon-35b5,3.0,motesf7327,5.0,,train,h
-13131,motesf,What is a surprising use for a SPOON?,spoon,Use the spoon to clean your dishes,motesf_spoon-8333,3.6,motesf6512,6.0,,train,h
-3003,motesf,What is a surprising use for a SPOON?,spoon,make a dress,motesf_spoon-7393,4.1,motesf7a61,6.0,,test,h
-19055,motesf,What is a surprising use for a SPOON?,spoon,the heaviest spoon in the world.,motesf_spoon-8073,2.7,motesf1f0e,5.0,,train,h
-9721,motesf,What is a surprising use for a SPOON?,spoon,use it in the opposite direction,motesf_spoon-a278,2.1,motesf6c4b,6.0,,train,f_l
-4097,motesp,What is a surprising use for a SPOON?,spoon,Get a big spoon and then put a pie in it with whipped cream and then prank someone with the pie by pressing down on the spoon and then the pie will go into someone's face,motesp-g1_spoon-26YK,3.2,26YK,,,train,f_l
-10005,motesf,What is a surprising use for a SPOON?,spoon,try using it like a fork,motesf_spoon-3d03,2.1,motesfe2c4,6.0,,train,f_u
-4178,motesf,What is a surprising use for a SPOON?,spoon,you can use a spoon for like a music,motesf_spoon-8714,2.4,motesf9b86,4.0,,train,f_u
-17862,motesf,What is a surprising use for a SPOON?,spoon,you can make a round mold out of clay.,motesf_spoon-1101,3.6,motesf7f10,2.0,,train,m_l
-9785,motesp,What is a surprising use for a SPOON?,spoon,To make Forky off of Toy Story 4 ,motesp-g1_spoon-18RE,3.0,18RE,,,train,m_l
-18482,motesf,What is a surprising use for a SPOON?,spoon,bend the spoon then glue a stone on it,motesf_spoon-f686,3.3,motesf2b24,6.0,,train,m_l
-640,motesf,What is a surprising use for a SPOON?,spoon,to launch things,motesf_spoon-aa51,2.7,motesfcb70,1.0,,test,m_l
-11975,motesf,What is a surprising use for a SPOON?,spoon,a ball launcher,motesf_spoon-a202,2.7,motesf1d7f,3.0,,train,m_u
-2043,motesf,What is a surprising use for a SPOON?,spoon,make a house with it,motesf_spoon-210b,3.6,motesf274a,7.0,,test,m_u
-18998,motesf,What is a surprising use for a SPOON?,spoon,A screwdriver,motesf_spoon-383f,3.3,motesf92c8,5.0,,train,m_u
-676,motesf,What is a surprising use for a SPOON?,spoon,create a cute (or handsome) friend out of the spoon and name it Bob,motesf_spoon-b38e,3.3,motesf642e,4.0,,test,m_u
-11291,dod20,What is a surprising use for a TABLE?,table,plant stand,dod20_table-b2c0,2.2,dod2033,5.0,2.0,train,h
-18338,dod20,What is a surprising use for a TABLE?,table,for drawing,dod20_table-2aba,1.5,dod2040,6.0,,train,h
-12572,dod20,What is a surprising use for a TABLE?,table,a ladder,dod20_table-13fc,3.3,dod2072,1.0,,train,h
-14902,dod20,What is a surprising use for a TABLE?,table,a barrier,dod20_table-d6a2,3.5,dod2076,3.0,,train,h
-14482,dod20,What is a surprising use for a TABLE?,table,to bl,dod20_table-a2e8,1.0,dod2043,10.0,,train,h
-18375,dod20,What is a surprising use for a TABLE?,table,set up buffet on,dod20_table-9b9c,1.5,dod2085,7.0,,train,h
-6310,dod20,What is a surprising use for a TABLE?,table,door prop,dod20_table-25ac,3.2,dod2033,0.0,,train,f_l
-17080,dod20,What is a surprising use for a TABLE?,table,studying,dod20_table-32db,1.5,dod2021,1.0,,train,f_l
-6365,dod20,What is a surprising use for a TABLE?,table,create a clubhouse,dod20_table-4db1,3.5,dod2065,0.0,,train,f_u
-17117,dod20,What is a surprising use for a TABLE?,table,work on it,dod20_table-fffd,1.2,dod2013,9.0,,train,f_u
-7619,dod20,What is a surprising use for a TABLE?,table,bench press,dod20_table-96bf,3.8,dod2053,10.0,,train,m_l
-17951,dod20,What is a surprising use for a TABLE?,table,doing a puzzle,dod20_table-be3f,2.0,dod2064,3.0,,train,m_l
-13465,dod20,What is a surprising use for a TABLE?,table,plant box,dod20_table-fc5c,3.5,dod2017,3.0,,train,m_l
-14406,dod20,What is a surprising use for a TABLE?,table,support,dod20_table-509b,1.5,dod2060,4.0,,train,m_l
-7654,dod20,What is a surprising use for a TABLE?,table,doing homework,dod20_table-78ff,1.5,dod2090,1.0,,train,m_u
-17945,dod20,What is a surprising use for a TABLE?,table,for painting,dod20_table-7731,2.5,dod209,7.0,,train,m_u
-13208,dod20,What is a surprising use for a TABLE?,table,use it as a painting canvas,dod20_table-fece,3.2,dod204,5.0,,train,m_u
-10164,dod20,What is a surprising use for a TABLE?,table,puzzle board,dod20_table-9907,2.0,dod2048,4.0,,train,m_u
+aut_item,condition,response,target,response_id
+box,h,make it like a hat,1.8,human_seed0
+box,h,to masturbate in,1.7,human_seed1
+box,h,burn them for a fuel source,2.0,human_seed2
+box,h,backpacks,2.3,human_seed3
+box,h,Cover a sunroof,2.1,human_seed4
+box,h,draw different things on each side,2.2,human_seed5
+box,f_l,A backpack,2.0,human_seed6
+box,f_l,A train,1.9,human_seed7
+box,f_u,a chair,1.6,human_seed8
+box,f_u,pinata,2.3,human_seed9
+box,m_l,make a clubhouse out of a bunch of boxes,2.0,human_seed10
+box,m_l,fort for a child,1.7,human_seed11
+box,m_l,animal cage,1.7,human_seed12
+box,m_l,Creating a fort,1.7,human_seed13
+box,m_u,Can be used to prevent scratches on floor,2.7,human_seed14
+box,m_u,as a stool,1.8,human_seed15
+box,m_u,slide,1.8,human_seed16
+box,m_u,wear the   as a costume,1.6,human_seed17
+fork,h,weapon,2.7,human_seed18
+fork,h,throw,2.2,human_seed19
+fork,h,stab lid of jar for insects,2.8,human_seed20
+fork,h,whisk,2.0,human_seed21
+fork,h,plant market,2.5,human_seed22
+fork,h,to use to help as a tool,1.8,human_seed23
+fork,f_l,used as a weapon,2.7,human_seed24
+fork,f_l,fling food,2.8,human_seed25
+fork,f_u,back scratcher,2.5,human_seed26
+fork,f_u,scrape burned food into the trash,1.7,human_seed27
+fork,m_l,to stab someone,2.5,human_seed28
+fork,m_l,perforation maker,2.3,human_seed29
+fork,m_l,to crush garlic with handle,2.8,human_seed30
+fork,m_l,use in garden,2.8,human_seed31
+fork,m_u,use as garden decor,2.8,human_seed32
+fork,m_u,to scrath a surface with,2.0,human_seed33
+fork,m_u,impromptu stirrer,1.8,human_seed34
+fork,m_u,a back scratcher,2.7,human_seed35
+lightbulb,h,making sounds,2.7,human_seed36
+lightbulb,h,Instead of using it at night rip it out and pretend it is a light up ball.,2.8,human_seed37
+lightbulb,h,hang it upside down,2.4,human_seed38
+lightbulb,h,A surprising use for a light bulb would be to tie a string and hang it onto the ceiling for decoration.,2.4,human_seed39
+lightbulb,h,You could use it as a trap for insects that bother you,2.4,human_seed40
+lightbulb,h,smashing the lightbulb.,2.1,human_seed41
+lightbulb,f_l,A surprising use for a lightbulb would be to use it underwater to light up a pool,2.6,human_seed42
+lightbulb,f_l,a lightbulb could be used as something like the sun but for an animal you could use it to keep an animal hot even if a lightbulb or always known for their heat,2.7,human_seed43
+lightbulb,f_u,throw it and play with it,2.4,human_seed44
+lightbulb,f_u,put LED lights in it and it will shine different colors,2.7,human_seed45
+lightbulb,m_l,shiny lightbulb,1.6,human_seed46
+lightbulb,m_l,put it on top of your head for a good idea,2.4,human_seed47
+lightbulb,m_l,Spin it,2.4,human_seed48
+lightbulb,m_l,the ones that turn to different colors,2.4,human_seed49
+lightbulb,m_u,put it with batteries,2.1,human_seed50
+lightbulb,m_u,To put LED lights and have a dance party.,2.4,human_seed51
+lightbulb,m_u,you can put color paper in it then turn it on.,2.4,human_seed52
+lightbulb,m_u,to break it and light it up,2.1,human_seed53
+spoon,h,sticking it on your nose,2.1,human_seed54
+spoon,h,using it as a food launcher,2.7,human_seed55
+spoon,h,a spork,2.4,human_seed56
+spoon,h,use it as a fork,2.6,human_seed57
+spoon,h,using it to dig outside,2.4,human_seed58
+spoon,h,a ball launcher,2.7,human_seed59
+spoon,f_l,a catapult,2.7,human_seed60
+spoon,f_l,use it as a slingshot,2.7,human_seed61
+spoon,f_u,You can use it for a mirror.,2.4,human_seed62
+spoon,f_u,stick it on your nose,2.4,human_seed63
+spoon,m_l,By using the spoon by dipping it into something,2.1,human_seed64
+spoon,m_l,you use a spoon to eat,1.9,human_seed65
+spoon,m_l,to flick food in the air,2.7,human_seed66
+spoon,m_l,using it for drums,2.4,human_seed67
+spoon,m_u,"Put eyes, mouth, and arms to make it into a toy",2.4,human_seed68
+spoon,m_u,you could use a spoon that's not too hard to bend as a slingshot for things,2.7,human_seed69
+spoon,m_u,you can use the spoon to dig out dirt in your backyard,2.4,human_seed70
+spoon,m_u,turn the spoon into a catapult,2.7,human_seed71
+table,h,a stool,2.0,human_seed72
+table,h,paint on,2.5,human_seed73
+table,h,bench,2.5,human_seed74
+table,h,it can be used as a sitting chair,2.5,human_seed75
+table,h,to keep books,2.3,human_seed76
+table,h,as a workout board,2.8,human_seed77
+table,f_l,building,2.5,human_seed78
+table,f_l,reach lightbulb,2.8,human_seed79
+table,f_u,to use as a decoration,2.5,human_seed80
+table,f_u,poker,2.0,human_seed81
+table,m_l,used for arranging books,2.2,human_seed82
+table,m_l,to put a lamp,1.8,human_seed83
+table,m_l,folding laundry,2.0,human_seed84
+table,m_l,towel holder,2.2,human_seed85
+table,m_u,operation,2.3,human_seed86
+table,m_u,as a present,2.5,human_seed87
+table,m_u,plant stand,2.2,human_seed88
+table,m_u,beer pong games,2.3,human_seed89
