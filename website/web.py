@@ -60,7 +60,7 @@ app = Flask(__name__)
 app.secret_key = 'k'
 
 # BigQuery credentials
-key_path = file_prefix + "creds/netcreate-0335ce05e7ff.json"
+key_path = file_prefix + "creds/google_creds.json"
 credentials = service_account.Credentials.from_service_account_file(
     key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
 )
