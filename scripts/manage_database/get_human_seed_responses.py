@@ -2,7 +2,8 @@
 Author: Joshua Ashkinaze
 Date: 2023-05-07
 
-Description: This script selects a sample of prior responses to be added to the database, assigns these responses to conditions
+Description: This script selects a sample of prior responses (25th to 75th percentile for creativity) to be added to the database,
+ and then assigns these responses to conditions
 """
 
 import pandas as pd
@@ -23,8 +24,15 @@ def main():
         "m_u": 4
     }
 
-    # Read in the data and filter to only include the relevant prompts
+    # Read in the data
     df = pd.read_csv("../../data/prior_responses.csv")
+
+    # Get Q2-Q3 responses
+    df['creativity_quartile'] = pd.qcut(df['target'], 4, labels=False)
+    df['creativity_quartile'] = df['creativity_quartile'] + 1
+    df = df[df['creativity_quartile'].isin([2,3])]
+
+    # Filter for my items
     my_items = pd.read_csv("../../data/chosen_aut_items.csv")['aut_item'].tolist()
     df = df[df['prompt'].isin(my_items)]
 
@@ -51,6 +59,8 @@ def main():
     # Concatenate all the DataFrames in assignments
     assignments_df = pd.concat(assignments)
     assignments_df = assignments_df.rename(columns={'prompt': 'aut_item'})
+    assignments_df = assignments_df[['aut_item', 'condition', 'response', 'target']]
+    assignments_df['response_id'] = [f"human_seed{i}" for i in range(len(assignments_df))]
 
     # Save the result
     assignments_df.to_csv("../../data/seed_human_responses.csv", index=False)
