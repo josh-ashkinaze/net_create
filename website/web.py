@@ -199,10 +199,11 @@ def thank_you():
     participant_responses = list(zip(session['item_order'], session['responses']))
 
     # Generate the human comparison graph
-    img_base64_human = graph_score(participant_responses, "human")
+    img_base64_human = graph_score(participant_responses, "human", prefix=
+                                   file_prefix)
 
     # Generate the AI comparison graph
-    img_base64_ai = graph_score(participant_responses, "AI")
+    img_base64_ai = graph_score(participant_responses, "AI", prefix=file_prefix)
     return render_template('thank_you.html', img_base64_human=img_base64_human, img_base64_ai=img_base64_ai)
 
 
