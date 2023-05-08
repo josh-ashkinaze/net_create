@@ -88,4 +88,4 @@ def make_graphs(participant_responses, conditions, file_prefix="../"):
     ai_graph = comparison_graph(participant_scores, "AI", file_prefix)
     human_graph = comparison_graph(participant_scores, "human", file_prefix)
     ai_human_graph = plot_ai_human(conditions, participant_scores)
-    return ai_graph, human_graph, ai_human_graph
+    return human_graph, ai_graph, ai_human_graph
