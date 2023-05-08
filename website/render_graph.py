@@ -32,7 +32,7 @@ def graph_score(participant_responses, comparison, prefix="../"):
     participant_scores= my_utils.batch_score_responses(participant_responses)['originality'].tolist()
     make_aesthetic()
     mean_score = np.mean(participant_scores)
-    comparison_scores = load_data(comparison)
+    comparison_scores = load_data(comparison, prefix)
 
     percentile = int(percentileofscore(comparison_scores, mean_score))
 
