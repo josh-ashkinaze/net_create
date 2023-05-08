@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 class RateLimitError(Exception):
+    logging.info("Rate limit error")
     pass
 
 
@@ -44,12 +45,9 @@ def score_aut_responses(response_tupples):
 def process_aut_batch(batch):
     scores = []
     for x in batch:
-        try:
-            data = {'aut_item': x[0], 'response': x[1]}
-            score = score_aut_responses([data])
-            scores.append(score)
-        except Exception as e:
-            logging.error(f"Failed to score response {x[1]} for item {x[0]}: {e}")
+        data = {'aut_item': x[0], 'response': x[1]}
+        score = score_aut_responses([(data['aut_item'], data['response'])])
+        scores.append(score)
     return scores
 
 
@@ -62,6 +60,7 @@ def batch_score_responses(response_tupples, batch_size=30, max_workers=4):
         batch_futures = []
 
         for batch_idx in range(total_batches):
+            logging.info("Processing batch {} out of {}".format(batch_idx + 1, total_batches))
             start_idx = batch_idx * batch_size
             end_idx = min((batch_idx + 1) * batch_size, len(response_tupples))
             current_batch = response_tupples[start_idx:end_idx]
@@ -70,8 +69,8 @@ def batch_score_responses(response_tupples, batch_size=30, max_workers=4):
         for future in batch_futures:
             scores.extend(future.result())
 
-    logging.info("Finished logging scores for responses.")
-    return pd.DataFrame(scores)
+    return pd.concat(scores, ignore_index=True)
+
 
 
 def make_aesthetic():
