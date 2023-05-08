@@ -8,11 +8,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 class RateLimitError(Exception):
-    logging.info("Rate limit error")
-    pass
+    def __init__(self, message, logger=None):
+        super().__init__(message)
+        if logger:
+            logger.info("Rate limit error")
 
 
-def score_aut_responses(response_tupples):
+def score_aut_responses(response_tupples, logger=None):
     """Score a list of response tupples (prompt, response) using the OpenScoring API."""
     base_url = "https://openscoring.du.edu/llm"
     model = "gpt-davinci-paper_alpha"
@@ -36,23 +38,23 @@ def score_aut_responses(response_tupples):
         result = pd.DataFrame(scores, columns=["prompt", "response", "originality"])
         return result
     elif response.status_code == 429:  # Assuming 429 is the rate limit error code
-        raise RateLimitError("Rate limit error")
+        raise RateLimitError("Rate limit error", logger)
     else:
-        logging.info(f"Error: {response.status_code}")
         return None
 
 
-def process_aut_batch(batch):
+def process_aut_batch(batch, logger=None):
     scores = []
     for x in batch:
         data = {'aut_item': x[0], 'response': x[1]}
-        score = score_aut_responses([(data['aut_item'], data['response'])])
+        score = score_aut_responses([(data['aut_item'], data['response'])], logger)
         scores.append(score)
     return scores
 
 
-def batch_score_responses(response_tupples, batch_size=30, max_workers=4):
-    logging.info("Logging scores for responses with batch size of {}".format(batch_size))
+def batch_score_responses(response_tupples, batch_size=30, max_workers=4, logger=None):
+    if logger:
+        logging.info("Logging scores for responses with batch size of {}".format(batch_size))
     scores = []
     total_batches = math.ceil(len(response_tupples) / batch_size)
 
@@ -60,11 +62,12 @@ def batch_score_responses(response_tupples, batch_size=30, max_workers=4):
         batch_futures = []
 
         for batch_idx in range(total_batches):
-            logging.info("Processing batch {} out of {}".format(batch_idx + 1, total_batches))
+            if logger:
+                logging.info("Processing batch {} out of {}".format(batch_idx + 1, total_batches))
             start_idx = batch_idx * batch_size
             end_idx = min((batch_idx + 1) * batch_size, len(response_tupples))
             current_batch = response_tupples[start_idx:end_idx]
-            batch_futures.append(executor.submit(process_aut_batch, current_batch))
+            batch_futures.append(executor.submit(process_aut_batch, current_batch, logger))
 
         for future in batch_futures:
             scores.extend(future.result())
