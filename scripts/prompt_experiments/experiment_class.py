@@ -22,15 +22,10 @@ The `run` method is used to start the experiment, and it requires two parameters
 """
 
 import openai
-import json
-import multiprocessing
 import random
-import os
-import sys
 import logging
 import concurrent.futures
 from datetime import datetime
-from tenacity import RetryCallState
 import jsonlines
 
 from tenacity import (
@@ -42,7 +37,7 @@ from tenacity import (
 
 
 class PromptExperiment:
-    def __init__(self, api_key, prompts, aut_items, n_uses, example_df, n_examples, title="", random_seed=416):
+    def __init__(self, api_key, prompts, aut_items, n_uses, example_df, n_examples=False, title="", random_seed=416):
         self.api_key = api_key
         self.prompts = prompts
         self.aut_items = aut_items
