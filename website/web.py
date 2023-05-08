@@ -62,6 +62,7 @@ app.secret_key = 'k'
 
 # BigQuery credentials
 
+
 if not is_local:
     json_key = json.loads(os.environ['GOOGLE_CREDS'])
     credentials = service_account.Credentials.from_service_account_info(json_key)
