@@ -1,8 +1,6 @@
 import numpy as np
-
 from experiment_class import PromptExperiment
 import pandas as pd
-import random
 import json
 import argparse
 
@@ -16,17 +14,17 @@ def run(n_trials_per_combo=1):
     mean_word_count = int(np.mean(example_df['word_count']))
 
     # Get OpenAI keys
-    api_key_path = "../../creds/openai_creds.json"
-    with open(api_key_path, "r") as f:
-        creds = json.load(f)
-    API_KEY = creds["api_key"]
+    with open("../../secrets/openai_creds.json", "r") as f:
+        API_KEY = json.load(f)["api_key"]
 
     # Get prompts
     with open('prompt_list.json') as f:
         all_prompts = json.load(f)['prompts']
     prompts = {key: all_prompts[key] for key in {'zero_shot', 'zero_shot_limit_length'}}
-    prompts['zero_shot_limit_length'] = prompts['zero_shot_limit_length'].replace("[MEAN_HUMAN_WORDS]", str(mean_word_count))
+    prompts['zero_shot_limit_length'] = prompts['zero_shot_limit_length'].replace("[MEAN_HUMAN_WORDS]",
+                                                                                  str(mean_word_count))
 
+    # Fill in experiment details
     aut_items = pd.read_csv("../../data/chosen_aut_items.csv")["aut_item"].tolist()
     n_uses = 5
     llm_params = {
