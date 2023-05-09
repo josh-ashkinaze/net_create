@@ -1,4 +1,4 @@
-/creds/google_creds.json
-/creds/openai_creds.json
-creds/
+secrets/
 *.log
+/secrets/google_creds.json
+/secrets/openai_creds.json
