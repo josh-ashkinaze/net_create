@@ -133,15 +133,15 @@ def render_trial(condition_no):
     participant_id = session['participant_id']
     condition = session['condition_order'][condition_no]
     to_label = CONDITIONS[condition]['label']
-    human_ideas = CONDITIONS[condition]['n_human']
-    ai_ideas = CONDITIONS[condition]['n_ai']
+    n_human_ideas = CONDITIONS[condition]['n_human']
+    n_ai_ideas = CONDITIONS[condition]['n_ai']
     item = session['item_order'][condition_no]
 
     # If the HTTP method is GET, render the render_trial template
     if request.method == "GET":
-        human_rows = [row['response_text'] for row in list(client.query(
-            f"SELECT response_text FROM `net_expr.trials` WHERE (item = '{item}' AND condition = '{condition}') ORDER BY response_date DESC LIMIT {human_ideas}").result())]
-        ai_rows = AI_IDEAS_DF.query("aut_item=='{}'".format(item)).sample(ai_ideas)['response'].tolist()
+        human_rows = [row['response_text'] for row in list(client.query(f"""SELECT response_text FROM (SELECT DISTINCT response_text, response_date FROM `net_expr.trials` WHERE (item = '{item}' AND condition = '{condition}')) AS subquery ORDER BY response_date DESC LIMIT {n_human_ideas}""").result())]
+        filtered_ai_rows = AI_IDEAS_DF.query("aut_item=='{}'".format(item) and "response not in @human_rows")
+        ai_rows = filtered_ai_rows['response'].sample(n_ai_ideas).tolist()
         if to_label:
             human_rows = [row + ' <span style="color: #1F4287;">(Source: <strong>Human</strong>)</span>' for row in
                           human_rows]
@@ -150,7 +150,9 @@ def render_trial(condition_no):
         rows = ai_rows + human_rows
         random.shuffle(rows)
         print("responses", rows)
-        return render_template('render_trial.html', item=item, rows=rows, condition_no=condition_no, label=SOURCE_LABEL if to_label else "")
+        return render_template('render_trial.html', item=item, rows=rows, condition_no=condition_no,
+                               label=SOURCE_LABEL if to_label else "")
+
 
     # If the HTTP method is POST, insert the participant's response into the BigQuery table
     # then increment the condition_no and redirect to the next render_trial
