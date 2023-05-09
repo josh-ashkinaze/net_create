@@ -1,5 +1,5 @@
 """"
-Date: 03/12/2023
+Date: 05/07/2023
 
 Description: This is a Flask web application that runs a web experiment.
 
@@ -8,13 +8,9 @@ Description: This is a Flask web application that runs a web experiment.
 * The experiment counterbalances across different conditions and stimuli
 * The experiment has four routes:  the consent form, the start of the experiment, the trials themselves, and the thank you page.
 
-# Condition defintions:
-# - 6 human-only ideas
-# - f, l: few (2) AI ideas / many (4) human ideas, labeled source
-# - f, u: few (2) AI ideas / many (4) human ideas, unlabled source
-# - m, l: many (4) AI ideas / few (2) human ideas, labled source
-# - m, u: many (4) AI ideas / few (2) human ideas, unlabled source
-
+# Conditions:
+# There is a control human-only condition, and then a 2x2 varying by
+# LLM exposure (few LLM ideas vs many LLM ideas) and transparency (say source labels or don't)
 """
 
 from google.cloud import bigquery
@@ -53,16 +49,11 @@ ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].uniqu
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
 ####################
 
-
-
-
 # Initialize the Flask application
 app = Flask(__name__)
 app.secret_key = 'k'
 
-# BigQuery credentials
-
-
+# Connect to BQ
 if not is_local:
     json_key = json.loads(os.environ['GOOGLE_CREDS'])
     credentials = service_account.Credentials.from_service_account_info(json_key)
@@ -71,8 +62,6 @@ else:
     credentials = service_account.Credentials.from_service_account_file(
         key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
-
-# BigQuery connection
 client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 dataset = client.dataset("net_expr")
 table = dataset.table("trials")
@@ -89,20 +78,14 @@ def start_experiment():
     """
     Start the experiment.
 
-    Let's first create a participant ID, counterbalance conditions, and counterbalance items.
-    Store these items in the global variable called `TEMP'.
-
-    Then, we start the experiment by calling `render_trial(conditon_no=0)'.
-    From there, `render_trial' will recursively call itself to display all trials until the experiment is done.
-
+    1. Ccreate a UUID for participant ID
+    2. Counterbalance conditions and counterbalance items.
+    3. Save all this stuff to a Flask session object.
+    4. Redirect to the first trial.
     """
     session['participant_id'] = str(uuid.uuid4())
-    item_order = list(ITEMS)
-    random.shuffle(item_order)
-    condition_order = list(CONDITIONS.keys())
-    random.shuffle(condition_order)
-    session['condition_order'] = condition_order
-    session['item_order'] = item_order
+    session['item_order'] = random.sample(ITEMS, len(ITEMS))
+    session['condition_order'] = random.sample(list(CONDITIONS.keys()), len(CONDITIONS))
     session['responses'] = []
     return redirect(url_for('render_trial', condition_no=0, method="GET"))
 
@@ -112,9 +95,10 @@ def render_trial(condition_no):
     """
     Recursively handles the render_trial route for a particular condition_no.
 
-    The idea is that in a temp dictionary, we store the participant ID, the condition order, and the item order.
-    Then, we keep calling this function with the next condition_no -- which indexes items and conditions --
-    until we've gone through all conditions.
+    The idea is that in a session object (like a unique dictionary or each participant),
+    we store the participant ID, the condition order, and the item order.
+    Then, we keep calling this function with the next condition_no -- which indexes the participant's items and condition sequence --
+    until we've gone through all trials.
 
     The logic is as follows:
 
@@ -122,11 +106,11 @@ def render_trial(condition_no):
         Return the thank_you page since our experiment is done.
     
     ELSE if there are still trials to go:
-        1. If the HTTP method is GET (i.e: response not submitted), retrieve the necessary context from the global TEMP
-        dict and generate an render_trial instance. Upon submitting a response, this submits a post request.
+        1. If the HTTP method is GET (i.e: response not submitted), retrieve the necessary context from the session
+         and generate a render_trial instance. Upon submitting a response, this submits a post request.
 
-        2. If the HTTP method is POST (i.e: response was submitted), the function retrieves the participant's response
-        text and inserts it into a BigQuery table. Then we make GET request to `render_trial(condition_no+1)' to
+        2. If the HTTP method is POST (i.e: response was submitted), retrieve the participant's response
+        text and insert it into a BigQuery table. Then we make GET request to `render_trial(condition_no+1)' to
         go to the next condition/item.
 
 
@@ -134,7 +118,7 @@ def render_trial(condition_no):
     - condition_no (int): the current condition_no
 
     Returns:
-    - Either another instance of render_trial or the thank_you page
+    - Either another instance of render_trial (if not done) or the thank_you page (if done)
 
     """
     # If the participant has completed all condition_nos, redirect to thank you page
@@ -201,15 +185,11 @@ def render_trial(condition_no):
 @app.route("/thank-you")
 def thank_you():
     """Thank you page"""
-    participant_responses = session['responses']  # example participant_responses
-    comparison = "human"  # example comparison
     participant_responses = list(zip(session['item_order'], session['responses']))
     participant_conditions = session['condition_order']
+
+    # Render a bunch of graphs of participant's responses
     human_graph, ai_graph, human_ai_graph = make_graphs(participant_responses, participant_conditions, file_prefix)
-
-    # Generate the human comparison graph
-
-    # Generate the AI comparison graph
     return render_template('thank_you.html', img_base64_human=human_graph, img_base64_ai=ai_graph, img_base64_human_ai=human_ai_graph)
 
 
