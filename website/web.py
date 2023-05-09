@@ -186,13 +186,17 @@ def render_trial(condition_no):
 @app.route("/thank-you")
 def thank_you():
     """Thank you page"""
+    return render_template('thank_you.html')
+
+@app.route("/get-graphs")
+def get_graphs():
+    """Generate graphs and return them as JSON"""
     participant_responses = list(zip(session['item_order'], session['responses']))
     participant_conditions = session['condition_order']
 
     # Render a bunch of graphs of participant's responses
     human_graph, ai_graph, human_ai_graph = make_graphs(participant_responses, participant_conditions, file_prefix)
-    return render_template('thank_you.html', img_base64_human=human_graph, img_base64_ai=ai_graph, img_base64_human_ai=human_ai_graph)
-
+    return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
 
 if __name__ == '__main__':
     if is_local:

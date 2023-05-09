@@ -44,16 +44,39 @@
   </head>
   <body class="container py-4">
     <h1 class="mb-4">Thank you for participating!</h1>
-    <h2>Creativity With/Without AI</h2>
-    <img src="data:image/png;base64,{{ img_base64_human_ai }}" alt="Creativity With/Without AI Graph">
-    <h2>Human Comparison</h2>
-    <img src="data:image/png;base64,{{ img_base64_human }}" alt="Human Comparison Graph">
-    <h2>AI Comparison</h2>
-    <img src="data:image/png;base64,{{ img_base64_ai }}" alt="AI Comparison Graph">
+    <p> <strong> We have some graphs of the creativity of your responses! Loading... </strong> </p>
 
-    <!-- Add the footer with the desired content -->
+    <div id="graphs" style="display:none;">
+      <h2>Creativity With/Without AI</h2>
+      <img id="human-ai-graph" src="" alt="Creativity With/Without AI Graph">
+      <h2>Human Comparison</h2>
+      <img id="human-graph" src="" alt="Human Comparison Graph">
+      <h2>AI Comparison</h2>
+      <img id="ai-graph" src="" alt="AI Comparison Graph">
+    </div>
+
+    <!-- Add the footer with cite for creativity scores -->
     <footer>
-      Creativity was measured using the model from: Organisciak, Peter, Selcuk Acar, Denis Dumas, and Kelly Berthiaume. "Beyond semantic distance: automated scoring of divergent thinking greatly improves with large language models." Pre-print (2022). We queried the public API available at: <a href="https://openscoring.du.edu/">https://openscoring.du.edu/</a>
+      <p style="text-align: left;">
+        Creativity was measured using the model from: <br>
+        Organisciak, Peter, Selcuk Acar, Denis Dumas, and Kelly Berthiaume. 2022. "Beyond Semantic Distance: Automated Scoring of Divergent Thinking Greatly Improves with Large Language Models." Pre-print. <br><br>
+        We queried the public API available at: <a href="https://openscoring.du.edu/">https://openscoring.du.edu/</a>
+      </p>
     </footer>
-  </body>
-</html>
+
+
+    <!-- Async fetch graphs -->
+    <script>
+        async function fetchGraphs() {
+            const response = await fetch('/get-graphs');
+            const data = await response.json();
+            document.getElementById('human-graph').src = 'data:image/png;base64,' + data.human_graph;
+            document.getElementById('ai-graph').src = 'data:image/png;base64,' + data.ai_graph;
+            document.getElementById('human-ai-graph').src = 'data:image/png;base64,' + data.human_ai_graph;
+            document.querySelector('p').style.display = 'none';
+            document.getElementById('graphs').style.display = 'block';
+          }
+           window.onload = fetchGraphs;
+          </script>
+        </body>
+      </html>
