@@ -139,7 +139,6 @@ def render_trial(condition_no):
 
     # If the HTTP method is GET, render the render_trial template
     if request.method == "GET":
-        time.sleep(0.1)
         human_rows = [row['response_text'] for row in list(client.query(
             f"SELECT response_text FROM `net_expr.trials` WHERE (item = '{item}' AND condition = '{condition}') ORDER BY response_date DESC LIMIT {human_ideas}").result())]
         ai_rows = AI_IDEAS_DF.query("aut_item=='{}'".format(item)).sample(ai_ideas)['response'].tolist()
