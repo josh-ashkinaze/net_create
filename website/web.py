@@ -23,10 +23,11 @@ import time
 from datetime import datetime
 import random
 import os
-import sys
 from render_graph import make_graphs  # import the comparison_graph function from render_graph.py
 
 
+# SETUP
+##############################
 # Figure out if we're running locally or on Heroku. This will matter for file paths.
 if 'DYNO' in os.environ:
     is_local = False
@@ -35,8 +36,28 @@ else:
     is_local = True
     file_prefix = "../"
 
+# Initialize the Flask application
+app = Flask(__name__)
+if is_local:
+    flask_secret_key = json.load(open("../secrets/flask_secret_key.json", "r"))['session_key']
+else:
+    flask_secret_key = os.environ['FLASK_SECRET_KEY']
+app.secret_key = flask_secret_key
+
+# Connect to BQ
+if not is_local:
+    json_key = json.loads(os.environ['GOOGLE_CREDS'])
+    credentials = service_account.Credentials.from_service_account_info(json_key)
+else:
+    key_path = "../secrets/google_creds.json"
+    credentials = service_account.Credentials.from_service_account_file(
+        key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
+client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+dataset = client.dataset("net_expr")
+table = dataset.table("trials")
+
 # EXPERIMENT PARAMETERS
-####################
 SOURCE_LABEL = "For this object, we also asked AI to come up with ideas! "
 CONDITIONS = {
     'h': {'n_human': 6, 'n_ai': 0, 'label':False},
@@ -47,26 +68,7 @@ CONDITIONS = {
 }
 ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
-####################
-
-# Initialize the Flask application
-app = Flask(__name__)
-app.secret_key = 'k'
-
-# Connect to BQ
-if not is_local:
-    json_key = json.loads(os.environ['GOOGLE_CREDS'])
-    credentials = service_account.Credentials.from_service_account_info(json_key)
-else:
-    key_path = "../creds/google_creds.json"
-    credentials = service_account.Credentials.from_service_account_file(
-        key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
-    )
-client = bigquery.Client(credentials=credentials, project=credentials.project_id)
-dataset = client.dataset("net_expr")
-table = dataset.table("trials")
-
-
+##############################
 @app.route("/")
 def consent_form():
     """Consent form"""
