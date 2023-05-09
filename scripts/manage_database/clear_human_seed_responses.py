@@ -24,7 +24,7 @@ def delete_rows(credentials, dataset_id, table_id):
     logging.info(f"All rows with participant_id='seed' deleted from {dataset_id}.{table_id}")
 
 if __name__ == "__main__":
-    key_path = "../../creds/google_creds.json"
+    key_path = "../../secrets/google_creds.json"
     credentials = service_account.Credentials.from_service_account_file(
         key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )

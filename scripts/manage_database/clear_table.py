@@ -15,7 +15,7 @@ logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.
                     format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 def main():
-    key_path = "../../creds/google_creds.json"
+    key_path = "../../secrets/google_creds.json"
     credentials = service_account.Credentials.from_service_account_file(
         key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
