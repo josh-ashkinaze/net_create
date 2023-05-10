@@ -1,32 +1,11 @@
-"""
-This module defines the `PromptExperiment` class for running experiments to test different prompt configurations
-and hyperparameters with the OpenAI API.
-
-The `PromptExperiment` class is initialized with the following parameters:
-
-- api_key: Your OpenAI API key.
-- prompts: A dictionary containing the prompt conditions, where keys are the condition names and values are the
-  prompt templates.
-- aut_items: A list of items (objects) to be tested with each prompt.
-- example_df: A pandas DataFrame containing examples, with columns "prompt" and "response".
-- random_seed: (Optional) A random seed for reproducibility. Default is 416.
-
-The `run` method is used to start the experiment, and it requires two parameters:
-
-- n_trials_per_combo: Number of trials per combination of prompt, item, and example count.
-- grid_search: A dictionary containing lists of possible values for hyperparameters:
-  - temperature
-  - frequency_penalty
-  - presence_penalty
-  - n_examples (only applicable if at least one prompt contains the word "EXAMPLES")
-"""
-
 import openai
 import random
 import logging
 import concurrent.futures
 from datetime import datetime
 import jsonlines
+import pandas as pd
+import threading
 
 from tenacity import (
     retry,
@@ -37,37 +16,81 @@ from tenacity import (
 
 
 class PromptExperiment:
-    def __init__(self, api_key, prompts, aut_items, n_uses, example_df, n_examples=False, title="", random_seed=416):
+    """
+    This class is used to run a prompt experiment.
+    """
+
+    def __init__(self, api_key, prompts, aut_items, n_uses, example_df, n_trials, llm_params, n_examples=False, by_quartile=False, title="", random_seed=416):
         self.api_key = api_key
         self.prompts = prompts
         self.aut_items = aut_items
         self.n_uses = n_uses
         self.example_df = example_df
+        self.n_trials = n_trials
         self.n_examples = n_examples
+        self.by_quartile = by_quartile
         self.random_seed = random_seed
+        self.llm_params = llm_params # temperature, frequency_penalty, presence_penalty
         self.title = title
         random.seed(self.random_seed)
 
+        if self.n_examples:
+            self.example_df['creativity_quartile'] = pd.qcut(self.example_df['target'], 4, labels=False) + 1
+
+    # def handle_prompt(self, args):
+    #     """This function is used to run the experiment in parallel."""
+    #     prompt_base, object_name, examples, temperature, frequency_penalty, presence_penalty, n_uses = args
+    #     thread_id = threading.get_ident()
+    #     logging.info(f"Thread {thread_id} started")
+    #     prompt = self.make_prompt(prompt_base, object_name, examples, n_uses)
+    #     response = self.generate_responses(prompt, temperature, frequency_penalty, presence_penalty)
+    #     logging.info(f"Thread {thread_id} finished")
+    #     return response
+
     def handle_prompt(self, args):
+        """This function is used to run the experiment in parallel."""
+        print(args)
         prompt_base, object_name, examples, temperature, frequency_penalty, presence_penalty, n_uses = args
+        thread_id = threading.get_ident()
+        logging.info(f"Thread {thread_id} started")
         prompt = self.make_prompt(prompt_base, object_name, examples, n_uses)
         response = self.generate_responses(prompt, temperature, frequency_penalty, presence_penalty)
+        logging.info(f"Thread {thread_id} finished")
         return response
 
     def make_prompt(self, prompt_base, object_name, examples, n_uses):
+        """This function replaces the placeholder text in the prompt template with the appropriate values."""
         prompt = prompt_base.replace("[OBJECT_NAME]", object_name)
         prompt = prompt.replace("[N]", str(n_uses))
         examples = " ".join(['\n- ' + item for item in examples]) + "\n"
         prompt = prompt.replace("[EXAMPLES]", examples)
-        print("PROMPT", prompt)
         return prompt
 
-    def get_examples(self, df, prompt, seed=416):
-        return df[df['prompt'] == prompt].sample(self.n_examples, random_state=seed)['response'].tolist()
+    def get_examples(self, df, aut_item, quartile=None, seed=416):
+        """This function returns a list of examples for a given aut_item, optionally filtered by quartile."""
+        if quartile is not None:
+            df = df.query(f'creativity_quartile == {quartile}')
+        return df[df['prompt'] == aut_item].sample(self.n_examples, random_state=seed)['response'].tolist()
 
     @retry(wait=wait_random_exponential(multiplier=30, min=1, max=60), stop=stop_after_attempt(30),
            before_sleep=before_sleep_log(logging, logging.INFO))
     def generate_responses(self, prompt, temperature, frequency_penalty, presence_penalty):
+        """This function generates a response from the OpenAI API.
+        Params
+        ------
+        prompt: str
+            The prompt to be sent to the API.
+        temperature: float
+            The temperature parameter for the API.
+        frequency_penalty: float
+            The frequency_penalty parameter for the API.
+        presence_penalty: float
+            The presence_penalty parameter for the API.
+        Returns
+        -------
+        str
+            The response from the API.
+        """
         openai.api_key = self.api_key
         messages = openai.ChatCompletion.create(
             temperature=temperature,
@@ -80,77 +103,48 @@ class PromptExperiment:
             ]
         )
         msg = messages['choices'][0]['message']['content']
-        #print(msg)
+        # print(msg)
         return msg
 
-    def run(self, n_trials_per_combo, llm_params):
-        now = datetime.now()
-        date_string = now.strftime("%Y-%m-%d__%H.%M.%S")
-        log_file = f"{self.title}_n{n_trials_per_combo}_{date_string}.log" if self.title else f"experiment_{date_string}.log"
-        logging.basicConfig(filename=log_file, level=logging.INFO, filemode='w', format='%(asctime)s %(message)s')
-        results_file = f"../../data/prompt_experiments/{self.title}_n{n_trials_per_combo}_{date_string}.jsonl" if self.title else f"results_{date_string}.jsonl"
-        logging.info(f"n_trials_combo: {n_trials_per_combo}")
+    def run(self):
+        # Setup logging and result file paths
+        date_string = datetime.now().strftime("%Y-%m-%d__%H.%M.%S")
+        log_file = f"{self.title or 'experiment'}_n{self.n_trials}_{date_string}.log"
+        results_file = f"../../data/prompt_experiments/{self.title or 'results'}_n{self.n_trials}_{date_string}.jsonl"
 
-        should_get_examples = any('[EXAMPLES]' in prompt for prompt in self.prompts.values())
+        # Configure logging
+        logging.basicConfig(filename=log_file, level=logging.INFO, filemode='w',
+                            format='%(asctime)s %(message)s')
+        logging.info(
+            f"Running {self.n_trials} trials with parameters: {self.llm_params}\nPrompts: {self.prompts}\nAUT ITEMS: {self.aut_items}")
 
-        logging.info(f"llm_params parameters: {llm_params}")
-        logging.info(f"prompts: {self.prompts}")
-        logging.info(f"AUT ITEMS: {self.aut_items}")
-        total_requests = len(self.prompts) * len(self.aut_items) * n_trials_per_combo
-        logging.info(f"TOTAL REQUESTS: {total_requests}")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor, jsonlines.open(results_file,
+                                                                                              mode='w') as outfile:
+            for prompt_name, prompt_base in self.prompts.items():
+                prompt_args = []
+                for trial in range(self.n_trials):
+                    seed = self.random_seed + trial
+                    logging.info(seed)
+                    random.seed(seed)
+                    aut_item = random.choice(self.aut_items)
+                    params = {key: random.choice(value) for key, value in self.llm_params.items()}
+                    logging.info("params: " + str(params))
+                    quartile = random.choice([1, 2, 3, 4]) if self.by_quartile else None
+                    examples = self.get_examples(self.example_df, aut_item, quartile,
+                                                 seed=trial) if '[EXAMPLES]' in prompt_base else []
+                    prompt_args.append((prompt_base, "a " + aut_item, examples, *params.values(), self.n_uses, params))
 
-        results = []
-        condition_counter = 0
-        total_counter = 0
+                # Generate and record responses in parallel
+                futures = [executor.submit(self.handle_prompt, args[:-1]) for args in prompt_args]
+                for trial, future in enumerate(concurrent.futures.as_completed(futures)):
+                    response = future.result()
+                    args = prompt_args[trial]
+                    aut_item = args[1][2:]  # remove the "a " from the aut_item
+                    result = {**args[-1], 'aut_item': aut_item, 'prompt_condition': prompt_name, 'trial_no': trial,
+                              'examples': args[2], 'output_responses': response, 'n_examples': len(args[2]),
+                              'creativity_quartile': quartile if quartile is not None else 'N/A'}
+                    outfile.write(result)
+                    print(result)
+                logging.info(f"Processed all trials for prompt {prompt_name}")
 
-        with concurrent.futures.ThreadPoolExecutor(
-                max_workers=4) as executor, jsonlines.open(results_file,
-                                                                                         mode='w') as outfile:
-            for aut_item in self.aut_items:
-                for trial in range(n_trials_per_combo):
-                    random.seed(condition_counter)
-                    temperature = random.choice(llm_params['temperature'])
-                    frequency_penalty = random.choice(llm_params['frequency_penalty'])
-                    presence_penalty = random.choice(llm_params['presence_penalty'])
-
-                    if should_get_examples:
-                        examples = self.get_examples(self.example_df, aut_item, seed=condition_counter)
-                    else:
-                        examples = []
-
-                    for prompt_name, prompt_base in self.prompts.items():
-                        args = (
-                            prompt_base,
-                            "a " + aut_item,
-                            examples,
-                            temperature,
-                            frequency_penalty,
-                            presence_penalty,
-                            self.n_uses
-                        )
-                        future = executor.submit(self.handle_prompt, args)
-                        generated_response = future.result()
-
-                        row = {
-                            'aut_item': aut_item,
-                            'prompt_condition': prompt_name,
-                            'trial_no': trial,
-                            'idx': condition_counter,
-                            'examples': examples,
-                            'output_responses': generated_response,
-                            'n_examples': len(examples),
-                            'temperature': temperature,
-                            'frequency_penalty': frequency_penalty,
-                            'presence_penalty': presence_penalty
-                        }
-                        results.append(row)
-                        total_counter += 1
-                        if total_counter % 10 == 0:
-                            logging.info(f"{total_counter} of {total_requests}")
-
-                condition_counter += 1
-
-        with jsonlines.open(results_file, mode='w') as writer:
-            for row in results:
-                writer.write(row)
-        logging.info("DONE WITH EXPERIMENT")
+        logging.info("Experiment completed")
