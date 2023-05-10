@@ -150,7 +150,7 @@ def render_trial(condition_no):
             ORDER BY response_date DESC
             LIMIT {n_human_ideas}
         """).result())]
-        filtered_ai_rows = AI_IDEAS_DF.query("aut_item=='{}'".format(item) and "response not in @human_rows")
+        filtered_ai_rows = AI_IDEAS_DF[AI_IDEAS_DF['aut_item'] == item].query("response not in @human_rows")
         ai_rows = filtered_ai_rows['response'].sample(n_ai_ideas).tolist()
         if to_label:
             human_rows = [row + ' <span style="color: #1F4287;">(Source: <strong>Human</strong>)</span>' for row in
