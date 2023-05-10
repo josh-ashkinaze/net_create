@@ -31,6 +31,7 @@ def run(trials):
         "title": "stransfer",
         "n_uses": 5,
         "n_examples":5,
+        "by_quartile": True,
         "n_trials": args.trials,
         "llm_params": {
             "temperature": [.65, .70, .75, 0.80],

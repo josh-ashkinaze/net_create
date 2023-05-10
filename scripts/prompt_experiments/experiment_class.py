@@ -36,20 +36,8 @@ class PromptExperiment:
 
         if self.n_examples:
             self.example_df['creativity_quartile'] = pd.qcut(self.example_df['target'], 4, labels=False) + 1
-
-    # def handle_prompt(self, args):
-    #     """This function is used to run the experiment in parallel."""
-    #     prompt_base, object_name, examples, temperature, frequency_penalty, presence_penalty, n_uses = args
-    #     thread_id = threading.get_ident()
-    #     logging.info(f"Thread {thread_id} started")
-    #     prompt = self.make_prompt(prompt_base, object_name, examples, n_uses)
-    #     response = self.generate_responses(prompt, temperature, frequency_penalty, presence_penalty)
-    #     logging.info(f"Thread {thread_id} finished")
-    #     return response
-
     def handle_prompt(self, args):
         """This function is used to run the experiment in parallel."""
-        print(args)
         prompt_base, object_name, examples, temperature, frequency_penalty, presence_penalty, n_uses = args
         thread_id = threading.get_ident()
         logging.info(f"Thread {thread_id} started")
@@ -124,16 +112,14 @@ class PromptExperiment:
                 prompt_args = []
                 for trial in range(self.n_trials):
                     seed = self.random_seed + trial
-                    logging.info(seed)
                     random.seed(seed)
                     aut_item = random.choice(self.aut_items)
                     params = {key: random.choice(value) for key, value in self.llm_params.items()}
-                    logging.info("params: " + str(params))
                     quartile = random.choice([1, 2, 3, 4]) if self.by_quartile else None
                     examples = self.get_examples(self.example_df, aut_item, quartile,
                                                  seed=trial) if '[EXAMPLES]' in prompt_base else []
                     prompt_args.append((prompt_base, "a " + aut_item, examples, *params.values(), self.n_uses, params))
-
+                    logging.info("Args for trial {}: {}".format(trial, prompt_args[-1]))
                 # Generate and record responses in parallel
                 # We add params at the end to prompt_args just for data writing but it's redundant with temp, prescence, and freq
                 # So remove when passing to handle_prompt
@@ -146,7 +132,6 @@ class PromptExperiment:
                               'examples': args[2], 'output_responses': response, 'n_examples': len(args[2]),
                               'creativity_quartile': quartile if quartile is not None else 'N/A'}
                     outfile.write(result)
-                    print(result)
                 logging.info(f"Processed all trials for prompt {prompt_name}")
 
         logging.info("Experiment completed")
