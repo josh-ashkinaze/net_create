@@ -9,11 +9,11 @@
           crossorigin="anonymous">
     <style>
         body {
-          background-image: linear-gradient(to top right, #E5BEED, #FFD23F);
-          font-family: Arial, sans-serif;
-          line-height: 1.6;
-          margin-top: 5rem;
-          min-height: 100vh;
+            background-image: linear-gradient(to top right, #E5BEED, #FFD23F);
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin-top: 5rem;
+            min-height: 100vh;
         }
 
         h3 {
@@ -30,6 +30,15 @@
 
         li {
             margin-bottom: 0.5rem;
+        }
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
         }
 
         .container {
@@ -58,7 +67,7 @@
 <h4>{{ label }} Here are some other responses:</h4>
 <ul>
     {% for row in rows %}
-    <li>{{ row|safe }}</li>
+    <li class="noselect">{{ row|safe }}</li>
     {% endfor %}
 </ul>
 <form action="{{ url_for('render_trial', condition_no=condition_no) }}" method="post" class="mt-20">
