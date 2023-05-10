@@ -139,7 +139,17 @@ def render_trial(condition_no):
 
     # If the HTTP method is GET, render the render_trial template
     if request.method == "GET":
-        human_rows = [row['response_text'] for row in list(client.query(f"""SELECT response_text FROM (SELECT DISTINCT response_text, response_date FROM `net_expr.trials` WHERE (item = '{item}' AND condition = '{condition}')) AS subquery ORDER BY response_date DESC LIMIT {n_human_ideas}""").result())]
+        human_rows = [row['response_text'] for row in list(client.query(f"""
+            SELECT response_text, response_date 
+            FROM (
+                SELECT response_text, MAX(response_date) as response_date 
+                FROM `net_expr.trials` 
+                WHERE item = '{item}' AND condition = '{condition}'
+                GROUP BY response_text
+            ) AS subquery
+            ORDER BY response_date DESC
+            LIMIT {n_human_ideas}
+        """).result())]
         filtered_ai_rows = AI_IDEAS_DF.query("aut_item=='{}'".format(item) and "response not in @human_rows")
         ai_rows = filtered_ai_rows['response'].sample(n_ai_ideas).tolist()
         if to_label:
