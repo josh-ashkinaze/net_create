@@ -1,5 +1,6 @@
 import openai
 import random
+import os
 import logging
 import concurrent.futures
 from datetime import datetime
@@ -106,7 +107,7 @@ class PromptExperiment:
         logging.info(
             f"Running {self.n_trials} trials with parameters: {self.llm_params}\nPrompts: {self.prompts}\nAUT ITEMS: {self.aut_items}")
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=7) as executor, jsonlines.open(results_file,
+        with concurrent.futures.ThreadPoolExecutor(max_workers=min(os.cpu_count()-1, 12)) as executor, jsonlines.open(results_file,
                                                                                               mode='w') as outfile:
             for prompt_name, prompt_base in self.prompts.items():
                 prompt_args = []
