@@ -118,7 +118,7 @@ class PromptExperiment:
         logging.info(
             f"Running {self.n_trials} trials with parameters: {self.llm_params}\nPrompts: {self.prompts}\nAUT ITEMS: {self.aut_items}")
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor, jsonlines.open(results_file,
+        with concurrent.futures.ThreadPoolExecutor(max_workers=7) as executor, jsonlines.open(results_file,
                                                                                               mode='w') as outfile:
             for prompt_name, prompt_base in self.prompts.items():
                 prompt_args = []
@@ -136,7 +136,7 @@ class PromptExperiment:
 
                 # Generate and record responses in parallel
                 # We add params at the end to prompt_args just for data writing but it's redundant with temp, prescence, and freq
-                # So remove when passing to handle_propt
+                # So remove when passing to handle_prompt
                 futures = [executor.submit(self.handle_prompt, args[:-1]) for args in prompt_args]
                 for trial, future in enumerate(concurrent.futures.as_completed(futures)):
                     response = future.result()
