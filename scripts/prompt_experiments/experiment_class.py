@@ -135,6 +135,8 @@ class PromptExperiment:
                     prompt_args.append((prompt_base, "a " + aut_item, examples, *params.values(), self.n_uses, params))
 
                 # Generate and record responses in parallel
+                # We add params at the end to prompt_args just for data writing but it's redundant with temp, prescence, and freq
+                # So remove when passing to handle_propt
                 futures = [executor.submit(self.handle_prompt, args[:-1]) for args in prompt_args]
                 for trial, future in enumerate(concurrent.futures.as_completed(futures)):
                     response = future.result()
