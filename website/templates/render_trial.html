@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script>
+
     <style>
         body {
-            background-image: linear-gradient(to top right, #E5BEED, #FFD23F);
+            background-image: linear-gradient(to top right, #F7C1BB, #E1DD8F);
             font-family: Arial, sans-serif;
             line-height: 1.6;
             margin-top: 5rem;
@@ -57,6 +59,26 @@
             border-color: #0E2A56;
         }
 
+        .sortable-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sortable-list li {
+            margin: 0.5rem;
+            padding: 1rem;
+            border: 1px solid #1F4287;
+            border-radius: 5px;
+            color: #212529;
+            background-color: white;
+        }
+
+
+        .sortable-list li.ai-generated {
+            background-color: #1F4287;
+            color: white;
+        }
+
     </style>
 </head>
 <body class="container py-4">
@@ -64,11 +86,17 @@
 <p>For this task, you should write down original and creative uses for a <strong>{{ item }}</strong>. </p>
 <p>Certainly there are common, unoriginal ways to use a <strong>{{ item }}</strong>. </p>
 <p>But for this task, write down the most unusual, creative, and uncommon use you can think of. </p>
-<h4>{{ label }} Here are some other responses:</h4>
-<ul>
+<h4> {{ label }}</h4>
+<h5>Here are some other responses. Please rank the responses by creativity (a creative idea is one that is novel and
+    useful), with the most creative idea on top. Then, submit your own idea.</h5>
+<ul class="sortable-list">
     {% for row in rows %}
-    <li class="noselect">{{ row|safe }}</li>
-    {% endfor %}
+            {% if "(Source: <strong>A.I</strong>)</span>" in row %}
+                <li class="noselect ai-generated">{{ row|safe }}</li>
+            {% else %}
+                <li class="noselect">{{ row|safe }}</li>
+            {% endif %}
+        {% endfor %}
 </ul>
 <form action="{{ url_for('render_trial', condition_no=condition_no) }}" method="post" class="mt-20">
     <div class="form-group">
@@ -76,5 +104,20 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        new Sortable(document.querySelector('.sortable-list'), {
+            animation: 150,
+            chosenClass: "sortable-chosen",
+            dragClass: "sortable-drag",
+        });
+    });
+</script>
+
 </body>
 </html>
