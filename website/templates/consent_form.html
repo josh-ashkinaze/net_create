@@ -23,7 +23,7 @@
         body {
             background-image: linear-gradient(to top left, #FFD23F, #E5BEED);
             background-size: 150% 150%;
-            animation: movingGradient 4s ease infinite;
+            animation: movingGradient 5s ease infinite;
             /*background-image: linear-gradient(to top right, #E5BEED, #FFD23F);*/
             color: #272727;
             font-family: Arial, sans-serif;
@@ -56,15 +56,113 @@
             border-color: #0E2A56;
         }
 
+
+        /* Add this CSS for the slider */
+        /* Updated Slider styles */
+        .slider {
+            width: 100%; /* set the width to 100% */
+            appearance: none;
+            height: 15px;
+            border-radius: 5px;
+            background: #ffffff; /* Updated background to white */
+            outline: none;
+            opacity: 1;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #3F7CAC; /* Changed color to a calm deep blue */
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #3F7CAC; /* Changed color to a calm deep blue */
+            cursor: pointer;
+        }
+
+        .slider-group {
+            border: 1px solid black; /* Add black border */
+            background-color: transparent; /* Make background transparent */
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            opacity: 100%;
+            justify-content: space-around;
+        }
+
+
+        .slider-title {
+            text-align: left; /* change the text alignment to left */
+            margin-bottom: 0.5rem;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 10px; /* add a margin to the right of the icon */
+        }
+
+        .slider-group > div {
+            width: 90%; /* set the width of the slider container to 90% */
+            margin: auto; /* center the slider container */
+        }
+
+        .slider-value {
+            margin-left: 10px;
+            color: #FF0000; /* Updated color to red */
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body class="container py-4">
+
+
+<h4 class="mb-4">How creative are you?</h4>
+<p class="lead mb-4"> Guess how creative you are compared to humans and AI. At the end of the experiment, we'll show you
+    your score! </p>
+<div class="slider-group">
+    <div>
+        <div class="slider-title">
+            <div class="icon">&#x1F916;</div> <!-- Unicode for robot icon -->
+            <span id="sliderValueAI">I am more creative than 50% of AI</span>
+        </div>
+        <input type="range" min="0" max="100" value="50" class="slider" id="creativitySliderAI">
+    </div>
+</div>
+<div class="slider-group">
+    <div>
+        <div class="slider-title">
+            <div class="icon">&#x1F464;</div> <!-- Unicode for person icon -->
+            <span id="sliderValueHuman">I am more creative than 50% of Humans</span>
+        </div>
+        <input type="range" min="0" max="100" value="50" class="slider" id="creativitySliderHuman">
+    </div>
+</div>
+
 <h4 class="mb-4">Study Overview</h4>
 <p class="lead mb-4">We'll show you 5 items and ask you to come up with a creative use for each item. For some
-    inspiration, we'll also show you ideas prior participants had. And in some cases, we will show you ideas that
-    ChatGPT had. The study should take no more than 3 minutes to complete. The goal of the study is to learn more about
-    both human and human-AI creativity.</p>
-<h4>Benefits</h4>
+    inspiration, we'll also show you ideas from other people who did the experiment. And in some cases, we'll even show
+    you ideas from
+    ChatGPT. The study should will take around 5 minutes. The goal is to learn more about
+    human and human-AI creativity.</p>
+<h4 class="mb-4">Benefits </h4>
 <p class="mb-4">At the end of the study, we will measure the creativity of each response. <strong> The person with the
     most creative response will get $100</strong>. Also, after completing the study <strong> we will show you how your
     creativity compares to humans, to AI, and if you're more creative with or without seeing AI ideas</strong>.</p>
@@ -89,5 +187,24 @@
         <button type="submit" class="btn btn-primary">I Agree</button>
     </div>
 </form>
+
+<script>
+var sliderAI = document.getElementById("creativitySliderAI");
+var sliderValueAI = document.getElementById("sliderValueAI");
+sliderAI.oninput = function () {
+    let value = (this.value-this.min)/(this.max-this.min)*100
+    this.style.background = 'linear-gradient(to right, #3F7CAC ' + value + '%, #ffffff ' + value + '%)';
+    sliderValueAI.innerHTML = 'I am more creative than <span class="slider-value">'+ this.value + '%</span> of AI';
+}
+
+var sliderHuman = document.getElementById("creativitySliderHuman");
+var sliderValueHuman = document.getElementById("sliderValueHuman");
+sliderHuman.oninput = function () {
+    let value = (this.value-this.min)/(this.max-this.min)*100
+    this.style.background = 'linear-gradient(to right, #3F7CAC ' + value + '%, #ffffff ' + value + '%)';
+    sliderValueHuman.innerHTML = 'I am more creative than <span class="slider-value">'+ this.value + '%</span> of Humans';
+}
+</script>
+
 </body>
 </html>
