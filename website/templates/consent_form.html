@@ -45,16 +45,18 @@
         }
 
         .btn-primary {
-            background-color: #1F4287;
-            border-color: #1F4287;
+            background-color: #1f4286;
+            border-color: #1f4286;
             border-radius: 25px;
-            padding: 10px 30px;
+            padding: 10px 40px;
+            font-size: 1.3em;
         }
 
         .btn-primary:hover {
             background-color: #0E2A56;
             border-color: #0E2A56;
         }
+
 
 
         /* Add this CSS for the slider */
@@ -135,33 +137,69 @@
             font-weight: bold;
         }
 
+
+
+
+        /* Add this CSS for the lead */
+.creative-section {
+    background-color: #F5F5F5;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+}
+
+.creative-section h4 {
+    color: #1F4287;
+    font-weight: bold;
+    margin-bottom: 1.25em;
+    font-size: 2em;
+}
+
+.creative-section .highlight {
+    color: #db2b39;
+}
+
+.creative-section p {
+    color: #333;
+    font-size: 1.125em;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
     </style>
 </head>
 <body class="container py-4">
 
+<div class="creative-section">
+    <h4 class="mb-4">How <span class="highlight">creative</span> are you?</h4>
+    <p class="lead mb-4">Guess how creative you are <span class="highlight">compared to humans and AI</span>. At the end of the experiment, we'll show you your score! And if you submit the most creative response, you get <span class="highlight">$100</span>.</p>
 
-<h4 class="mb-4">How creative are you?</h4>
-<p class="lead mb-4"> Guess how creative you are compared to humans and AI. At the end of the experiment, we'll show you
-    your score! And if you submit the most creative response, you get $100.</p>
-
-<div class="slider-group">
-    <div>
-        <div class="slider-title">
-            <div class="icon">&#x1F916;</div>
-            <span id="sliderValueAI">I am more creative than 50% of AI</span>
+    <div class="slider-group">
+        <div>
+            <div class="slider-title">
+                <div class="icon">&#x1F916;</div>
+                <span id="sliderValueAI">I am more creative than 50% of AI</span>
+            </div>
+            <input type="range" min="0" max="100" value="50" class="slider" id="creativitySliderAI">
         </div>
-        <input type="range" min="0" max="100" value="50" class="slider" id="creativitySliderAI">
+    </div>
+    <div class="slider-group">
+        <div>
+            <div class="slider-title">
+                <div class="icon">&#x1F464;</div>
+                <span id="sliderValueHuman">I am more creative than 50% of Humans</span>
+            </div>
+            <input type="range" min="0" max="100" value="50" class="slider" id="creativitySliderHuman">
+        </div>
     </div>
 </div>
-<div class="slider-group">
-    <div>
-        <div class="slider-title">
-            <div class="icon">&#x1F464;</div>
-            <span id="sliderValueHuman">I am more creative than 50% of Humans</span>
-        </div>
-        <input type="range" min="0" max="100" value="50" class="slider" id="creativitySliderHuman">
-    </div>
-</div>
+
+
+
+<!--<h4 class="mb-4">How creative are you?</h4>-->
+<!--<p class="lead mb-4"> Guess how creative you are compared to humans and AI. At the end of the experiment, we'll show you-->
+<!--    your score! And if you submit the most creative response, you get $100.</p>-->
+
 
 <h4 class="mb-4"> What You'll Do </h4>
 <p class="lead mb-4">We'll show you 5 common items, and you'll come up with creative uses for each item.
@@ -174,18 +212,14 @@
     creativity compares to humans, to AI, and if you're more creative with or without seeing AI ideas</strong>.
     We don't anticipate any risks of completing this study.</p>
 <h4>Consent</h4>
-<p class="mb-4">By checking "I Agree", you indicate that you are at least 18 years old, have read and understood the
-    information provided above, and agree to participate in this study. If you do not consent, we will delete your
+<p class="mb-4">By clicking on the button below, you indicate that you are at least 18, read and understood the
+    terms above, and agree to participate. If you do not consent, we will delete your
     responses to the creativity questions asked above. This study has been deemed exempt from ongoing oversight by the
     University of Michigan IRB. For more information, please contact x@umich.edu.</p>
 
 <form action="/start-experiment" method="get">
     <div class="form-group">
-        <div class="form-check mb-4">
-            <input type="checkbox" class="form-check-input" id="consentCheck" required>
-            <label class="form-check-label" for="consentCheck">I agree to participate in this study</label>
-        </div>
-        <button type="submit" class="btn btn-primary">I Agree</button>
+        <button type="submit" class="btn btn-primary" required>I agree to participate in this study. Let's start!</button>
     </div>
 </form>
 
