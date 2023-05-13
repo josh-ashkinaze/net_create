@@ -60,13 +60,12 @@
         /* Add this CSS for the slider */
         /* Updated Slider styles */
         .slider {
-            width: 100%; /* set the width to 100% */
+            width: 100%;
             appearance: none;
-            height: 5px;
-            border-radius: 3px;
-            background: transparent; /* Updated background to white */
+            height: 15px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #db2b39, #1f4286); /* Matching color gradient */
             outline: none;
-            opacity: 1;
             -webkit-transition: .2s;
             transition: opacity .2s;
         }
@@ -80,16 +79,23 @@
             width: 25px;
             height: 25px;
             border-radius: 50%;
-            background: #1F4287; /* Changed color to a calm deep blue */
+            background: #212529;
             cursor: pointer;
+            border: 2px solid #1F4287; /* Border color matching the site theme */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.25); /* Shadow for 3D effect */
+            transition: all 0.3s ease; /* Transition for smooth effect */
         }
+
 
         .slider::-moz-range-thumb {
             width: 25px;
             height: 25px;
             border-radius: 50%;
-            background: #1F4287; /* Changed color to a calm deep blue */
+            background: #212529;
             cursor: pointer;
+            border: 2px solid #1F4287; /* Border color matching the site theme */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.25); /* Shadow for 3D effect */
+            transition: all 0.3s ease; /* Transition for smooth effect */
         }
 
         .slider-group {
@@ -137,10 +143,11 @@
 <h4 class="mb-4">How creative are you?</h4>
 <p class="lead mb-4"> Guess how creative you are compared to humans and AI. At the end of the experiment, we'll show you
     your score! And if you submit the most creative response, you get $100.</p>
+
 <div class="slider-group">
     <div>
         <div class="slider-title">
-            <div class="icon">&#x1F916;</div> <!-- Unicode for robot icon -->
+            <div class="icon">&#x1F916;</div>
             <span id="sliderValueAI">I am more creative than 50% of AI</span>
         </div>
         <input type="range" min="0" max="100" value="50" class="slider" id="creativitySliderAI">
@@ -149,14 +156,14 @@
 <div class="slider-group">
     <div>
         <div class="slider-title">
-            <div class="icon">&#x1F464;</div> <!-- Unicode for person icon -->
+            <div class="icon">&#x1F464;</div>
             <span id="sliderValueHuman">I am more creative than 50% of Humans</span>
         </div>
         <input type="range" min="0" max="100" value="50" class="slider" id="creativitySliderHuman">
     </div>
 </div>
 
-<h4 class="mb-4">Study Overview</h4>
+<h4 class="mb-4"> What You'll Do </h4>
 <p class="lead mb-4">We'll show you 5 common items, and you'll come up with creative uses for each item.
     To spark your imagination, you'll see ideas from prior participants and even from AI (i.e: ChatGPT).
     The ideas you submit may be anonymously shown to future participants to spark their imagination.
@@ -165,11 +172,13 @@
 <p class="mb-4"> At the end of the study, we will measure the creativity of each response. <strong> The person with the
     most creative response will get $100</strong>. Also, after completing the study <strong> we will show you how your
     creativity compares to humans, to AI, and if you're more creative with or without seeing AI ideas</strong>.
-We don't anticipate any risks of completing this study.</p>
+    We don't anticipate any risks of completing this study.</p>
 <h4>Consent</h4>
-<p class="mb-4">By checking "I Agree", you indicate you are at least 18 years old, you read and understood the above
-    info, and  you agree to participate in this study. The University of Michigan IRB deemed this study exempt from ongoing oversight.
-    For more info, contact jashkina@umich.edu</p>
+<p class="mb-4">By checking "I Agree", you indicate that you are at least 18 years old, have read and understood the
+    information provided above, and agree to participate in this study. If you do not consent, we will delete your
+    responses to the creativity questions asked above. This study has been deemed exempt from ongoing oversight by the
+    University of Michigan IRB. For more information, please contact x@umich.edu.</p>
+
 <form action="/start-experiment" method="get">
     <div class="form-group">
         <div class="form-check mb-4">
@@ -180,26 +189,22 @@ We don't anticipate any risks of completing this study.</p>
     </div>
 </form>
 
-
 <script>
     var sliderAI = document.getElementById("creativitySliderAI");
-    var sliderValueAI = document.getElementById("sliderValueAI");
+    var outputAI = document.getElementById("sliderValueAI");
+
     sliderAI.oninput = function () {
-        let value = (this.value - this.min) / (this.max - this.min) * 100
-        this.style.background = 'linear-gradient(to right, #1F4287 ' + value + '%, #ffffff ' + value + '%)';
-        sliderValueAI.innerHTML = 'I think I am more creative than<span class="slider-value">' + this.value + '%</span> of AI.';
+        outputAI.innerHTML = "I am more creative than " + this.value + "% of AI";
     }
-    sliderAI.oninput(); // Trigger the oninput event after page load
 
     var sliderHuman = document.getElementById("creativitySliderHuman");
-    var sliderValueHuman = document.getElementById("sliderValueHuman");
+    var outputHuman = document.getElementById("sliderValueHuman");
+
     sliderHuman.oninput = function () {
-        let value = (this.value - this.min) / (this.max - this.min) * 100
-        this.style.background = 'linear-gradient(to right, #1F4287 ' + value + '%, #ffffff ' + value + '%)';
-        sliderValueHuman.innerHTML = 'I think I am more creative than<span class="slider-value">' + this.value + '%</span> of humans.';
+        outputHuman.innerHTML = "I am more creative than " + this.value + "% of Humans";
     }
-    sliderHuman.oninput(); // Trigger the oninput event after page load
 </script>
+
 
 </body>
 </html>
