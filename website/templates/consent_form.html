@@ -62,9 +62,9 @@
         .slider {
             width: 100%; /* set the width to 100% */
             appearance: none;
-            height: 15px;
-            border-radius: 5px;
-            background: #ffffff; /* Updated background to white */
+            height: 5px;
+            border-radius: 3px;
+            background: transparent; /* Updated background to white */
             outline: none;
             opacity: 1;
             -webkit-transition: .2s;
@@ -80,7 +80,7 @@
             width: 25px;
             height: 25px;
             border-radius: 50%;
-            background: #3F7CAC; /* Changed color to a calm deep blue */
+            background: #1F4287; /* Changed color to a calm deep blue */
             cursor: pointer;
         }
 
@@ -88,7 +88,7 @@
             width: 25px;
             height: 25px;
             border-radius: 50%;
-            background: #3F7CAC; /* Changed color to a calm deep blue */
+            background: #1F4287; /* Changed color to a calm deep blue */
             cursor: pointer;
         }
 
@@ -125,7 +125,7 @@
 
         .slider-value {
             margin-left: 10px;
-            color: #FF0000; /* Updated color to red */
+            color: #db2b39; /* Updated color to red */
             font-weight: bold;
         }
 
@@ -136,7 +136,7 @@
 
 <h4 class="mb-4">How creative are you?</h4>
 <p class="lead mb-4"> Guess how creative you are compared to humans and AI. At the end of the experiment, we'll show you
-    your score! </p>
+    your score! And if you submit the most creative response, you get $100.</p>
 <div class="slider-group">
     <div>
         <div class="slider-title">
@@ -188,22 +188,25 @@
     </div>
 </form>
 
-<script>
-var sliderAI = document.getElementById("creativitySliderAI");
-var sliderValueAI = document.getElementById("sliderValueAI");
-sliderAI.oninput = function () {
-    let value = (this.value-this.min)/(this.max-this.min)*100
-    this.style.background = 'linear-gradient(to right, #3F7CAC ' + value + '%, #ffffff ' + value + '%)';
-    sliderValueAI.innerHTML = 'I am more creative than <span class="slider-value">'+ this.value + '%</span> of AI';
-}
 
-var sliderHuman = document.getElementById("creativitySliderHuman");
-var sliderValueHuman = document.getElementById("sliderValueHuman");
-sliderHuman.oninput = function () {
-    let value = (this.value-this.min)/(this.max-this.min)*100
-    this.style.background = 'linear-gradient(to right, #3F7CAC ' + value + '%, #ffffff ' + value + '%)';
-    sliderValueHuman.innerHTML = 'I am more creative than <span class="slider-value">'+ this.value + '%</span> of Humans';
-}
+<script>
+    var sliderAI = document.getElementById("creativitySliderAI");
+    var sliderValueAI = document.getElementById("sliderValueAI");
+    sliderAI.oninput = function () {
+        let value = (this.value - this.min) / (this.max - this.min) * 100
+        this.style.background = 'linear-gradient(to right, #1F4287 ' + value + '%, #ffffff ' + value + '%)';
+        sliderValueAI.innerHTML = 'I think I am more creative than<span class="slider-value">' + this.value + '%</span> of AI.';
+    }
+    sliderAI.oninput(); // Trigger the oninput event after page load
+
+    var sliderHuman = document.getElementById("creativitySliderHuman");
+    var sliderValueHuman = document.getElementById("sliderValueHuman");
+    sliderHuman.oninput = function () {
+        let value = (this.value - this.min) / (this.max - this.min) * 100
+        this.style.background = 'linear-gradient(to right, #1F4287 ' + value + '%, #ffffff ' + value + '%)';
+        sliderValueHuman.innerHTML = 'I think I am more creative than<span class="slider-value">' + this.value + '%</span> of humans.';
+    }
+    sliderHuman.oninput(); // Trigger the oninput event after page load
 </script>
 
 </body>
