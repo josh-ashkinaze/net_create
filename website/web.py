@@ -155,7 +155,7 @@ def render_trial(condition_no):
         if to_label:
             human_rows = [row + ' <span style="color: #1F4287;">(Source: <strong>Human</strong>)</span>' for row in
                           human_rows]
-            ai_rows = [row + ' <span style="color: #1F4287;">(Source: <strong>A.I</strong>)</span>' for row in ai_rows]
+            ai_rows = [row + ' <span style="color: #ffffff;">(Source: <strong>A.I</strong>)</span>' for row in ai_rows]
 
         rows = ai_rows + human_rows
         random.shuffle(rows)
