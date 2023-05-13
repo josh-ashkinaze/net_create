@@ -161,7 +161,7 @@ def render_trial(condition_no):
         random.shuffle(rows)
         print("responses", rows)
         return render_template('render_trial.html', item=item, rows=rows, condition_no=condition_no,
-                               label=SOURCE_LABEL if to_label else "")
+                               label=SOURCE_LABEL if to_label else "", trial_no=condition_no + 1)
 
 
     # If the HTTP method is POST, insert the participant's response into the BigQuery table
