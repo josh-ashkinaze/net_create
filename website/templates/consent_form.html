@@ -44,18 +44,32 @@
             max-width: 800px;
         }
 
-        .btn-primary {
-            background-color: #1f4286;
-            border-color: #1f4286;
-            border-radius: 25px;
-            padding: 10px 40px;
-            font-size: 1.3em;
-        }
+            /* Add this CSS for the button animation */
+    /* Add this CSS for the button animation */
+    .btn-primary {
+        background-color: #1f4286;
+        border-color: #1f4286;
+        border-radius: 25px;
+        padding: 20px 40px;
+        font-size: 1.4em;
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+        z-index: 1;
+        animation: pulse 1.5s ease-in-out infinite;
+    }
 
-        .btn-primary:hover {
-            background-color: #0E2A56;
-            border-color: #0E2A56;
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
         }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
 
 
 
@@ -138,33 +152,31 @@
         }
 
 
-
-
         /* Add this CSS for the lead */
-.creative-section {
-    background-color: #F5F5F5;
-    border-radius: 10px;
-    padding: 30px;
-    text-align: center;
-}
+        .creative-section {
+            background-color: #F5F5F5;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+        }
 
-.creative-section h4 {
-    color: #1F4287;
-    font-weight: bold;
-    margin-bottom: 1.25em;
-    font-size: 2em;
-}
+        .creative-section h4 {
+            color: #1F4287;
+            font-weight: bold;
+            margin-bottom: 1.25em;
+            font-size: 2em;
+        }
 
-.creative-section .highlight {
-    color: #db2b39;
-}
+        .creative-section .highlight {
+            color: #db2b39;
+        }
 
-.creative-section p {
-    color: #333;
-    font-size: 1.125em;
-    line-height: 1.5;
-    margin-bottom: 0;
-}
+        .creative-section p {
+            color: #333;
+            font-size: 1.125em;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
 
     </style>
 </head>
@@ -172,7 +184,9 @@
 
 <div class="creative-section">
     <h4 class="mb-4">How <span class="highlight">creative</span> are you?</h4>
-    <p class="lead mb-4">Guess how creative you are <span class="highlight">compared to humans and AI</span>. At the end of the experiment, we'll show you your score! And if you submit the most creative response, you get <span class="highlight">$100</span>.</p>
+    <p class="lead mb-4">Guess how creative you are <span class="highlight">compared to humans and AI</span>. At the end
+        of the experiment, we'll show you your score! And if you submit the most creative response, you get <span
+                class="highlight">$100</span>.</p>
 
     <div class="slider-group">
         <div>
@@ -195,13 +209,12 @@
 </div>
 
 
-
 <!--<h4 class="mb-4">How creative are you?</h4>-->
 <!--<p class="lead mb-4"> Guess how creative you are compared to humans and AI. At the end of the experiment, we'll show you-->
 <!--    your score! And if you submit the most creative response, you get $100.</p>-->
 
 
-<h4 class="mb-4"> What You'll Do </h4>
+<h4 class="mb-4"> Experiment Overview </h4>
 <p class="lead mb-4">We'll show you 5 common items, and you'll come up with creative uses for each item.
     To spark your imagination, you'll see ideas from prior participants and even from AI (i.e: ChatGPT).
     The ideas you submit may be anonymously shown to future participants to spark their imagination.
@@ -215,11 +228,11 @@
 <p class="mb-4">By clicking on the button below, you indicate that you are at least 18, read and understood the
     terms above, and agree to participate. If you do not consent, we will delete your
     responses to the creativity questions asked above. This study has been deemed exempt from ongoing oversight by the
-    University of Michigan IRB. For more information, please contact x@umich.edu.</p>
+    University of Michigan IRB for Health Sciences and Behavioral Sciences. For more information, please contact x@umich.edu.</p>
 
 <form action="/start-experiment" method="get">
     <div class="form-group">
-        <button type="submit" class="btn btn-primary" required>I agree to participate in this study. Let's start!</button>
+        <button type="submit" class="btn btn-primary" required> Click here to start the experiment!</button>
     </div>
 </form>
 
