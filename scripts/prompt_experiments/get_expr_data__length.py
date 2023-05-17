@@ -8,9 +8,13 @@ import argparse
 def run(trials):
     params = {}
 
+    # My items
+    my_items = pd.read_csv("../../data/chosen_aut_items.csv")["aut_item"].tolist()
+
     # Mean WC (used for one prompt)
     example_df = pd.read_csv("../../data/prior_responses.csv")
-    mean_word_count = int(np.mean(example_df['response'].apply(lambda x: len(x.split()))))
+    my_item_df = example_df.query(f"prompt in {my_items}")
+    mean_word_count = round(np.mean(my_item_df['response'].apply(lambda x: len(x.split()))))
 
     # Get OpenAI keys
     with open("../../secrets/openai_creds.json", "r") as f:
@@ -30,8 +34,6 @@ def run(trials):
         'example_df':example_df,
         "title": "length",
         "n_uses": 5,
-        "n_examples":5,
-        "by_quartile": True,
         "n_trials": args.trials,
         "llm_params": {
             "temperature": [.65, .70, .75, 0.80],
