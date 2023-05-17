@@ -6,13 +6,15 @@ import os
 import logging
 from helpers.helpers import process_ideas, extract_ideas, find_latest_file
 
+np.random.seed(416)
+
 
 def count_words(x):
     return len(x.split(" "))
 
 
 def make_aesthetic():
-    sns.set(style='white', context='poster', font_scale=0.9)
+    sns.set(style='white', context='poster', font_scale=1.1)
     plt.rcParams.update({'font.family': 'Arial'})
     sns.set_palette(sns.color_palette('dark'))
     sns.despine()
@@ -23,6 +25,32 @@ def make_aesthetic():
     plt.rcParams['axes.titlepad'] = 20
     plt.rcParams['axes.titlesize'] = 22
 
+
+def perm_test(df, num_permutations):
+    # Calculate observed abs difference
+    observed_diff = abs(df.loc[df.prompt_condition == 'zero_limit', 'n_words'].mean() - df.loc[
+        df.prompt_condition == 'human', 'n_words'].mean()) - \
+                    abs(df.loc[df.prompt_condition == 'zero_shot', 'n_words'].mean() - df.loc[
+                        df.prompt_condition == 'human', 'n_words'].mean())
+
+    count = 0
+    for _ in range(num_permutations):
+        # Permute the 'n_words' column
+        df['n_words'] = np.random.permutation(df['n_words'])
+
+        # Calculate the permuted abs difference
+        perm_diff = abs(df.loc[df.prompt_condition == 'zero_limit', 'n_words'].mean() - df.loc[
+            df.prompt_condition == 'human', 'n_words'].mean()) - \
+                    abs(df.loc[df.prompt_condition == 'zero_shot', 'n_words'].mean() - df.loc[
+                        df.prompt_condition == 'human', 'n_words'].mean())
+
+        if perm_diff >= observed_diff:
+            count += 1
+
+    # Calculate p-value
+    p_value = count / num_permutations
+
+    return p_value
 
 def make_n_words_graph(mydf):
     plt.figure(figsize=(12, 8))
@@ -37,14 +65,14 @@ def make_n_words_graph(mydf):
 
     # Create the barplot
     ax = sns.barplot(data=mydf, x='prompt_condition', y='n_words', order=['prior_work', 'zero_limit', 'zero_shot'],
-                     palette=custom_colors)
+                     palette=custom_colors, errorbar=('ci', 99))
     for i, (avg, sd, n) in enumerate(zip(avg_n_words, sd_n_words, n_obs)):
         plt.text(i, avg + 1, f'{avg:.2f}', ha='center')
         # plt.text(i, avg+3, f'SD = {sd:.2f}', ha='center')
         # plt.text(i, avg+1, f'n = {n}', ha='center')
 
     plt.suptitle("Mean Number of Words of AUT Responses", x=0.395, fontweight='bold', y=1)
-    plt.title("Error bars are 95% CIs", fontweight='regular', x=-0.043)
+    plt.title("Error bars are 99% CIs", fontweight='regular', x=-0.043)
     plt.xlabel("")
     plt.ylabel("Number of Words")
     plt.xticks(np.arange(3), custom_labels)  # Replace x-axis labels with your custom labels
@@ -73,7 +101,26 @@ def main():
     mydf = pd.concat([prior_df, wdf])
     summary_stats = mydf.groupby('prompt_condition')['n_words'].agg(['count', 'mean', 'std'])
     logging.info(str(summary_stats))
+
+    # Make graph
     make_n_words_graph(mydf)
+
+    # Permutation test
+    p_value = perm_test(mydf, 10000)
+    logging.info(f'p-value of permutation test: {p_value}')
+
+    # Latex table
+    latex_table = summary_stats.rename(
+        index={'prior_work': 'Human Ideas', 'zero_limit': 'Zero Shot Length Limited', 'zero_shot': 'Zero Shot'})
+    latex_table.columns = ['N', 'Average Words', 'SD Words']
+    logging.info(
+        """
+        %s
+        """,
+        latex_table.to_latex(float_format="%.2f", index=True, index_names=True,
+                             caption="Summary statistics of AUT prompt experiment. Human ideas are from \citet{organisciak_beyond_2022} and include only those ideas in response to the chosen AUT items. Note that in some cases ChatGPT did not return the desired number of ideas, leading to a slight discrepancy between ideas generated between the two prompts.",
+                             label="tab:aut_n_words_table")
+    )
 
 
 if __name__ == '__main__':
