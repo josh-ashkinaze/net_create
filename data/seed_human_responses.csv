@@ -1,91 +1,91 @@
 aut_item,condition,response,target,response_id
-box,h,make it like a hat,1.8,human_seed0
-box,h,to masturbate in,1.7,human_seed1
-box,h,burn them for a fuel source,2.0,human_seed2
-box,h,backpacks,2.3,human_seed3
-box,h,Cover a sunroof,2.1,human_seed4
-box,h,draw different things on each side,2.2,human_seed5
-box,f_l,A backpack,2.0,human_seed6
-box,f_l,A train,1.9,human_seed7
-box,f_l,to stop that crazy road runner for that crazy coyote,2.2,human_seed8
-box,f_l,Cutting holes in it and putting it on and walk down the street,2.0,human_seed9
-box,f_u,Can be used to prevent scratches on floor,2.7,human_seed10
-box,f_u,covering for light switches,2.3,human_seed11
-box,f_u,Some people could find it interesting to make a hat out of it because the flaps could look like a ball cap and then you could decorate it as much as you wanted to,1.9,human_seed12
-box,f_u,Creating a fort,1.7,human_seed13
-box,m_l,use to test paints,2.0,human_seed14
-box,m_l,using it as a Frisbee,1.6,human_seed15
-box,m_u,can make flip flops out the,2.7,human_seed16
-box,m_u,build a castle,1.7,human_seed17
-fork,h,weapon,2.7,human_seed18
-fork,h,throw,2.2,human_seed19
-fork,h,stab lid of jar for insects,2.8,human_seed20
-fork,h,whisk,2.0,human_seed21
-fork,h,plant market,2.5,human_seed22
-fork,h,to use to help as a tool,1.8,human_seed23
-fork,f_l,used as a weapon,2.7,human_seed24
-fork,f_l,fling food,2.8,human_seed25
-fork,f_l,use to pry something open,2.7,human_seed26
-fork,f_l,evening out ingredients,2.0,human_seed27
-fork,f_u,to stab someone,2.5,human_seed28
-fork,f_u,perforation maker,2.3,human_seed29
-fork,f_u,gardening,2.5,human_seed30
-fork,f_u,use in garden,2.8,human_seed31
-fork,m_l,use as garden decor,2.8,human_seed32
-fork,m_l,to scrath a surface with,2.0,human_seed33
-fork,m_u,to grasop something,2.8,human_seed34
-fork,m_u,to pick teeth with,2.5,human_seed35
-lightbulb,h,making sounds,2.7,human_seed36
-lightbulb,h,Instead of using it at night rip it out and pretend it is a light up ball.,2.8,human_seed37
-lightbulb,h,hang it upside down,2.4,human_seed38
-lightbulb,h,A surprising use for a light bulb would be to tie a string and hang it onto the ceiling for decoration.,2.4,human_seed39
-lightbulb,h,You could use it as a trap for insects that bother you,2.4,human_seed40
-lightbulb,h,smashing the lightbulb.,2.1,human_seed41
-lightbulb,f_l,A surprising use for a lightbulb would be to use it underwater to light up a pool,2.6,human_seed42
-lightbulb,f_l,a lightbulb could be used as something like the sun but for an animal you could use it to keep an animal hot even if a lightbulb or always known for their heat,2.7,human_seed43
-lightbulb,f_l,the ones that turn to different colors,2.4,human_seed44
-lightbulb,f_l,To make a really cool night light,2.1,human_seed45
-lightbulb,f_u,paint it and make it aesthetic and use it so the light would be colorful,2.7,human_seed46
-lightbulb,f_u,put LED lights in it and it will shine different colors,2.7,human_seed47
-lightbulb,f_u,Spin it,2.4,human_seed48
-lightbulb,f_u,paint a lightbulb on the lightbulb,2.4,human_seed49
-lightbulb,m_l,use it in a light show,2.1,human_seed50
-lightbulb,m_l,To put LED lights and have a dance party.,2.4,human_seed51
-lightbulb,m_u,you could use a light bulb as a mini sun,2.4,human_seed52
-lightbulb,m_u,a device just by adding parts.,2.4,human_seed53
-spoon,h,sticking it on your nose,2.1,human_seed54
-spoon,h,using it as a food launcher,2.7,human_seed55
-spoon,h,a spork,2.4,human_seed56
-spoon,h,use it as a fork,2.6,human_seed57
-spoon,h,using it to dig outside,2.4,human_seed58
-spoon,h,a ball launcher,2.7,human_seed59
-spoon,f_l,a catapult,2.7,human_seed60
-spoon,f_l,use it as a slingshot,2.7,human_seed61
-spoon,f_l,You could use a spoon as a digger for sand,2.4,human_seed62
-spoon,f_l,lick it,1.9,human_seed63
-spoon,f_u,to scoop up concrete,2.7,human_seed64
-spoon,f_u,you use a spoon to eat,1.9,human_seed65
-spoon,f_u,Making them into a launcher,2.7,human_seed66
-spoon,f_u,using it for drums,2.4,human_seed67
-spoon,m_l,"Put eyes, mouth, and arms to make it into a toy",2.4,human_seed68
-spoon,m_l,digging soil,2.4,human_seed69
-spoon,m_u,by looking at it and see yourself like a mirror,2.4,human_seed70
-spoon,m_u,you can use the spoon to dig out dirt in your backyard,2.4,human_seed71
-table,h,a stool,2.0,human_seed72
-table,h,paint on,2.5,human_seed73
-table,h,bench,2.5,human_seed74
-table,h,it can be used as a sitting chair,2.5,human_seed75
-table,h,to keep books,2.3,human_seed76
-table,h,as a workout board,2.8,human_seed77
-table,f_l,building,2.5,human_seed78
-table,f_l,reach lightbulb,2.8,human_seed79
-table,f_l,to sell for money,2.5,human_seed80
-table,f_l,for painting,2.5,human_seed81
-table,f_u,used for arranging books,2.2,human_seed82
-table,f_u,to put a lamp,1.8,human_seed83
-table,f_u,folding laundry,2.0,human_seed84
-table,f_u,tv tray,1.8,human_seed85
-table,m_l,operation,2.3,human_seed86
-table,m_l,as a present,2.5,human_seed87
-table,m_u,puzzle board,2.0,human_seed88
-table,m_u,use the table top as a art piece,2.7,human_seed89
+tire,h,spin something,2.5,human_seed0
+tire,h,chip it up and use for the floor of a playground,2.7,human_seed1
+tire,h,wheelbarrow,2.0,human_seed2
+tire,h,game,2.5,human_seed3
+tire,h,exercising tool,2.8,human_seed4
+tire,h,"use for an obstacle course, exercise",2.7,human_seed5
+tire,f_l,bumper for a dock or side of a boat,2.8,human_seed6
+tire,f_l,bounce on it,2.8,human_seed7
+tire,f_l,kids play area,2.7,human_seed8
+tire,f_l,ride in,1.8,human_seed9
+tire,f_u,bounce,2.8,human_seed10
+tire,f_u,obstacle course,2.8,human_seed11
+tire,f_u,flip for exercising,2.8,human_seed12
+tire,f_u,decorate,2.8,human_seed13
+tire,m_l,agility drills,2.8,human_seed14
+tire,m_l,recycling,1.7,human_seed15
+tire,m_u,as a play toy,2.3,human_seed16
+tire,m_u,play ground,2.2,human_seed17
+pants,h,cut and turn into shorts,2.3,human_seed18
+pants,h,fly,2.2,human_seed19
+pants,h,stuffed with other clothes,2.8,human_seed20
+pants,h,something to light a fire with,2.5,human_seed21
+pants,h,use them as a makeshift rope to tie something up,2.8,human_seed22
+pants,h,stuff for a scarecrow,2.3,human_seed23
+pants,f_l,decorate the legs,2.0,human_seed24
+pants,f_l,wash them,1.8,human_seed25
+pants,f_l,to make rags from when old,2.2,human_seed26
+pants,f_l,protection,1.7,human_seed27
+pants,f_u,bandages,2.5,human_seed28
+pants,f_u,make scarecrow outfit,2.2,human_seed29
+pants,f_u,motivation,2.2,human_seed30
+pants,f_u,paint in them to protect clean pants,2.0,human_seed31
+pants,m_l,climb,2.0,human_seed32
+pants,m_l,to use as a pattern to sew more pants,2.5,human_seed33
+pants,m_u,dust rag,2.2,human_seed34
+pants,m_u,bandana,2.7,human_seed35
+shoe,h,throwing weapon,2.8,human_seed36
+shoe,h,donate,1.7,human_seed37
+shoe,h,warning,2.2,human_seed38
+shoe,h,hit something,2.7,human_seed39
+shoe,h,draw on it,2.5,human_seed40
+shoe,h,paint for decoration,2.8,human_seed41
+shoe,f_l,draw large letters on sandy beach,2.7,human_seed42
+shoe,f_l,as a doorstopper,2.7,human_seed43
+shoe,f_l,put different shoe on,1.9,human_seed44
+shoe,f_l,throwing at something,2.2,human_seed45
+shoe,f_u,hang over power line,2.2,human_seed46
+shoe,f_u,tie around power lines,2.2,human_seed47
+shoe,f_u,projectile,2.7,human_seed48
+shoe,f_u,place on a shelf,2.3,human_seed49
+shoe,m_l,slap someone,2.7,human_seed50
+shoe,m_l,to throw at someone,2.5,human_seed51
+shoe,m_u,dog toy,2.8,human_seed52
+shoe,m_u,A shoe could be a container for anything that can fit in it.,2.3,human_seed53
+table,h,a stool,2.0,human_seed54
+table,h,paint on,2.5,human_seed55
+table,h,bench,2.5,human_seed56
+table,h,it can be used as a sitting chair,2.5,human_seed57
+table,h,to keep books,2.3,human_seed58
+table,h,as a workout board,2.8,human_seed59
+table,f_l,building,2.5,human_seed60
+table,f_l,reach lightbulb,2.8,human_seed61
+table,f_l,to sell for money,2.5,human_seed62
+table,f_l,for painting,2.5,human_seed63
+table,f_u,used for arranging books,2.2,human_seed64
+table,f_u,to put a lamp,1.8,human_seed65
+table,f_u,folding laundry,2.0,human_seed66
+table,f_u,tv tray,1.8,human_seed67
+table,m_l,operation,2.3,human_seed68
+table,m_l,as a present,2.5,human_seed69
+table,m_u,puzzle board,2.0,human_seed70
+table,m_u,use the table top as a art piece,2.7,human_seed71
+bottle,h,you could bottle flip the bottle.,2.1,human_seed72
+bottle,h,water plants,2.5,human_seed73
+bottle,h,mouthwash container,1.8,human_seed74
+bottle,h,flipping it into the trash,1.9,human_seed75
+bottle,h,put in cabinet as decoration,2.5,human_seed76
+bottle,h,science experiment,2.8,human_seed77
+bottle,f_l,window,2.5,human_seed78
+bottle,f_l,spit cup,2.7,human_seed79
+bottle,f_l,breath it,2.4,human_seed80
+bottle,f_l,contain salt/pepper,2.3,human_seed81
+bottle,f_u,put dish washing liquid on it,1.8,human_seed82
+bottle,f_u,you can craft stuff with it,2.4,human_seed83
+bottle,f_u,spitoon,2.3,human_seed84
+bottle,f_u,to put holes in it,2.4,human_seed85
+bottle,m_l,cut it in half,1.9,human_seed86
+bottle,m_l,a drawing pad!,2.7,human_seed87
+bottle,m_u,artwork,2.7,human_seed88
+bottle,m_u,use it as a club,2.5,human_seed89
