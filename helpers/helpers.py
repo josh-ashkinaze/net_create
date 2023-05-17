@@ -4,7 +4,10 @@ import seaborn as sns
 import requests
 import tenacity  # Don't forget to import tenacity
 import logging
+import os
+import glob
 import math
+import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
@@ -80,6 +83,37 @@ def batch_score_responses(response_tupples, batch_size=30, max_workers=4, logger
     return pd.concat(scores, ignore_index=True)
 
 
+def extract_ideas(text):
+    """Extract AUT ideas from GPT"""
+    text = text.lower()
+    ideas = []
+
+    lines = text.split("\n")
+    for line in lines:
+        line = line.strip()
+
+        if re.match(r'\d+\.', line):
+            idea = re.sub(r'\d+\.', '', line).strip()
+            ideas.append(idea)
+
+        elif re.match(r'-', line):
+            idea = re.sub(r'-', '', line).strip()
+            ideas.append(idea)
+
+        else:
+            ideas.append(line)
+
+    ideas = list(set([process_ideas(idea) for idea in ideas if idea]))
+
+    return ideas
+
+
+def process_ideas(x):
+    """Clean up AUT ideas from GPT"""
+    x = x.replace('"', '')
+    x = x.rstrip('.')
+    return x
+
 
 def make_aesthetic():
     """Make Seaborn look clean, like ggplot"""
@@ -96,3 +130,12 @@ def make_aesthetic():
     plt.rcParams['axes.titleweight'] = 'bold'
     plt.rcParams['axes.titlepad'] = 20
     plt.rcParams['axes.titlesize'] = 22
+
+
+def find_latest_file(directory, pattern):
+    search_pattern = os.path.join(directory, f'*{pattern}*')
+    matching_files = glob.glob(search_pattern)
+
+    sorted_files = sorted(matching_files, key=os.path.getctime)
+    latest_file = sorted_files[-1]
+    return latest_file

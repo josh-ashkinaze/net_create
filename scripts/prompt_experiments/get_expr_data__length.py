@@ -49,6 +49,6 @@ def run(trials):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--trials", type=int, default=1,
-                        help="Number of trials per combination of prompt, item, and example count.")
+                        help="Number of trials")
     args = parser.parse_args()
     run(args.trials)
