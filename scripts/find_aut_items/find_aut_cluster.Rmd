@@ -15,6 +15,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, echo=FALSE}
 library(lme4)
 library(tidyverse)
+library(kableExtra)
+library(xtable)
 library(gtools)
 library(readr)
 library(vtable)
@@ -39,6 +41,7 @@ library(gtools)
 library(readr)
 library(vtable)
 library(ggplot2)
+library(jtools)
 
 df <- read_csv("../../data/prior_responses.csv")
 df$prompt <- as.factor(df$prompt)
@@ -47,6 +50,7 @@ df <- df %>%
   rename(study = src,
          aut_item = prompt,
          score = target)
+scores <- read_csv("../../data/organisciak_gpt_performance.csv") %>% rename(aut_item = prompt, score=target)
 ```
 
 ## Basic Metadata Description
@@ -70,10 +74,9 @@ result_str <- sprintf("There were %d total responses from %d participants, acros
 print(result_str)
 
 
-st(df)
 ```
 
-# Clusters
+# Originality Distributions
 
 ```{r, echo=TRUE}
 ggplot(data=df, aes(y=reorder(aut_item, score), x=score)) + 
@@ -84,76 +87,60 @@ ggplot(data=df, aes(y=reorder(aut_item, score), x=score)) +
 ggsave(file.path("../../plots/prior_work_aut_dist.png"), dpi = 300, bg = 'transparent')
 ```
 
-## Get clusters
-
-```{r, echo=TRUE}
-
-first_quartile <- quantile(aut_freqs$occur, 0.25)
-filtered_df <- df %>%
-  inner_join(aut_freqs, by = "aut_item") %>%
-  filter(occur > first_quartile) %>%
-  select(-occur)
+# Performance
+```{r overall_performance}
+# Calculate the correlation between predicted and actual ratings
+correlation <- cor(scores$predicted, scores$score)
+print(sprintf("The overall correlation between predicted and actual ratings is %.2f", correlation))
+```
 
 
+```{r per-item, echo=TRUE}
+# Calculate correlation by item using dplyr
+cor_by_item <- scores %>%
+  group_by(aut_item) %>%
+  summarize(correlation = cor(predicted, score))
 
-# Fit nested random fx model
-model <-
-  lmer(score ~ 0 + aut_item + (1 |
-                                 study / participant), data = filtered_df)
-summary(model)
-fixed_effects <- fixef(model)
+# Merge the data frames
+merged_df <- merge(cor_by_item, aut_freqs, by = "aut_item")
+colnames(merged_df) <- c("aut_item", "correlation", "frequency")
+merged_df <- merged_df %>% 
+  arrange(desc(correlation))
 
+colnames(merged_df) <- c("AUT Item", "Classifier Accuracy (r)", "Frequency in Dataset")
+# Calculate overall accuracy and 5-item subset accuracy
+aut_items <- merged_df[1:CLUSTER_SIZE,]
 
+overall_accuracy <- cor(scores$predicted, scores$score)
+subset_accuracy <- mean(aut_items$`Classifier Accuracy (r)`)
 
-find_min_variance_cluster <-
-  function(n, prompt_combinations, fixed_effects) {
-    prompt_combinations <-
-      combinations(length(fixed_effects), n, names(fixed_effects))
-    
-    min_variance <- Inf
-    best_cluster <- NULL
-    
-    for (i in 1:nrow(prompt_combinations)) {
-      cluster <- prompt_combinations[i, ]
-      cluster_means <- fixed_effects[cluster]
-      variance <- var(cluster_means)
-      
-      if (variance < min_variance) {
-        min_variance <- variance
-        best_cluster <- cluster
-      }
-    }
-    
-    return(best_cluster)
-  }
+# Update caption with sprintf
+aut_freq_table <- xtable(merged_df, 
+  caption=sprintf("AUT items by frequency of occurrence in dataset and classifier accuracy, where overall accuracy (r) = %.2f, and average accuracy (r) from 5-item subset = %.2f. All data from \\citet{organisciak_beyond_2022}.", overall_accuracy, subset_accuracy), 
+  label="aut_desc_stats", 
+  include.rownames=FALSE)
 
-cluster <-
-  find_min_variance_cluster(CLUSTER_SIZE, prompt_combinations, fixed_effects)
-cluster <- sub("aut_item", "", cluster)
-print(cluster)
+print(aut_freq_table, include.rownames=FALSE, sanitize.text.function = function(x){x})
 
-write.csv(data.frame(aut_item = cluster), file = "../../data/chosen_aut_items.csv", row.names = FALSE)
+```
+# Write items
 
-
+```{r}
+items <- aut_items$`AUT Item`
+write.csv(data.frame(aut_item = items), file = "../../data/chosen_aut_items.csv", row.names = FALSE)
 ```
 
 ```{r}
-print(stargazer(model, title="Mixed Effects Model of AUT Scores", single.row=TRUE))
+correlation_subset <- cor(scores$score[scores$aut_item %in% items], scores$predicted[scores$aut_item %in% items])
+
+ggplot(scores %>% filter(aut_item %in% items ), aes(x = score, y = predicted)) +
+ geom_point() +   geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+
+  labs(title=sprintf("Originality Classifier Accuracy of 5-Item Subset \nCorrelation: %.2f", correlation_subset)) +
+  xlab("Actual Score") +
+  ylab("Predicted Score") +
+  theme_nice()
 ```
 
-## Give info on clusters
 
-```{r}
-
-cluster_df_sum <- df[df$aut_item %in% cluster, ] %>% group_by(by=aut_item) %>% summarise(m = mean(score))
-
-cluster_df <- df %>% filter(aut_item %in% cluster)
-intra_mean <- round(mean(cluster_df_sum$m),2)
-intra_sd <- round(sd(cluster_df_sum$m),2)
-overall_mean <- round(mean(df$score), 2)
-
-result_str <- sprintf("The intra-cluster mean was %0.2f and intra-cluster SD was %0.2f, while the general mean was %0.2f.", intra_mean, intra_sd, overall_mean)
-print(result_str)
-
-```
 
