@@ -188,13 +188,24 @@ But for this task, write down the most unusual, creative, and uncommon use you c
             dialogOverlay.style.display = "flex";
         }
 
-        // Function to close the dialog box
-        function closeDialog() {
-            var dialogOverlay = document.getElementById("dialogOverlay");
-            dialogOverlay.style.display = "none";
-            document.querySelector('form').submit();
+        // // Function to close the dialog box
+        // function closeDialog() {
+        //     var dialogOverlay = document.getElementById("dialogOverlay");
+        //     dialogOverlay.style.display = "none";
+        //     document.querySelector('form').submit();
+        //
+        // }
 
-        }
+        function closeDialog() {
+    var dialogOverlay = document.getElementById("dialogOverlay");
+    var submitButton = document.querySelector('button[type="submit"]');
+
+    dialogOverlay.style.display = "none";
+    submitButton.textContent = "Loading...";
+    submitButton.disabled = true;
+
+    document.querySelector('form').submit();
+}
 
         document.addEventListener('DOMContentLoaded', (event) => {
             // Add an event listener to the form submission
