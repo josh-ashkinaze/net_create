@@ -224,7 +224,7 @@ def get_graphs():
 
 if __name__ == '__main__':
     if is_local:
-        app.run(port=5023, debug=True)
+        app.run(port=5033, debug=True)
     else:
         port = int(os.environ.get('PORT', 5000))
         app.run(host="0.0.0.0", port=port)
