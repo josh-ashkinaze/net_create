@@ -132,7 +132,7 @@
 <h3>Item {{ trial_no }} of 5: Generate a creative use for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>.</h3>
 <h4> Task </h4>
 
-<p>For this task, you should write down original and creative uses for a <strong>{{ item }}</strong>. Certainly there are common, unoriginal ways to use a <strong>{{ item }}</strong>.
+<p>For this task, you should write down original and creative uses for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>. Certainly there are common, unoriginal ways to use {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>.
 But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
 <h4> {{ label }}</h4>
 
