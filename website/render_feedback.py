@@ -5,7 +5,12 @@ import seaborn as sns
 from scipy.stats import percentileofscore
 from helpers import helpers as my_utils
 import base64
+import spacy
 import io
+from scipy.spatial.distance import cosine as cosine_distance
+
+# Load the small english model. You'll need to download it first via spacy's cli: python -m spacy download en_core_web_sm
+nlp = spacy.load('en_core_web_md')
 
 
 def make_aesthetic():
@@ -89,3 +94,15 @@ def make_graphs(participant_responses, conditions, file_prefix="../"):
     human_graph = comparison_graph(participant_scores, "human", file_prefix)
     ai_human_graph = plot_ai_human(conditions, participant_scores)
     return human_graph, ai_graph, ai_human_graph
+
+
+def calculate_similarity(sentence1, sentence2):
+    # Transform sentences into their vector representation
+    sentence1_vector = nlp(sentence1).vector
+    sentence2_vector = nlp(sentence2).vector
+
+    # Reshape vectors to 1-D numpy arrays
+    sentence1_vector = sentence1_vector.ravel()
+    sentence2_vector = sentence2_vector.ravel()
+
+    return 1 - cosine_distance(sentence1_vector, sentence2_vector)

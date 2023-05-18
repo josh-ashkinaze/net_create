@@ -14,7 +14,7 @@ Description: This is a Flask web application that runs a web experiment.
 """
 
 from google.cloud import bigquery
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import flash, Flask, render_template, request, redirect, url_for, session
 from google.oauth2 import service_account
 import uuid
 import json
@@ -23,7 +23,7 @@ import time
 from datetime import datetime
 import random
 import os
-from render_graph import make_graphs  # import the comparison_graph function from render_graph.py
+from render_feedback import make_graphs, calculate_similarity  # import the comparison_graph function from render_feedback.py
 
 
 # SETUP
@@ -159,7 +159,9 @@ def render_trial(condition_no):
 
         rows = ai_rows + human_rows
         random.shuffle(rows)
-        print("responses", rows)
+        session['last_human_response'] = human_rows[-1]
+        session.modified = True  # Explicitly mark the session as modified
+
         return render_template('render_trial.html', item=item, rows=rows, condition_no=condition_no,
                                label=SOURCE_LABEL if to_label else "", trial_no=condition_no + 1)
 
@@ -172,7 +174,9 @@ def render_trial(condition_no):
         response_text = request.form.get('participant_response')
         session['responses'].append(response_text)
         session.modified = True  # Explicitly mark the session as modified
-        print("printing responses", session['responses'])
+        response_similarity = calculate_similarity(response_text, session['last_human_response'])
+        flash(f'Similarity Score: {response_similarity:.2f}')
+
 
         # Insert the participant's response into the BigQuery table
         row = {
@@ -199,6 +203,14 @@ def render_trial(condition_no):
 def thank_you():
     """Thank you page"""
     return render_template('thank_you.html')
+
+
+@app.route('/calculate_similarity', methods=['POST'])
+def calculate_similarity_route():
+    response_text = request.form.get('response')
+    last_human_response = session.get('last_human_response')
+    similarity_score = calculate_similarity(response_text, last_human_response)
+    return str(max(round(similarity_score*100),1))
 
 @app.route("/get-graphs")
 def get_graphs():
