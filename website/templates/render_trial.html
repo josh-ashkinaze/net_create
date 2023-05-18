@@ -129,13 +129,19 @@
     </style>
 </head>
 <body class="container py-4">
-<h3>Item {{ trial_no }} of 5: Generate a creative use for a <strong>{{ item }}</strong>.</h3>
-<p>For this task, you should write down original and creative uses for a <strong>{{ item }}</strong>. </p>
-<p>Certainly there are common, unoriginal ways to use a <strong>{{ item }}</strong>. </p>
-<p>But for this task, write down the most unusual, creative, and uncommon use you can think of. </p>
+<h3>Item {{ trial_no }} of 5: Generate a creative use for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>.</h3>
+<h4> Task </h4>
+
+<p>For this task, you should write down original and creative uses for a <strong>{{ item }}</strong>. Certainly there are common, unoriginal ways to use a <strong>{{ item }}</strong>.
+But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
 <h4> {{ label }}</h4>
-<h5>Here are some other responses. Please rank the responses by creativity (a creative idea is one that is novel and
-    useful), with the most creative idea on top. Then, submit your own idea.</h5>
+
+<h4> Before you answer... </h4>
+<ol>
+    <li>Read previous ideas. </li>
+    <li>Rank these ideas in order of creativity with the most creative idea on top.</li>
+</ol>
+
 <ul class="sortable-list">
     {% for row in rows %}
             {% if "(Source: <strong>A.I</strong>)</span>" in row %}
