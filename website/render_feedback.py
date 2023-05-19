@@ -6,6 +6,7 @@ from scipy.stats import percentileofscore
 from helpers import helpers as my_utils
 import base64
 import spacy
+import matplotlib.font_manager as fm
 import io
 from scipy.spatial.distance import cosine as cosine_distance
 
@@ -15,7 +16,7 @@ nlp = spacy.load('en_core_web_md')
 def make_aesthetic():
     sns.set(style='white', context='poster', font_scale=1.1)
     try:
-        plt.rcParams.update({'font.family': 'Arial'})
+        plt.rcParams.update({'font.family': 'Roboto'})
     except:
         pass
     sns.set_palette(sns.color_palette('dark'))
@@ -44,7 +45,7 @@ def comparison_graph(participant_scores, comparison, prefix="../"):
     fig, ax = plt.subplots(figsize=(12, 8))
 
     sns.histplot(comparison_scores, bins=10, stat='percent', color='#1F4287', alpha=0.8)
-    plt.suptitle("Your average response was more creative than\n{}% of {} responses".format(percentile, comparison),
+    plt.suptitle("Your average response was more creative than\n{}% of {} responses.".format(percentile, comparison),
                  ha='left', x=0.125, fontweight='bold', y=1.07, fontsize=26)
     ax.set_title(
         f"The graph shows creativity of {comparison}-generated responses on a scale of 1-5,\nwith a dashed line for your average creativity score.",
@@ -61,6 +62,7 @@ def comparison_graph(participant_scores, comparison, prefix="../"):
 
 
 def plot_ai_human(conditions, scores):
+    make_aesthetic()
     color_dict = {'Human Only': '#1F4287', 'AI + Human': '#FFD23F'}
     df = pd.DataFrame({'conditions': conditions, 'scores': scores})
     df['source'] = df['conditions'].apply(lambda x: "Human Only" if x == 'h' else 'AI + Human')
@@ -88,6 +90,10 @@ def plot_ai_human(conditions, scores):
 
 
 def make_graphs(participant_responses, conditions, file_prefix="../"):
+    font_path = file_prefix + "website/resources/Roboto.ttf"
+    fm.fontManager.addfont(font_path)
+    plt.rcParams['font.family'] = 'Roboto'
+
     participant_scores = my_utils.batch_score_responses(participant_responses)['originality'].tolist()
     ai_graph = comparison_graph(participant_scores, "AI", file_prefix)
     human_graph = comparison_graph(participant_scores, "human", file_prefix)
