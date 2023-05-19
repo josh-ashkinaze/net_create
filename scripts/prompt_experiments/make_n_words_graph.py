@@ -14,7 +14,7 @@ def count_words(x):
 
 
 def make_aesthetic():
-    sns.set(style='white', context='poster', font_scale=1.1)
+    sns.set(style='white', context='poster', font_scale=0.9)
     plt.rcParams.update({'font.family': 'Arial'})
     sns.set_palette(sns.color_palette('dark'))
     sns.despine()
@@ -56,8 +56,8 @@ def make_n_words_graph(mydf):
     plt.figure(figsize=(12, 8))
 
     custom_colors = ['#7B68EE', '#2F243A', '#2F243A']
-    custom_labels = ['Human Responses', 'GPT Responses\n(Prompt = Zero Shot,\nLength Limited)',
-                     'GPT Responses\n(Prompt = Zero Shot)']
+    custom_labels = ['Human Responses', 'GPT Responses\n(Prompt = ZeroShotLimit)',
+                     'GPT Responses\n(Prompt = ZeroShot)']
 
     avg_n_words = mydf.groupby('prompt_condition')['n_words'].mean().reindex(['prior_work', 'zero_limit', 'zero_shot'])
     sd_n_words = mydf.groupby('prompt_condition')['n_words'].std().reindex(['prior_work', 'zero_limit', 'zero_shot'])

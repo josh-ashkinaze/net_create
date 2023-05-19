@@ -9,7 +9,6 @@ import spacy
 import io
 from scipy.spatial.distance import cosine as cosine_distance
 
-# Load the small english model. You'll need to download it first via spacy's cli: python -m spacy download en_core_web_sm
 nlp = spacy.load('en_core_web_md')
 
 
