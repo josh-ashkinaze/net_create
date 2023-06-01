@@ -232,9 +232,14 @@
 
 <form action="/start-experiment" method="get">
     <div class="form-group">
-        <button type="submit" class="btn btn-primary" required> Click here to start the experiment!</button>
+        <label for="email"><strong>Optional</strong>: Enter your email address to be eligible to win the $100 award! </label>
+        <input type="email" id="email" name="email" class="form-control" placeholder="email address" required>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary"> Click here to start the experiment!</button>
     </div>
 </form>
+
 
 <script>
     var sliderAI = document.getElementById("creativitySliderAI");
