@@ -121,6 +121,7 @@ def start_experiment():
     session['item_order'] = random.sample(ITEMS, len(ITEMS))
     session['condition_order'] = random.sample(list(CONDITIONS.keys()), len(CONDITIONS))
     session['responses'] = []
+    session['response_ids'] = []
     return redirect(url_for('render_trial', condition_no=0, method="GET"))
 
 
@@ -226,7 +227,9 @@ def render_trial(condition_no):
         ranked_array = request.form.get('ranked_array', '').split(',')
         print("Init array and ranked array", init_array, ranked_array)
         response_text = request.form.get('participant_response')
+        response_id = str(uuid.uuid4())
         session['responses'].append(response_text)
+        session['response_ids'].append(response_id)
         session.modified = True  # Explicitly mark the session as modified
         response_similarity = calculate_similarity(response_text, session['last_human_response'])
         flash(f'Similarity Score: {response_similarity:.2f}')
@@ -234,7 +237,7 @@ def render_trial(condition_no):
         # Insert the participant's response into the BigQuery table
         row = {
             "item": item,
-            "response_id": str(uuid.uuid4()),
+            "response_id": response_id,
             "participant_id": participant_id,
             "condition_order": condition_no,
             "response_text": response_text,
@@ -274,8 +277,21 @@ def get_graphs():
     participant_responses = list(zip(session['item_order'], session['responses']))
     participant_conditions = session['condition_order']
 
-    # Render a bunch of graphs of participant's responses
-    human_graph, ai_graph, human_ai_graph = make_graphs(participant_responses, participant_conditions, file_prefix)
+    # Get graphgs of responses
+    human_graph, ai_graph, human_ai_graph, scores = make_graphs(participant_responses, participant_conditions, file_prefix)
+
+    # Add scores to database
+    response_table = dataset.table("responses")
+    rows_to_insert = [
+        {"response_id": session['response_ids'][i], "rating": scores[i]}
+        for i in range(len(scores))
+    ]
+    errors = client.insert_rows_json(response_table, rows_to_insert)
+    if errors:
+        print(f"Encountered errors while inserting rows: {errors}")
+    else:
+        print("All rows have been added to responses.")
+
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
 
 
@@ -312,7 +328,7 @@ def get_world():
 
 if __name__ == '__main__':
     if is_local:
-        app.run(port=5037, debug=True)
+        app.run(port=5047, debug=True)
     else:
         port = int(os.environ.get('PORT', 5000))
         app.run(host="0.0.0.0", port=port)
