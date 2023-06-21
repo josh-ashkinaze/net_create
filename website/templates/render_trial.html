@@ -11,7 +11,7 @@
 
     <style>
 
-         .dialog-overlay {
+        .dialog-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -129,38 +129,44 @@
     </style>
 </head>
 <body class="container py-4">
-<h3>Item {{ trial_no }} of 5: Generate a creative use for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>.</h3>
+<h3>Item {{ trial_no }} of 5: Generate a creative use for {% if item != 'pants' %}a {% endif %}<strong>{{ item
+    }}</strong>.</h3>
 <h4> Task </h4>
 
-<p>For this task, you should write down original and creative uses for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>. Certainly there are common, unoriginal ways to use {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>.
-But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
+<p>For this task, you should write down original and creative uses for {% if item != 'pants' %}a {% endif %}<strong>{{
+    item }}</strong>. Certainly there are common, unoriginal ways to use {% if item != 'pants' %}a {% endif %}<strong>{{
+    item }}</strong>.
+    But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
 <h4> {{ label }}</h4>
 
 <h4> Before you answer... </h4>
 <ol>
-    <li>Read previous ideas. </li>
+    <li>Read previous ideas.</li>
     <li>Rank these ideas in order of creativity with the most creative idea on top.</li>
 </ol>
 
 <ul class="sortable-list">
-    {% for row in rows %}
-            {% if "(Source: <strong>A.I</strong>)</span>" in row %}
-                <li class="noselect ai-generated">{{ row|safe }}</li>
-            {% else %}
-                <li class="noselect">{{ row|safe }}</li>
-            {% endif %}
-        {% endfor %}
+    {% for row, r_id in data %}
+    {% if "(Source: <strong>A.I</strong>)</span>" in row %}
+    <li class="noselect ai-generated" data-r-id="{{ r_id }}">{{ row|safe }}</li>
+    {% else %}
+    <li class="noselect" data-r-id="{{ r_id }}">{{ row|safe }}</li>
+    {% endif %}
+    {% endfor %}
 </ul>
-    <div id="dialogOverlay" class="dialog-overlay" style="display: none;">
-        <div class="dialog-box">
-            <h3>Similarity Score</h3>
-            <p id="similarityScore"></p>
-            <button onclick="closeDialog()">Keep going</button>
-        </div>
+
+<div id="dialogOverlay" class="dialog-overlay" style="display: none;">
+    <div class="dialog-box">
+        <h3>Similarity Score</h3>
+        <p id="similarityScore"></p>
+        <button onclick="closeDialog()">Keep going</button>
     </div>
+</div>
 
 <form action="{{ url_for('render_trial', condition_no=condition_no) }}" method="post" class="mt-20">
     <div class="form-group">
+        <input type="hidden" name="init_array" value="{{ init_array }}">
+        <input type="hidden" name="ranked_array" value="">
         <input type="text" class="form-control" name="participant_response" required placeholder="Write your idea here">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
@@ -171,77 +177,92 @@ But for this task, write down the most unusual, creative, and uncommon use you c
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 
 <script>
+
     document.addEventListener('DOMContentLoaded', (event) => {
-        new Sortable(document.querySelector('.sortable-list'), {
+        var sortable = new Sortable(document.querySelector('.sortable-list'), {
             animation: 150,
             chosenClass: "sortable-chosen",
             dragClass: "sortable-drag",
+            onSort: function (evt) {
+                updateRIdArray();
+            }
         });
     });
 
 
-            // Function to display the dialog box with the similarity score
-        function showDialog(similarityScore) {
-            var dialogOverlay = document.getElementById("dialogOverlay");
-            var similarityScoreElement = document.getElementById("similarityScore");
-            similarityScoreElement.textContent = "Your response was " + similarityScore + "% similar to the last person's response!";
-            dialogOverlay.style.display = "flex";
-        }
-
-        // // Function to close the dialog box
-        // function closeDialog() {
-        //     var dialogOverlay = document.getElementById("dialogOverlay");
-        //     dialogOverlay.style.display = "none";
-        //     document.querySelector('form').submit();
-        //
-        // }
-
-        function closeDialog() {
-    var dialogOverlay = document.getElementById("dialogOverlay");
-    var submitButton = document.querySelector('button[type="submit"]');
-
-    dialogOverlay.style.display = "none";
-    submitButton.textContent = "Loading...";
-    submitButton.disabled = true;
-
-    document.querySelector('form').submit();
-}
-
-        document.addEventListener('DOMContentLoaded', (event) => {
-            // Add an event listener to the form submission
-            document.querySelector('form').addEventListener('submit', function (event) {
-                event.preventDefault();  // Prevent the form from submitting
-
-                // Get the participant's response
-                var response = document.querySelector('input[name="participant_response"]').value;
-
-                // Perform any necessary submission logic here
-                // For example, you can use AJAX to send the response to the server
-
-                // Calculate the similarity score (replace this with your own calculation logic)
-                var similarityScore = calculateSimilarity(response);
-
-                // Display the dialog box with the similarity score
-                showDialog(similarityScore);
-            });
+    function updateRIdArray() {
+        var sortedRIds = [];
+        $('.sortable-list li').each(function () {
+            sortedRIds.push($(this).attr('data-r-id'));
         });
+        $('input[name="ranked_array"]').val(sortedRIds.join(','));
+    }
+
+    updateRIdArray();
 
 
-       function calculateSimilarity(response) {
-            $.ajax({
-                type: "POST",
-                url: "{{ url_for('calculate_similarity_route') }}",
-                data: { response: response },
-                success: function(score) {
-                    // Display the similarity score in the dialog box
-                    showDialog(score);
-                },
-                error: function(xhr, status, error) {
-                    // Handle error if the request fails
-                    console.log("Error:", error);
-                }
-            });
-        }
+    // Function to display the dialog box with the similarity score
+    function showDialog(similarityScore) {
+        var dialogOverlay = document.getElementById("dialogOverlay");
+        var similarityScoreElement = document.getElementById("similarityScore");
+        similarityScoreElement.textContent = "Your response was " + similarityScore + "% similar to the last person's response!";
+        dialogOverlay.style.display = "flex";
+    }
+
+    // // Function to close the dialog box
+    // function closeDialog() {
+    //     var dialogOverlay = document.getElementById("dialogOverlay");
+    //     dialogOverlay.style.display = "none";
+    //     document.querySelector('form').submit();
+    //
+    // }
+
+    function closeDialog() {
+        var dialogOverlay = document.getElementById("dialogOverlay");
+        var submitButton = document.querySelector('button[type="submit"]');
+
+        dialogOverlay.style.display = "none";
+        submitButton.textContent = "Loading...";
+        submitButton.disabled = true;
+
+        document.querySelector('form').submit();
+    }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Add an event listener to the form submission
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent the form from submitting
+
+            // Get the participant's response
+            var response = document.querySelector('input[name="participant_response"]').value;
+
+            // Perform any necessary submission logic here
+            // For example, you can use AJAX to send the response to the server
+
+            // Calculate the similarity score (replace this with your own calculation logic)
+            var similarityScore = calculateSimilarity(response);
+
+            // Display the dialog box with the similarity score
+            showDialog(similarityScore);
+        });
+    });
+
+
+    function calculateSimilarity(response) {
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('calculate_similarity_route') }}",
+            data: {response: response},
+            success: function (score) {
+                // Display the similarity score in the dialog box
+                showDialog(score);
+            },
+            error: function (xhr, status, error) {
+                // Handle error if the request fails
+                console.log("Error:", error);
+            }
+        });
+    }
 </script>
 
 </body>

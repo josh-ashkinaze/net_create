@@ -109,7 +109,7 @@ def start_experiment():
         "creativity_ai": session['creativity_ai'],
         "creativity_human": session['creativity_human'],
         "ip_address": session['participant_ip'],
-        "dt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     }
 
     errors = client.insert_rows_json(person_table, [row])
@@ -161,41 +161,60 @@ def render_trial(condition_no):
     else:
         pass
 
-    # Retrieve the necessary information from the global TEMP variable
     participant_id = session['participant_id']
     condition = session['condition_order'][condition_no]
     to_label = CONDITIONS[condition]['label']
     n_human_ideas = CONDITIONS[condition]['n_human']
     n_ai_ideas = CONDITIONS[condition]['n_ai']
     item = session['item_order'][condition_no]
+    world = session['world']
 
     # If the HTTP method is GET, render the render_trial template
     if request.method == "GET":
-        human_rows = [row['response_text'] for row in list(client.query(f"""
-            SELECT response_text, response_date 
-            FROM (
-                SELECT response_text, MAX(response_date) as response_date 
-                FROM `net_expr.trials` 
-                WHERE item = '{item}' AND condition = '{condition}'
-                GROUP BY response_text
-            ) AS subquery
-            ORDER BY response_date DESC
-            LIMIT {n_human_ideas}
-        """).result())]
+        # Get the human ideas and their IDs
+        human_result = list(client.query(f"""
+                    SELECT response_text, response_id, response_date 
+                    FROM (
+                        SELECT response_text, response_id, MAX(response_date) as response_date 
+                        FROM `net_expr.trials` 
+                        WHERE item = '{item}' AND condition = '{condition}' AND world = {world} 
+                        GROUP BY response_text, response_id
+                    ) AS subquery
+                    ORDER BY response_date DESC
+                    LIMIT {n_human_ideas}
+                """).result())
+
+        human_rows = [row['response_text'] for row in human_result]
+        human_ids = [row['response_id'] for row in human_result]
+
+        # Filter out the AI ideas that match the human ideas and get their IDs
         filtered_ai_rows = AI_IDEAS_DF[AI_IDEAS_DF['aut_item'] == item].query("response not in @human_rows")
-        ai_rows = filtered_ai_rows['response'].sample(n_ai_ideas).tolist()
+        ai_sample = filtered_ai_rows.sample(n_ai_ideas)
+        ai_rows = ai_sample['response'].tolist()
+        ai_ids = ai_sample['response_id'].tolist()
+
+        # Add source labels if necessary
         if to_label:
             human_rows = [row + ' <span style="color: #1F4287;">(Source: <strong>Human</strong>)</span>' for row in
                           human_rows]
             ai_rows = [row + ' <span style="color: #ffffff;">(Source: <strong>A.I</strong>)</span>' for row in ai_rows]
 
-        rows = ai_rows + human_rows
-        random.shuffle(rows)
+        # Concatenate the human and AI rows and their IDs
+        rows = human_rows + ai_rows
+        ids = human_ids + ai_ids
+
+        # Combine the rows and their IDs, shuffle them, and then separate them again
+        rows_with_ids = list(zip(rows, ids))
+        random.shuffle(rows_with_ids)
+        rows, ids = zip(*rows_with_ids)
+        data = zip(rows, ids)
+        init_array = ','.join(map(str, ids))
+        print(rows)
         session['last_human_response'] = human_rows[-1]
         session.modified = True  # Explicitly mark the session as modified
 
-        return render_template('render_trial.html', item=item, rows=rows, condition_no=condition_no,
-                               label=SOURCE_LABEL if to_label else "", trial_no=condition_no + 1)
+        return render_template('render_trial.html', item=item, data=data, condition_no=condition_no,
+                               label=SOURCE_LABEL if to_label else "", trial_no=condition_no + 1, init_array=init_array)
 
 
     # If the HTTP method is POST, insert the participant's response into the BigQuery table
@@ -203,6 +222,9 @@ def render_trial(condition_no):
     elif request.method == 'POST':
 
         # Retrieve the participant's response
+        init_array = request.form.get('init_array', '').split(',')
+        ranked_array = request.form.get('ranked_array', '').split(',')
+        print("Init array and ranked array", init_array, ranked_array)
         response_text = request.form.get('participant_response')
         session['responses'].append(response_text)
         session.modified = True  # Explicitly mark the session as modified
@@ -216,9 +238,11 @@ def render_trial(condition_no):
             "participant_id": participant_id,
             "condition_order": condition_no,
             "response_text": response_text,
-            "response_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
             "condition": condition,
-            "world": session['world']
+            "world": session['world'],
+            "init_array": init_array,
+            "ranked_array": ranked_array,
         }
         errors = client.insert_rows_json(table, [row])
         if not errors:
@@ -281,7 +305,8 @@ def get_world():
     """
     query_job = client.query(query)
     results = query_job.result()
-    current_world = list(results)[0]['min_count'] // N_PER_WORLD
+    trials = list(results)[0]['min_count']
+    current_world = trials // N_PER_WORLD
     return current_world
 
 
