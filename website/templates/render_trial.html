@@ -114,7 +114,7 @@
         .sortable-list li {
             margin: 0.5rem;
             padding: 1rem;
-            border: 1px solid #1F4287;
+            border: 1px solid white;
             border-radius: 5px;
             color: #212529;
             background-color: white;
@@ -122,6 +122,26 @@
 
 
         .sortable-list li.ai-generated {
+            background-color: #B33F62;
+            color: white;
+        }
+
+        .sortable-list li.human-generated {
+            background-color: #1F4287;
+            color: white;
+        }
+
+
+
+        .ai-generated {
+            padding: 0.3rem;
+            border: 1px solid white;
+            border-radius: 5px;
+            background-color: #B33F62;
+            color: white;
+        }
+
+        .sortable-list li.human-generated {
             background-color: #1F4287;
             color: white;
         }
@@ -133,27 +153,41 @@
     }}</strong>.</h3>
 <h4> Task </h4>
 
-<p>For this task, you should write down original and creative uses for {% if item != 'pants' %}a {% endif %}<strong>{{
+<p>For this task, you should write down an original and creative use for {% if item != 'pants' %}a {% endif %}<strong>{{
     item }}</strong>. Certainly there are common, unoriginal ways to use {% if item != 'pants' %}a {% endif %}<strong>{{
     item }}</strong>.
     But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
-<h4> {{ label }}</h4>
+
+
+
+{% if label %}
+    <h4 class = 'ai-generated' >
+        {{ label }}
+    </h4>
+{% endif %}
 
 <h4> Before you answer... </h4>
 <ol>
-    <li>Read previous ideas.</li>
-    <li>Rank these ideas in order of creativity with the most creative idea on top.</li>
+    <li>Read previous creative uses. </li>
+    <li>Rank these uses in order of creativity with the most creative use on top.</li>
 </ol>
+
+
 
 <ul class="sortable-list">
     {% for row, r_id in data %}
     {% if "(Source: <strong>A.I</strong>)</span>" in row %}
     <li class="noselect ai-generated" data-r-id="{{ r_id }}">{{ row|safe }}</li>
+    {% elif "(Source: <strong>Human</strong>)</span>" in row %}
+    <li class="noselect human-generated" data-r-id="{{ r_id }}">{{ row|safe }}</li>
     {% else %}
-    <li class="noselect" data-r-id="{{ r_id }}">{{ row|safe }}</li>
+    <li class="noselect human-generated" data-r-id="{{ r_id }}">{{ row|safe }}</li>
     {% endif %}
     {% endfor %}
 </ul>
+
+
+
 
 <div id="dialogOverlay" class="dialog-overlay" style="display: none;">
     <div class="dialog-box">

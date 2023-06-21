@@ -196,7 +196,7 @@ def render_trial(condition_no):
 
         # Add source labels if necessary
         if to_label:
-            human_rows = [row + ' <span style="color: #1F4287;">(Source: <strong>Human</strong>)</span>' for row in
+            human_rows = [row + ' <span style="color: #ffffff;">(Source: <strong>Human</strong>)</span>' for row in
                           human_rows]
             ai_rows = [row + ' <span style="color: #ffffff;">(Source: <strong>A.I</strong>)</span>' for row in ai_rows]
 
@@ -328,7 +328,7 @@ def get_world():
 
 if __name__ == '__main__':
     if is_local:
-        app.run(port=5047, debug=True)
+        app.run(port=5046, debug=True)
     else:
         port = int(os.environ.get('PORT', 5000))
         app.run(host="0.0.0.0", port=port)
