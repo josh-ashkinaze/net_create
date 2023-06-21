@@ -109,7 +109,7 @@ def start_experiment():
         "creativity_ai": session['creativity_ai'],
         "creativity_human": session['creativity_human'],
         "ip_address": session['participant_ip'],
-        "dt": datetime.utcnow()
+        "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     }
 
     errors = client.insert_rows_json(person_table, [row])
@@ -238,7 +238,7 @@ def render_trial(condition_no):
             "participant_id": participant_id,
             "condition_order": condition_no,
             "response_text": response_text,
-            "response_date": datetime.utcnow(),
+            "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
             "condition": condition,
             "world": session['world'],
             "init_array": init_array,
@@ -298,7 +298,8 @@ def get_world():
         SELECT MIN(count) as min_count
         FROM (
           SELECT condition, item, COUNT(*) as count
-          FROM `net_expr.trials_without_seed`
+          FROM `net_expr.trials`
+          WHERE participant_id != "seed"
           GROUP BY condition, item
         )
     """
