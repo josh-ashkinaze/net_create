@@ -57,6 +57,7 @@ dataset = client.dataset("net_expr")
 table = dataset.table("trials")
 
 # EXPERIMENT PARAMETERS
+N_PER_WORLD = 20
 SOURCE_LABEL = "For this object, we also asked AI to come up with ideas! "
 CONDITIONS = {
     'h': {'n_human': 6, 'n_ai': 0, 'label': False},
@@ -89,13 +90,16 @@ def start_experiment():
 
     # Assign UUID to participant
     session['participant_id'] = str(uuid.uuid4())
+    session['world'] = get_world()
 
     # Get creativity values from sliders
     creativity_ai = request.args.get('creativitySliderAIValue')
     creativity_human = request.args.get('creativitySliderHumanValue')
-    session['creativity_ai'] = creativity_ai
-    session['creativity_human'] = creativity_human
+    session['creativity_ai'] = int(creativity_ai) if creativity_ai != '' else 50
+    session['creativity_human'] = int(creativity_human) if creativity_human != '' else 50
     session['participant_ip'] = get_client_ip()
+
+    print(session)
     session.modified = True
 
     # Add participant to the person table
@@ -107,6 +111,7 @@ def start_experiment():
         "ip_address": session['participant_ip'],
         "dt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
+
     errors = client.insert_rows_json(person_table, [row])
     if errors:
         print("Encountered errors while inserting rows: {}".format(errors))
@@ -213,7 +218,7 @@ def render_trial(condition_no):
             "response_text": response_text,
             "response_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "condition": condition,
-            "world": 1
+            "world": session['world']
         }
         errors = client.insert_rows_json(table, [row])
         if not errors:
@@ -258,9 +263,31 @@ def get_client_ip():
         return request.remote_addr
 
 
+def get_world():
+    """Get the current world number.
+
+    The reason why I get the minimum number of trials for each condition/item combination is that participants may
+    have only completed half of the experiment, so there is not necessarily going to be an equal number of trials for
+    everything.
+    """
+    query = """
+        SELECT MIN(count) as min_count
+        FROM (
+          SELECT condition, item, COUNT(*) as count
+          FROM `net_expr.trials`
+          WHERE participant_id != "seed"
+          GROUP BY condition, item
+        )
+    """
+    query_job = client.query(query)
+    results = query_job.result()
+    current_world = list(results)[0]['min_count'] // N_PER_WORLD
+    return current_world
+
+
 if __name__ == '__main__':
     if is_local:
-        app.run(port=5033, debug=True)
+        app.run(port=5037, debug=True)
     else:
         port = int(os.environ.get('PORT', 5000))
         app.run(host="0.0.0.0", port=port)
