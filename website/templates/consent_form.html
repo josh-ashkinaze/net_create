@@ -209,6 +209,8 @@
 </div>
 
 
+
+
 <!--<h4 class="mb-4">How creative are you?</h4>-->
 <!--<p class="lead mb-4"> Guess how creative you are compared to humans and AI. At the end of the experiment, we'll show you-->
 <!--    your score! And if you submit the most creative response, you get $100.</p>-->
@@ -231,25 +233,29 @@
     University of Michigan IRB for Health Sciences and Behavioral Sciences. For more information, please contact x@umich.edu.</p>
 
 <form action="/start-experiment" method="get">
+    <input type="hidden" id="creativitySliderAIValue" name="creativitySliderAIValue">
+    <input type="hidden" id="creativitySliderHumanValue" name="creativitySliderHumanValue">
     <div class="form-group">
         <button type="submit" class="btn btn-primary"> Click here to start the experiment!</button>
     </div>
 </form>
 
 
+
 <script>
     var sliderAI = document.getElementById("creativitySliderAI");
     var outputAI = document.getElementById("sliderValueAI");
-
     sliderAI.oninput = function () {
         outputAI.innerHTML = "I am more creative than " + this.value + "% of AI";
+        document.getElementById("creativitySliderAIValue").value = this.value;
     }
 
     var sliderHuman = document.getElementById("creativitySliderHuman");
     var outputHuman = document.getElementById("sliderValueHuman");
-
     sliderHuman.oninput = function () {
         outputHuman.innerHTML = "I am more creative than " + this.value + "% of Humans";
+        document.getElementById("creativitySliderHumanValue").value = this.value;
+
     }
 </script>
 

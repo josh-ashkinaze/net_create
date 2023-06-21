@@ -23,8 +23,7 @@ import time
 from datetime import datetime
 import random
 import os
-from render_feedback import make_graphs, calculate_similarity  # import the comparison_graph function from render_feedback.py
-
+from render_feedback import make_graphs, calculate_similarity
 
 # SETUP
 ##############################
@@ -60,14 +59,16 @@ table = dataset.table("trials")
 # EXPERIMENT PARAMETERS
 SOURCE_LABEL = "For this object, we also asked AI to come up with ideas! "
 CONDITIONS = {
-    'h': {'n_human': 6, 'n_ai': 0, 'label':False},
-    'f_l': {'n_human': 4, 'n_ai': 2, 'label':True},
+    'h': {'n_human': 6, 'n_ai': 0, 'label': False},
+    'f_l': {'n_human': 4, 'n_ai': 2, 'label': True},
     'f_u': {'n_human': 4, 'n_ai': 2, 'label': False},
     'm_l': {'n_human': 2, 'n_ai': 4, 'label': True},
     'm_u': {'n_human': 2, 'n_ai': 4, 'label': False},
 }
 ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
+
+
 ##############################
 @app.route("/")
 def consent_form():
@@ -85,7 +86,33 @@ def start_experiment():
     3. Save all this stuff to a Flask session object.
     4. Redirect to the first trial.
     """
+
+    # Assign UUID to participant
     session['participant_id'] = str(uuid.uuid4())
+
+    # Get creativity values from sliders
+    creativity_ai = request.args.get('creativitySliderAIValue')
+    creativity_human = request.args.get('creativitySliderHumanValue')
+    session['creativity_ai'] = creativity_ai
+    session['creativity_human'] = creativity_human
+    session['participant_ip'] = get_client_ip()
+    session.modified = True
+
+    # Add participant to the person table
+    person_table = dataset.table("person")
+    row = {
+        "participant_id": session['participant_id'],
+        "creativity_ai": session['creativity_ai'],
+        "creativity_human": session['creativity_human'],
+        "ip_address": session['participant_ip'],
+        "dt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    errors = client.insert_rows_json(person_table, [row])
+    if errors:
+        print("Encountered errors while inserting rows: {}".format(errors))
+    else:
+        print("New row has been added to person.")
+
     session['item_order'] = random.sample(ITEMS, len(ITEMS))
     session['condition_order'] = random.sample(list(CONDITIONS.keys()), len(CONDITIONS))
     session['responses'] = []
@@ -124,7 +151,7 @@ def render_trial(condition_no):
 
     """
     # If the participant has completed all condition_nos, redirect to thank you page
-    if condition_no > len(ITEMS)-1:
+    if condition_no > len(ITEMS) - 1:
         return redirect(url_for('thank_you'))
     else:
         pass
@@ -177,7 +204,6 @@ def render_trial(condition_no):
         response_similarity = calculate_similarity(response_text, session['last_human_response'])
         flash(f'Similarity Score: {response_similarity:.2f}')
 
-
         # Insert the participant's response into the BigQuery table
         row = {
             "item": item,
@@ -187,7 +213,7 @@ def render_trial(condition_no):
             "response_text": response_text,
             "response_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "condition": condition,
-            "world":1
+            "world": 1
         }
         errors = client.insert_rows_json(table, [row])
         if not errors:
@@ -210,7 +236,8 @@ def calculate_similarity_route():
     response_text = request.form.get('response')
     last_human_response = session.get('last_human_response')
     similarity_score = calculate_similarity(response_text, last_human_response)
-    return str(max(round(similarity_score*100),1))
+    return str(max(round(similarity_score * 100), 1))
+
 
 @app.route("/get-graphs")
 def get_graphs():
@@ -221,6 +248,15 @@ def get_graphs():
     # Render a bunch of graphs of participant's responses
     human_graph, ai_graph, human_ai_graph = make_graphs(participant_responses, participant_conditions, file_prefix)
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
+
+
+def get_client_ip():
+    if 'HTTP_X_FORWARDED_FOR' in request.environ:
+        # In case of multiple proxies, the client IP would be the first one.
+        return request.environ['HTTP_X_FORWARDED_FOR'].split(',')[0]
+    else:
+        return request.remote_addr
+
 
 if __name__ == '__main__':
     if is_local:
