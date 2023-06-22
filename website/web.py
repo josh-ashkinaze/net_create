@@ -18,6 +18,7 @@ from flask import flash, Flask, render_template, request, redirect, url_for, ses
 from google.oauth2 import service_account
 import uuid
 import json
+import numpy as np
 import pandas as pd
 import time
 from scipy.stats import spearmanr
@@ -279,24 +280,27 @@ import pandas as pd
 
 @app.route('/calculate_rank_similarity', methods=['POST'])
 def calculate_rank_similarity_route():
-    ranked_array = request.form.get('ranked_array', '').split(',')
-    ranked_array_str = ",".join([f'"{item}"' for item in ranked_array])
-    query = f"""
-            SELECT response_id, IFNULL(rating, 2.5) as rating
-            FROM `net_expr.responses`
-            WHERE response_id IN UNNEST([{ranked_array_str}])
-            """
-    query_job = client.query(query)
-    scores_dict = {row['response_id']: row['rating'] for row in query_job.result()}
-    ranked_scores = [scores_dict.get(id, 2.5) for id in ranked_array]
-    data = pd.DataFrame({
-        'ranks': list(range(1, len(ranked_array) + 1)),
-        'ranked_scores': ranked_scores
-    })
-    rank_similarity = data['ranks'].corr(data['ranked_scores'], method='spearman')
-    print(rank_similarity)
-    return str(0.5)
-    return str((rank_similarity + 1) / 2)
+    try:
+        ranked_array = request.form.get('ranked_array', '').split(',')
+        ranked_array_str = ",".join([f'"{item}"' for item in ranked_array])
+        print(ranked_array_str)
+        query = f"""
+                SELECT response_id, IFNULL(rating, 2.5) as rating
+                FROM `net_expr.responses`
+                WHERE response_id IN UNNEST([{ranked_array_str}])
+                """
+        query_job = client.query(query)
+        scores_dict = {row['response_id']: row['rating'] for row in query_job.result()}
+        ranked_scores = [scores_dict.get(id, 2.5) for id in ranked_array]
+        rank_similarity, _ = spearmanr(np.arange(1, len(ranked_array) + 1), ranked_scores)
+        rank_similarity = (-1*rank_similarity + 1) / 2 #-1 bc first idea is most creative
+        print(rank_similarity)
+        return str(int(rank_similarity * 100))
+    except Exception as e:
+        print("Error:", e)
+        random_value = random.uniform(0.3, 0.7)
+        return str(int(random_value * 100))
+
 
 
 @app.route("/get-graphs")

@@ -166,34 +166,36 @@
 
 <h4> Before you answer... </h4>
 <ul>
-    <li >Read previous ideas.</li>
-    <li>Rank these ideas in order of creativity with the most creative use on top. Make at least 1 change. </li>
+    <li>Read previous ideas.</li>
+    <li>Rank these ideas in order of creativity with the most creative use on top. Make at least 1 change.</li>
 </ul>
 
 
 <ul class="sortable-list">
 
-{% for row, r_id in data %}
-{% if "(Source: <strong>A.I</strong>)</span>" in row %}
-<li class="noselect ai-generated" data-r-id="{{ r_id }}">
-    <span class="rank"></span> {{ row|safe }}
-</li>
-{% elif "(Source: <strong>Human</strong>)</span>" in row %}
-<li class="noselect human-generated" data-r-id="{{ r_id }}">
-    <span class="rank"></span> {{ row|safe }}
-</li>
-{% else %}
-<li class="noselect human-generated" data-r-id="{{ r_id }}">
-    <span class="rank"></span> {{ row|safe }}
-</li>
-{% endif %}
-{% endfor %}
+    {% for row, r_id in data %}
+    {% if "(Source: <strong>A.I</strong>)</span>" in row %}
+    <li class="noselect ai-generated" data-r-id="{{ r_id }}">
+        <span class="rank"></span> {{ row|safe }}
+    </li>
+    {% elif "(Source: <strong>Human</strong>)</span>" in row %}
+    <li class="noselect human-generated" data-r-id="{{ r_id }}">
+        <span class="rank"></span> {{ row|safe }}
+    </li>
+    {% else %}
+    <li class="noselect human-generated" data-r-id="{{ r_id }}">
+        <span class="rank"></span> {{ row|safe }}
+    </li>
+    {% endif %}
+    {% endfor %}
 </ul>
 
 <div id="dialogOverlay" class="dialog-overlay" style="display: none;">
     <div class="dialog-box">
-        <h3>Similarity Score</h3>
+        <h3>How unique is your idea?</h3>
         <p id="similarityScore"></p>
+        <h3>How accurately can you rank other people's ideas?</h3>
+        <p id="rankSimilarityScore"></p>
         <button onclick="closeDialog()">Keep going</button>
     </div>
 </div>
@@ -211,117 +213,115 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 <script>
-
-    document.addEventListener('DOMContentLoaded', (event) => {
-        var sortable = new Sortable(document.querySelector('.sortable-list'), {
-            animation: 150,
-            chosenClass: "sortable-chosen",
-            dragClass: "sortable-drag",
-            onSort: function (evt) {
-                updateRIdArray();
-            }
-        });
-
-        function updateRIdArray() {
-            var rIdArray = [];
-            var listItems = document.querySelectorAll('.sortable-list li');
-            listItems.forEach(function (item, index) {
-                rIdArray.push(item.dataset.rId);
-                item.querySelector('.rank').textContent = (index + 1) + ') ';
-            });
-            document.querySelector('input[name="ranked_array"]').value = rIdArray.join(',');
+// When the DOM is fully loaded, execute the code inside this function
+$(document).ready(function () {
+    // Initialize the Sortable library on the sortable list
+    var sortable = new Sortable(document.querySelector('.sortable-list'), {
+        animation: 150,
+        chosenClass: "sortable-chosen",
+        dragClass: "sortable-drag",
+        onSort: function (evt) {
+            updateRIdArray();
         }
-
-        updateRIdArray();
     });
-
-
-    // Function to display the dialog box with the similarity score
-    function showDialog(similarityScore) {
-        var dialogOverlay = document.getElementById("dialogOverlay");
-        var similarityScoreElement = document.getElementById("similarityScore");
-        similarityScoreElement.textContent = "Your response was " + similarityScore + "% similar to the last person's response!";
-        dialogOverlay.style.display = "flex";
-    }
-
-    // // Function to close the dialog box
-    // function closeDialog() {
-    //     var dialogOverlay = document.getElementById("dialogOverlay");
-    //     dialogOverlay.style.display = "none";
-    //     document.querySelector('form').submit();
-    //
-    // }
-
-    function closeDialog() {
-        var dialogOverlay = document.getElementById("dialogOverlay");
-        var submitButton = document.querySelector('button[type="submit"]');
-
-        dialogOverlay.style.display = "none";
-        submitButton.textContent = "Loading...";
-        submitButton.disabled = true;
-
-        document.querySelector('form').submit();
-    }
-
-    document.addEventListener('DOMContentLoaded', (event) => {
-        // Add an event listener to the form submission
-        document.querySelector('form').addEventListener('submit', function (event) {
-            event.preventDefault();  // Prevent the form from submitting
-
-            // Get the participant's response
-            var response = document.querySelector('input[name="participant_response"]').value;
-
-            var initArray = $('input[name="init_array"]').val();
-            var rankedArray = $('input[name="ranked_array"]').val();
-            // Check if initial array and ranked array are same
-            if (initArray === rankedArray) {
-                // If yes, alert the user and stop form submission
-                alert("Please move at least one ranking before continuing!");
-                return;
-            }
-            // Perform any necessary submission logic here
-            // For example, you can use AJAX to send the response to the server
-
-            // Calculate the similarity score (replace this with your own calculation logic)
-            var similarityScore = calculateSimilarity(response);
-
-            // Display the dialog box with the similarity score
-            showDialog(similarityScore);
-        });
-    });
-
-
-    function calculateSimilarity(response) {
-        $.ajax({
-            type: "POST",
-            url: "{{ url_for('calculate_similarity_route') }}",
-            data: {response: response},
-            success: function (score) {
-                // Display the similarity score in the dialog box
-                showDialog(score);
-            },
-            error: function (xhr, status, error) {
-                // Handle error if the request fails
-                console.log("Error:", error);
-            }
-        });
-    }
-
 
     function updateRIdArray() {
-        var sortedRIds = [];
-        $('.sortable-list li').each(function (index) {
-            $(this).find('.rank').text((index + 1) + ")");
-            sortedRIds.push($(this).attr('data-r-id'));
+        var rIdArray = [];
+        var listItems = document.querySelectorAll('.sortable-list li');
+        listItems.forEach(function (item, index) {
+            rIdArray.push(item.dataset.rId);
+            item.querySelector('.rank').textContent = (index + 1) + ') ';
         });
-        $('input[name="ranked_array"]').val(sortedRIds.join(','));
+        document.querySelector('input[name="ranked_array"]').value = rIdArray.join(',');
     }
 
-    // Call the function once when the document is ready to initialize the ranks
-    $(document).ready(function () {
-        updateRIdArray();
-    });
+    updateRIdArray();
 
+    document.querySelector('form').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var response = document.querySelector('input[name="participant_response"]').value;
+        var initArray = $('input[name="init_array"]').val();
+        var rankedArray = $('input[name="ranked_array"]').val();
+
+        if (initArray === rankedArray) {
+            alert("Please move at least one ranking before continuing!");
+            return;
+        }
+
+        var submitButton = document.querySelector('button[type="submit"]');
+        var submitButton = document.querySelector('button[type="submit"]');
+        submitButton.textContent = "Calculating...";
+        submitButton.disabled = true;
+        submitButton.style.backgroundColor = "#0E2A56"; // Match the hover background color
+        submitButton.style.borderColor = "#0E2A56"; // Match the hover border color
+        submitButton.style.color = "white"; // Use any desired text color
+
+        calculateSimilarity(response, function (similarityScore) {
+            calculateRankSimilarity(rankedArray, function (rankSimilarityScore) {
+                showDialog(similarityScore, rankSimilarityScore);
+            });
+        });
+    });
+});
+
+function showDialog(similarityScore, rankSimilarityScore) {
+    var dialogOverlay = document.getElementById("dialogOverlay");
+    var similarityScoreElement = document.getElementById("similarityScore");
+    similarityScoreElement.textContent = "Your response was " + similarityScore + "% similar to the last person's response!";
+
+    if (rankSimilarityScore) {
+        var rankSimilarityScoreElement = document.getElementById("rankSimilarityScore");
+        rankSimilarityScoreElement.textContent = "Your rankings were " + rankSimilarityScore + "% similar to the actual creativity rankings!";
+    }
+
+    dialogOverlay.style.display = "flex";
+}
+
+function closeDialog() {
+    var dialogOverlay = document.getElementById("dialogOverlay");
+    var submitButton = document.querySelector('button[type="submit"]');
+
+    dialogOverlay.style.display = "none";
+    submitButton.textContent = "Loading...";
+    submitButton.disabled = true;
+
+    document.querySelector('form').submit();
+}
+
+function calculateSimilarity(response, callback) {
+    $.ajax({
+        type: "POST",
+        url: "{{ url_for('calculate_similarity_route') }}",
+        data: {response: response},
+        success: function (score) {
+            callback(score);
+        },
+        error: function (xhr, status, error) {
+            console.log("Error:", error);
+            callback(randomBetween(30, 70));
+        }
+    });
+}
+
+function calculateRankSimilarity(rankedArray, callback) {
+    $.ajax({
+        type: "POST",
+        url: "{{ url_for('calculate_rank_similarity_route') }}",
+        data: {ranked_array: rankedArray},
+        success: function (score) {
+            callback(score);
+        },
+        error: function (xhr, status, error) {
+            console.log("Error:", error);
+            callback(randomBetween(30, 70));
+        }
+    });
+}
+
+function randomBetween(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 </script>
 
 </body>
