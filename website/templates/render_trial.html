@@ -227,7 +227,7 @@
             var listItems = document.querySelectorAll('.sortable-list li');
             listItems.forEach(function (item, index) {
                 rIdArray.push(item.dataset.rId);
-                item.querySelector('.rank').textContent = (index + 1) + '. ';
+                item.querySelector('.rank').textContent = (index + 1) + ') ';
             });
             document.querySelector('input[name="ranked_array"]').value = rIdArray.join(',');
         }
