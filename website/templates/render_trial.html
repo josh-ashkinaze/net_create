@@ -132,7 +132,6 @@
         }
 
 
-
         .ai-generated {
             padding: 0.3rem;
             border: 1px solid white;
@@ -159,35 +158,37 @@
     But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
 
 
-
 {% if label %}
-    <h4 class = 'ai-generated' >
-        {{ label }}
-    </h4>
+<h4 class='ai-generated'>
+    {{ label }}
+</h4>
 {% endif %}
 
 <h4> Before you answer... </h4>
 <ol>
-    <li>Read previous creative uses. </li>
+    <li>Read previous creative uses.</li>
     <li>Rank these uses in order of creativity with the most creative use on top.</li>
 </ol>
 
 
-
 <ul class="sortable-list">
-    {% for row, r_id in data %}
-    {% if "(Source: <strong>A.I</strong>)</span>" in row %}
-    <li class="noselect ai-generated" data-r-id="{{ r_id }}">{{ row|safe }}</li>
-    {% elif "(Source: <strong>Human</strong>)</span>" in row %}
-    <li class="noselect human-generated" data-r-id="{{ r_id }}">{{ row|safe }}</li>
-    {% else %}
-    <li class="noselect human-generated" data-r-id="{{ r_id }}">{{ row|safe }}</li>
-    {% endif %}
-    {% endfor %}
+
+{% for row, r_id in data %}
+{% if "(Source: <strong>A.I</strong>)</span>" in row %}
+<li class="noselect ai-generated" data-r-id="{{ r_id }}">
+    <span class="rank"></span> {{ row|safe }}
+</li>
+{% elif "(Source: <strong>Human</strong>)</span>" in row %}
+<li class="noselect human-generated" data-r-id="{{ r_id }}">
+    <span class="rank"></span> {{ row|safe }}
+</li>
+{% else %}
+<li class="noselect human-generated" data-r-id="{{ r_id }}">
+    <span class="rank"></span> {{ row|safe }}
+</li>
+{% endif %}
+{% endfor %}
 </ul>
-
-
-
 
 <div id="dialogOverlay" class="dialog-overlay" style="display: none;">
     <div class="dialog-box">
@@ -297,6 +298,22 @@
             }
         });
     }
+
+
+    function updateRIdArray() {
+        var sortedRIds = [];
+        $('.sortable-list li').each(function (index) {
+            $(this).find('.rank').text((index + 1) + ")");
+            sortedRIds.push($(this).attr('data-r-id'));
+        });
+        $('input[name="ranked_array"]').val(sortedRIds.join(','));
+    }
+
+    // Call the function once when the document is ready to initialize the ranks
+    $(document).ready(function () {
+        updateRIdArray();
+    });
+
 </script>
 
 </body>
