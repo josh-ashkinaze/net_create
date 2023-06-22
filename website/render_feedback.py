@@ -1,15 +1,17 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy.stats import percentileofscore
-from helpers import helpers as my_utils
 import base64
-import spacy
-import random
-import matplotlib.font_manager as fm
 import io
+import random
+
+import matplotlib.font_manager as fm
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import spacy
 from scipy.spatial.distance import cosine as cosine_distance
+from scipy.stats import percentileofscore
+
+from helpers import helpers as my_utils
 
 nlp = spacy.load('en_core_web_md')
 

@@ -13,18 +13,19 @@ Description: This is a Flask web application that runs a web experiment.
 # LLM exposure (few LLM ideas vs many LLM ideas) and transparency (say source labels or don't)
 """
 
-from google.cloud import bigquery
-from flask import flash, Flask, render_template, request, redirect, url_for, session
-from google.oauth2 import service_account
-import uuid
 import json
+import os
+import random
+import uuid
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
-import time
+from flask import flash, Flask, render_template, request, redirect, url_for, session
+from google.cloud import bigquery
+from google.oauth2 import service_account
 from scipy.stats import spearmanr
-from datetime import datetime
-import random
-import os
+
 from render_feedback import make_graphs, calculate_similarity
 
 # SETUP
