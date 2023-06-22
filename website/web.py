@@ -272,12 +272,6 @@ def calculate_similarity_route():
     similarity_score = calculate_similarity(response_text, last_human_response)
     return str(max(round(similarity_score * 100), 1))
 
-
-from google.cloud import bigquery
-from scipy.stats import spearmanr
-import pandas as pd
-
-
 @app.route('/calculate_rank_similarity', methods=['POST'])
 def calculate_rank_similarity_route():
     try:
