@@ -20,6 +20,7 @@ import uuid
 import json
 import pandas as pd
 import time
+from scipy.stats import spearmanr
 from datetime import datetime
 import random
 import os
@@ -269,6 +270,33 @@ def calculate_similarity_route():
     last_human_response = session.get('last_human_response')
     similarity_score = calculate_similarity(response_text, last_human_response)
     return str(max(round(similarity_score * 100), 1))
+
+
+from google.cloud import bigquery
+from scipy.stats import spearmanr
+import pandas as pd
+
+
+@app.route('/calculate_rank_similarity', methods=['POST'])
+def calculate_rank_similarity_route():
+    ranked_array = request.form.get('ranked_array', '').split(',')
+    ranked_array_str = ",".join([f'"{item}"' for item in ranked_array])
+    query = f"""
+            SELECT response_id, IFNULL(rating, 2.5) as rating
+            FROM `net_expr.responses`
+            WHERE response_id IN UNNEST([{ranked_array_str}])
+            """
+    query_job = client.query(query)
+    scores_dict = {row['response_id']: row['rating'] for row in query_job.result()}
+    ranked_scores = [scores_dict.get(id, 2.5) for id in ranked_array]
+    data = pd.DataFrame({
+        'ranks': list(range(1, len(ranked_array) + 1)),
+        'ranked_scores': ranked_scores
+    })
+    rank_similarity = data['ranks'].corr(data['ranked_scores'], method='spearman')
+    print(rank_similarity)
+    return str(0.5)
+    return str((rank_similarity + 1) / 2)
 
 
 @app.route("/get-graphs")
