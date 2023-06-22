@@ -153,7 +153,7 @@
 
 <h4> Task </h4>
 <p>For this task, submit an original and creative use for {% if item != 'pants' %}a {% endif %}<strong>{{
-    item }}</strong>. But before submitting your idea, here are some ideas from others for inspiration. </p>
+    item }}</strong>. But before submitting your idea, here are some ideas for inspiration. </p>
 
 
 
@@ -166,7 +166,7 @@
 
 <ul>
     <li> Rank these ideas in order of creativity with the most creative use on top. </li>
-    <li>After submitting your idea, we'll show you how your ranking matches the actual ratings. </li>
+    <li> We'll show you how your ranking compares to the rankings these ideas were given by a highly-accurate model. </li>
 </ul>
 
 
@@ -279,7 +279,7 @@ function showDialog(similarityScore, rankSimilarityScore) {
 
     if (rankSimilarityScore) {
         var rankSimilarityScoreElement = document.getElementById("rankSimilarityScore");
-        rankSimilarityScoreElement.textContent = "Your rankings were " + rankSimilarityScore + "% similar to the actual creativity rankings!";
+        rankSimilarityScoreElement.textContent = "Your rankings were " + rankSimilarityScore + "% similar to the true creativity rankings!";
     }
 
     dialogOverlay.style.display = "flex";
