@@ -150,24 +150,23 @@
 <body class="container py-4">
 <h3>Item {{ trial_no }} of 5: Generate a creative use for {% if item != 'pants' %}a {% endif %}<strong>{{ item
     }}</strong>.</h3>
+
 <h4> Task </h4>
-
-<p>For this task, you should write down an original and creative use for {% if item != 'pants' %}a {% endif %}<strong>{{
-    item }}</strong>. Certainly there are common, unoriginal ways to use {% if item != 'pants' %}a {% endif %}<strong>{{
-    item }}</strong>.
-    But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
+<p>For this task, submit an original and creative use for {% if item != 'pants' %}a {% endif %}<strong>{{
+    item }}</strong>. But before submitting your idea, here are some ideas from others for inspiration. </p>
 
 
+
+<h4> Previous Ideas </h4>
 {% if label %}
-<h4 class='ai-generated'>
+<h5 class='ai-generated'>
     {{ label }}
-</h4>
+</h5>
 {% endif %}
 
-<h4> Before you answer... </h4>
 <ul>
-    <li>Read previous ideas.</li>
-    <li>Rank these ideas in order of creativity with the most creative use on top. Make at least 1 change.</li>
+    <li> Rank these ideas in order of creativity with the most creative use on top. </li>
+    <li>After submitting your idea, we'll show you how your ranking matches the actual ratings. </li>
 </ul>
 
 
@@ -189,6 +188,13 @@
     {% endif %}
     {% endfor %}
 </ul>
+
+<h4> Your Idea </h4>
+<p> Write down an original and creative use for {% if item != 'pants' %}a {% endif %}<strong>{{
+    item }}</strong>. Certainly there are common, unoriginal ways to use {% if item != 'pants' %}a {% endif %}<strong>{{
+    item }}</strong>.
+    But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
+
 
 <div id="dialogOverlay" class="dialog-overlay" style="display: none;">
     <div class="dialog-box">
