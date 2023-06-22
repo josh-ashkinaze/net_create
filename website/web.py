@@ -277,6 +277,7 @@ def calculate_similarity_route():
 def calculate_rank_similarity_route():
     try:
         ranked_array = request.form.get('ranked_array', '').split(',')
+        print(ranked_array)
         ranked_array_str = ",".join([f'"{item}"' for item in ranked_array])
         print(ranked_array_str)
         query = f"""
@@ -357,7 +358,7 @@ def get_world():
 
 if __name__ == '__main__':
     if is_local:
-        app.run(port=5046, debug=True)
+        app.run(port=5048, debug=True)
     else:
         port = int(os.environ.get('PORT', 5000))
         app.run(host="0.0.0.0", port=port)
