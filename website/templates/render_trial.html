@@ -250,12 +250,13 @@ $(document).ready(function () {
         var initArray = $('input[name="init_array"]').val();
         var rankedArray = $('input[name="ranked_array"]').val();
 
-        if (initArray === rankedArray) {
-            alert("Please move at least one ranking before continuing!");
-            return;
-        }
+        // In old logic we forced people to rank
 
-        var submitButton = document.querySelector('button[type="submit"]');
+        // if (initArray === rankedArray) {
+        //     alert("Please move at least one ranking before continuing!");
+        //     return;
+        // }
+
         var submitButton = document.querySelector('button[type="submit"]');
         submitButton.textContent = "Calculating...";
         submitButton.disabled = true;
