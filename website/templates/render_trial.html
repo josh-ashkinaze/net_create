@@ -165,10 +165,10 @@
 {% endif %}
 
 <h4> Before you answer... </h4>
-<ol>
-    <li>Read previous creative uses.</li>
-    <li>Rank these uses in order of creativity with the most creative use on top.</li>
-</ol>
+<ul>
+    <li >Read previous ideas.</li>
+    <li>Rank these ideas in order of creativity with the most creative use on top. Make at least 1 change. </li>
+</ul>
 
 
 <ul class="sortable-list">
@@ -271,6 +271,14 @@
             // Get the participant's response
             var response = document.querySelector('input[name="participant_response"]').value;
 
+            var initArray = $('input[name="init_array"]').val();
+            var rankedArray = $('input[name="ranked_array"]').val();
+            // Check if initial array and ranked array are same
+            if (initArray === rankedArray) {
+                // If yes, alert the user and stop form submission
+                alert("Please move at least one ranking before continuing!");
+                return;
+            }
             // Perform any necessary submission logic here
             // For example, you can use AJAX to send the response to the server
 
