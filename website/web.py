@@ -299,7 +299,10 @@ def calculate_rank_similarity_route():
         random_value = random.uniform(0.3, 0.7)
         return str(int(random_value * 100))
 
-
+@app.route("/reset_session")
+def reset_session():
+    session.clear()
+    return "Session reset!"
 
 @app.route("/get-graphs")
 def get_graphs():
@@ -322,6 +325,7 @@ def get_graphs():
     else:
         print("All rows have been added to responses.")
 
+    reset_session()  # Add this line
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
 
 
