@@ -285,7 +285,9 @@ def calculate_rank_similarity_route():
                 WHERE response_id IN UNNEST([{ranked_array_str}])
                 """
         query_job = client.query(query)
+        print(query_job)
         scores_dict = {row['response_id']: row['rating'] for row in query_job.result()}
+        print(scores_dict)
         ranked_scores = [scores_dict.get(id, 2.5) for id in ranked_array]
         rank_similarity, _ = spearmanr(np.arange(1, len(ranked_array) + 1), ranked_scores)
         rank_similarity = (-1*rank_similarity + 1) / 2 #-1 bc first idea is most creative
