@@ -209,7 +209,6 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 
 <script>
 
@@ -222,18 +221,19 @@
                 updateRIdArray();
             }
         });
+
+        function updateRIdArray() {
+            var rIdArray = [];
+            var listItems = document.querySelectorAll('.sortable-list li');
+            listItems.forEach(function (item, index) {
+                rIdArray.push(item.dataset.rId);
+                item.querySelector('.rank').textContent = (index + 1) + '. ';
+            });
+            document.querySelector('input[name="ranked_array"]').value = rIdArray.join(',');
+        }
+
+        updateRIdArray();
     });
-
-
-    function updateRIdArray() {
-        var sortedRIds = [];
-        $('.sortable-list li').each(function () {
-            sortedRIds.push($(this).attr('data-r-id'));
-        });
-        $('input[name="ranked_array"]').val(sortedRIds.join(','));
-    }
-
-    updateRIdArray();
 
 
     // Function to display the dialog box with the similarity score
