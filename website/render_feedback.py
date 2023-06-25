@@ -13,7 +13,7 @@ from scipy.stats import percentileofscore
 
 from helpers import helpers as my_utils
 
-nlp = spacy.load('en_core_web_md')
+nlp = spacy.load('en_core_web_sm')
 
 
 def make_aesthetic():
