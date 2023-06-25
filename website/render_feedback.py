@@ -13,9 +13,6 @@ from gensim.models import Word2Vec as w2v
 from gensim.utils import simple_preprocess as preprocess
 from helpers import helpers as my_utils
 
-model = w2v.load('../data/filtered_w2v.wv', mmap=False)
-
-
 def make_aesthetic():
     sns.set(style='white', context='poster', font_scale=1.1)
     try:
@@ -111,7 +108,8 @@ def sentence_vector(sentence, model):
         return None
     return np.mean(word_vectors, axis=0)
 
-def calculate_similarity(sentence1, sentence2, model=model):
+def calculate_similarity(sentence1, sentence2, file_prefix="../"):
+    model = w2v.load(f"{file_prefix}data/filtered_w2v.wv", mmap=False)
     try:
         sentence1_vector = sentence_vector(sentence1, model)
         sentence2_vector = sentence_vector(sentence2, model)
@@ -121,6 +119,7 @@ def calculate_similarity(sentence1, sentence2, model=model):
 
         similarity = 1 - cosine_distance(sentence1_vector, sentence2_vector, model)
         return similarity
-    except:
+    except Exception as e:
+        print("ERROR", sentence1, sentence2, e)
         return random.uniform(0.3, 0.7)
 

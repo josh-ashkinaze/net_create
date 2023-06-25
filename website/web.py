@@ -270,7 +270,7 @@ def thank_you():
 def calculate_similarity_route():
     response_text = request.form.get('response')
     last_human_response = session.get('last_human_response')
-    similarity_score = calculate_similarity(response_text, last_human_response)
+    similarity_score = calculate_similarity(response_text, last_human_response, file_prefix=file_prefix)
     return str(max(round(similarity_score * 100), 1))
 
 @app.route('/calculate_rank_similarity', methods=['POST'])
