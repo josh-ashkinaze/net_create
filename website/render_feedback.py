@@ -7,13 +7,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import spacy
 from scipy.spatial.distance import cosine as cosine_distance
 from scipy.stats import percentileofscore
-
+from gensim.models import Word2Vec as w2v
+from gensim.utils import simple_preprocess as preprocess
 from helpers import helpers as my_utils
 
-nlp = spacy.load('en_core_web_sm')
+model = w2v.load('../data/filtered_w2v.wv', mmap=False)
 
 
 def make_aesthetic():
@@ -104,15 +104,23 @@ def make_graphs(participant_responses, conditions, file_prefix="../"):
     return human_graph, ai_graph, ai_human_graph, participant_scores
 
 
-def calculate_similarity(sentence1, sentence2):
-    # Transform sentences into their vector representation
-    sentence1_vector = nlp(sentence1).vector
-    sentence2_vector = nlp(sentence2).vector
+def sentence_vector(sentence, model):
+    words = preprocess(sentence)
+    word_vectors = [model.wv[word] for word in words if word in model.wv.key_to_index]
+    if not word_vectors:
+        return None
+    return np.mean(word_vectors, axis=0)
 
-    # Reshape vectors to 1-D numpy arrays
-    sentence1_vector = sentence1_vector.ravel()
-    sentence2_vector = sentence2_vector.ravel()
+def calculate_similarity(sentence1, sentence2, model=model):
     try:
-        return 1 - cosine_distance(sentence1_vector, sentence2_vector)
+        sentence1_vector = sentence_vector(sentence1, model)
+        sentence2_vector = sentence_vector(sentence2, model)
+
+        if sentence1_vector is None or sentence2_vector is None:
+            return random.uniform(0.3, 0.7)
+
+        similarity = 1 - cosine_distance(sentence1_vector, sentence2_vector, model)
+        return similarity
     except:
-        return random.random(0.1, 0.5)
+        return random.uniform(0.3, 0.7)
+
