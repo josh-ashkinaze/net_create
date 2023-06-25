@@ -17,10 +17,8 @@ def download_file(url, save_path):
 
 def main():
     url = 'https://www.dropbox.com/scl/fi/uc6yr2ey8arb62vrp17sn/filtered_w2v.wv?dl=1&rlkey=ecp2mb9pjb7nsbljsjxnwr7na'
-    save_path = os.path.join('data', 'word_embeddings', 'filtered_w2v.wv')
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
-    download_file(url, save_path)
-    print(f"Model downloaded and saved to {save_path}")
+    download_file(url, "data/filtered_w2v.wv")
+    print(f"Model downloaded and saved")
 
 if __name__ == "__main__":
     main()
