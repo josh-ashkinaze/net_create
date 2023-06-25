@@ -109,7 +109,7 @@ def sentence_vector(sentence, model):
     return np.mean(word_vectors, axis=0)
 
 def calculate_similarity(sentence1, sentence2, file_prefix="../"):
-    model = w2v.load(f"{file_prefix}data/filtered_w2v.wv", mmap=False)
+    model = w2v.load(f"{file_prefix}data/filtered_w2v.wv")
     try:
         sentence1_vector = sentence_vector(sentence1, model)
         sentence2_vector = sentence_vector(sentence2, model)
