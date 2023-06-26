@@ -26,14 +26,15 @@ from google.cloud import bigquery
 from google.oauth2 import service_account
 from scipy.stats import spearmanr
 
+############################################################################################################
+# SETUP GLOBAL VARIABLES
+############################################################################################################
 
-# SETUP
-##############################
 # Figure out if we're running locally or on Heroku. This can matter for file paths.
 
-# Note: Depends on which root you want to run from for whether file_prefix should difer.
-# The updaed way I run locally is:
-# net_create % FLASK_APP=website/web.py flask run
+# Note: Depends on which root you want to run from for whether file_prefix should differ.
+# The updaed way I run locally is: `cd net_create  FLASK_APP=website/web.py flask run`
+# I switched to this method because this better matches how Heroku runs the app
 
 if 'DYNO' in os.environ:
     is_local = False
@@ -58,9 +59,8 @@ if not is_local:
     credentials = service_account.Credentials.from_service_account_info(json_key)
 else:
     key_path = f"{file_prefix}secrets/google_creds.json"
-    credentials = service_account.Credentials.from_service_account_file(
-        key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
-    )
+    credentials = service_account.Credentials.from_service_account_file(key_path,
+        scopes=["https://www.googleapis.com/auth/cloud-platform"], )
 client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 dataset = client.dataset("net_expr")
 table = dataset.table("trials")
@@ -68,18 +68,17 @@ table = dataset.table("trials")
 # EXPERIMENT PARAMETERS
 N_PER_WORLD = 20
 SOURCE_LABEL = "For this object, we also asked AI to come up with ideas! "
-CONDITIONS = {
-    'h': {'n_human': 6, 'n_ai': 0, 'label': False},
-    'f_l': {'n_human': 4, 'n_ai': 2, 'label': True},
-    'f_u': {'n_human': 4, 'n_ai': 2, 'label': False},
-    'm_l': {'n_human': 2, 'n_ai': 4, 'label': True},
-    'm_u': {'n_human': 2, 'n_ai': 4, 'label': False},
-}
+CONDITIONS = {'h': {'n_human': 6, 'n_ai': 0, 'label': False}, 'f_l': {'n_human': 4, 'n_ai': 2, 'label': True},
+    'f_u': {'n_human': 4, 'n_ai': 2, 'label': False}, 'm_l': {'n_human': 2, 'n_ai': 4, 'label': True},
+    'm_u': {'n_human': 2, 'n_ai': 4, 'label': False}, }
 ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
+############################################################################################################
+############################################################################################################
 
 
-##############################
+# START THE EXPERIMENT
+############################################################################################################
 @app.route("/")
 def consent_form():
     """Consent form"""
@@ -113,13 +112,9 @@ def start_experiment():
 
     # Add participant to the person table
     person_table = dataset.table("person")
-    row = {
-        "participant_id": session['participant_id'],
-        "creativity_ai": session['creativity_ai'],
-        "creativity_human": session['creativity_human'],
-        "ip_address": session['participant_ip'],
-        "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-    }
+    row = {"participant_id": session['participant_id'], "creativity_ai": session['creativity_ai'],
+        "creativity_human": session['creativity_human'], "ip_address": session['participant_ip'],
+        "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}
 
     errors = client.insert_rows_json(person_table, [row])
     if errors:
@@ -244,18 +239,10 @@ def render_trial(condition_no):
         flash(f'Similarity Score: {response_similarity:.2f}')
 
         # Insert the participant's response into the BigQuery table
-        row = {
-            "item": item,
-            "response_id": response_id,
-            "participant_id": participant_id,
-            "condition_order": condition_no,
-            "response_text": response_text,
-            "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
-            "condition": condition,
-            "world": session['world'],
-            "init_array": init_array,
-            "ranked_array": ranked_array,
-        }
+        row = {"item": item, "response_id": response_id, "participant_id": participant_id,
+            "condition_order": condition_no, "response_text": response_text,
+            "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), "condition": condition,
+            "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, }
         errors = client.insert_rows_json(table, [row])
         if not errors:
             print("New rows have been added.")
@@ -278,6 +265,7 @@ def calculate_similarity_route():
     last_human_response = session.get('last_human_response')
     similarity_score = calculate_similarity(response_text, last_human_response)
     return str(max(round(similarity_score * 100), 1))
+
 
 @app.route('/calculate_rank_similarity', methods=['POST'])
 def calculate_rank_similarity_route():
@@ -305,10 +293,12 @@ def calculate_rank_similarity_route():
         random_value = random.uniform(0.3, 0.7)
         return str(int(random_value * 100))
 
+
 @app.route("/reset_session")
 def reset_session():
     session.clear()
     return "Session reset!"
+
 
 @app.route("/get-graphs")
 def get_graphs():
@@ -317,14 +307,12 @@ def get_graphs():
     participant_conditions = session['condition_order']
 
     # Get graphgs of responses
-    human_graph, ai_graph, human_ai_graph, scores = make_graphs(participant_responses, participant_conditions, file_prefix)
+    human_graph, ai_graph, human_ai_graph, scores = make_graphs(participant_responses, participant_conditions,
+                                                                file_prefix)
 
     # Add scores to database
     response_table = dataset.table("responses")
-    rows_to_insert = [
-        {"response_id": session['response_ids'][i], "rating": scores[i]}
-        for i in range(len(scores))
-    ]
+    rows_to_insert = [{"response_id": session['response_ids'][i], "rating": scores[i]} for i in range(len(scores))]
     errors = client.insert_rows_json(response_table, rows_to_insert)
     if errors:
         print(f"Encountered errors while inserting rows: {errors}")
