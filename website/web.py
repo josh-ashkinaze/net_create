@@ -32,11 +32,9 @@ from render_feedback import make_graphs, calculate_similarity
 ##############################
 # Figure out if we're running locally or on Heroku. This will matter for file paths.
 if 'DYNO' in os.environ:
-    print("Is local: False")
     is_local = False
     file_prefix = ""
 else:
-    print("Is local: True")
     is_local = True
     file_prefix = "../"
 
@@ -272,7 +270,7 @@ def thank_you():
 def calculate_similarity_route():
     response_text = request.form.get('response')
     last_human_response = session.get('last_human_response')
-    similarity_score = calculate_similarity(response_text, last_human_response, file_prefix=file_prefix)
+    similarity_score = calculate_similarity(response_text, last_human_response)
     return str(max(round(similarity_score * 100), 1))
 
 @app.route('/calculate_rank_similarity', methods=['POST'])
