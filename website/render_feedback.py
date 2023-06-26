@@ -32,7 +32,7 @@ def make_aesthetic():
 
 def load_data(comparison, prefix="../"):
     if comparison == "human":
-        return np.array(pd.read_csv(prefix + "data/score_human_prior_responses.csv")['predicted'].tolist())
+        return np.array(pd.read_csv(prefix + "data/scored_human_prior_responses.csv")['predicted'].tolist())
     elif comparison == "AI":
         return np.array(pd.read_csv(prefix + "data/scored_ai_responses.csv")['originality'].tolist())
 
