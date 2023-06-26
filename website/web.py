@@ -26,22 +26,28 @@ from google.cloud import bigquery
 from google.oauth2 import service_account
 from scipy.stats import spearmanr
 
-from render_feedback import make_graphs, calculate_similarity
 
 # SETUP
 ##############################
-# Figure out if we're running locally or on Heroku. This will matter for file paths.
+# Figure out if we're running locally or on Heroku. This can matter for file paths.
+
+# Note: Depends on which root you want to run from for whether file_prefix should difer.
+# The updaed way I run locally is:
+# net_create % FLASK_APP=website/web.py flask run
+
 if 'DYNO' in os.environ:
     is_local = False
     file_prefix = ""
+    from render_feedback import make_graphs, calculate_similarity
 else:
     is_local = True
-    file_prefix = "../"
+    file_prefix = ""
+    from website.render_feedback import make_graphs, calculate_similarity
 
 # Initialize the Flask application
 app = Flask(__name__)
 if is_local:
-    flask_secret_key = json.load(open("../secrets/flask_secret_key.json", "r"))['session_key']
+    flask_secret_key = json.load(open(f"{file_prefix}secrets/flask_secret_key.json", "r"))['session_key']
 else:
     flask_secret_key = os.environ['FLASK_SECRET_KEY']
 app.secret_key = flask_secret_key
@@ -51,7 +57,7 @@ if not is_local:
     json_key = json.loads(os.environ['GOOGLE_CREDS'])
     credentials = service_account.Credentials.from_service_account_info(json_key)
 else:
-    key_path = "../secrets/google_creds.json"
+    key_path = f"{file_prefix}secrets/google_creds.json"
     credentials = service_account.Credentials.from_service_account_file(
         key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
@@ -291,7 +297,7 @@ def calculate_rank_similarity_route():
         print(scores_dict)
         ranked_scores = [scores_dict.get(id, 2.5) for id in ranked_array]
         rank_similarity, _ = spearmanr(np.arange(1, len(ranked_array) + 1), ranked_scores)
-        rank_similarity = (-1*rank_similarity + 1) / 2 #-1 bc first idea is most creative
+        rank_similarity = (-1 * rank_similarity + 1) / 2  # -1 bc first idea is most creative
         print(rank_similarity)
         return str(int(rank_similarity * 100))
     except Exception as e:

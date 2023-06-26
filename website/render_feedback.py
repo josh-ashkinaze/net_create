@@ -12,10 +12,8 @@ from scipy.stats import percentileofscore
 from gensim.models import Word2Vec as w2v
 from gensim.utils import simple_preprocess as preprocess
 from helpers import helpers as my_utils
-import os
 
-file_prefix = "" if 'DYNO' in os.environ else "../"
-model = w2v.load(f"{file_prefix}data/filtered_w2v.wv")
+model = w2v.load("data/filtered_w2v.wv")
 
 def make_aesthetic():
     sns.set(style='white', context='poster', font_scale=1.1)
