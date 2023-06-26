@@ -253,9 +253,11 @@
             console.log("initArray:", initArray);
             console.log("rankedArray:", rankedArray);
             if (initArray === rankedArray) {
-                var confirmation = window.confirm("Please move at least one ranking before continuing! Do you want to go back?");
+                var confirmation = window.confirm("You didn't make any changes to the idea rankings! Click 'OK' to continue or click 'cancel' to go back and make ranking changes.");
                 if (confirmation) {
-                    return; // Go back
+                    {}; // Go back
+                } else {
+                    return;
                 }
             }
 
