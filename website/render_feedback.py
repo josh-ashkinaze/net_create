@@ -114,14 +114,16 @@ def sentence_vector(sentence, model):
 
 def calculate_similarity(sentence1, sentence2):
     try:
+        # Remove labels
+        sentence1 = sentence1.split('<span', 1)[0].strip()
+        sentence2 = sentence1.split('<span', 1)[0].strip()
         sentence1_vector = sentence_vector(sentence1, model)
         sentence2_vector = sentence_vector(sentence2, model)
-
         if sentence1_vector is None or sentence2_vector is None:
             print("Get a NONE", sentence1, sentence2)
             return random.uniform(0.3, 0.7)
 
-        similarity = 1 - cosine_distance(sentence1_vector, sentence2_vector, model)
+        similarity = 1 - cosine_distance(sentence1_vector, sentence2_vector)
         return similarity
     except Exception as e:
         print("ERROR", sentence1, sentence2, e)
