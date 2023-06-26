@@ -12,6 +12,10 @@ from scipy.stats import percentileofscore
 from gensim.models import Word2Vec as w2v
 from gensim.utils import simple_preprocess as preprocess
 from helpers import helpers as my_utils
+import os
+
+file_prefix = "" if 'DYNO' in os.environ else "../"
+model = w2v.load(f"{file_prefix}data/filtered_w2v.wv")
 
 def make_aesthetic():
     sns.set(style='white', context='poster', font_scale=1.1)
@@ -109,9 +113,6 @@ def sentence_vector(sentence, model):
     return np.mean(word_vectors, axis=0)
 
 def calculate_similarity(sentence1, sentence2, file_prefix="../"):
-    print("file prefix", file_prefix)
-    model_fn = file_prefix + "data/filtered_w2v.wv"
-    model = w2v.load(model_fn)
     try:
         sentence1_vector = sentence_vector(sentence1, model)
         sentence2_vector = sentence_vector(sentence2, model)
