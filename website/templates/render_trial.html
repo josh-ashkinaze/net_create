@@ -7,7 +7,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
+
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
+    <script src="sweetalert2/dist/sweetalert2.min.js"></script>
+
 
     <style>
 
@@ -195,6 +200,11 @@
     But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
 
 
+<div id="dialog-confirm" title="Confirm Submission" style="display: none;">
+    <p>You didn't make any changes to the idea rankings! Click 'OK' to continue or click 'cancel' to go back and make
+        ranking changes.</p>
+</div>
+
 <div id="dialogOverlay" class="dialog-overlay" style="display: none;">
     <div class="dialog-box">
         <h3>How unique is your idea?</h3>
@@ -216,6 +226,7 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
 
 <script>
     // When the DOM is fully loaded, execute the code inside this function
@@ -253,28 +264,42 @@
             console.log("initArray:", initArray);
             console.log("rankedArray:", rankedArray);
             if (initArray === rankedArray) {
-                var confirmation = window.confirm("You didn't make any changes to the idea rankings! Click 'OK' to continue or click 'cancel' to go back and make ranking changes.");
-                if (confirmation) {
-                    {}; // Go back
-                } else {
-                    return;
-                }
-            }
+                Swal.fire({
+                    title: "You didn't re-rank ideas!",
+                    text: "Hey, you didn't make any changes to the idea rankings. Do you want to continue or go back and re-rank ideas?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#1F4287',
+                    cancelButtonColor: '#B33F62',
+                    confirmButtonText: 'Keep going',
+                    cancelButtonText: 'Go back'
 
-            var submitButton = document.querySelector('button[type="submit"]');
-            submitButton.textContent = "Calculating...";
-            submitButton.disabled = true;
-            submitButton.style.backgroundColor = "#0E2A56"; // Match the hover background color
-            submitButton.style.borderColor = "#0E2A56"; // Match the hover border color
-            submitButton.style.color = "white"; // Use any desired text color
-
-            calculateSimilarity(response, function (similarityScore) {
-                calculateRankSimilarity(rankedArray, function (rankSimilarityScore) {
-                    showDialog(similarityScore, rankSimilarityScore);
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        formSubmission(response, rankedArray);
+                    }
                 });
-            });
+            } else {
+                formSubmission(response, rankedArray);
+            }
         });
     });
+
+    function formSubmission(response, rankedArray) {
+        var submitButton = document.querySelector('button[type="submit"]');
+        submitButton.textContent = "Calculating...";
+        submitButton.disabled = true;
+        submitButton.style.backgroundColor = "#0E2A56"; // Match the hover background color
+        submitButton.style.borderColor = "#0E2A56"; // Match the hover border color
+        submitButton.style.color = "white"; // Use any desired text color
+
+        calculateSimilarity(response, function (similarityScore) {
+            calculateRankSimilarity(rankedArray, function (rankSimilarityScore) {
+                showDialog(similarityScore, rankSimilarityScore);
+            });
+        });
+    }
+
 
     function showDialog(similarityScore, rankSimilarityScore) {
         var dialogOverlay = document.getElementById("dialogOverlay");
@@ -334,6 +359,7 @@
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 </script>
+
 
 </body>
 </html>
