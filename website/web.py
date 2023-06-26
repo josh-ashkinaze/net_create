@@ -60,7 +60,8 @@ if not is_local:
 else:
     key_path = f"{file_prefix}secrets/google_creds.json"
     credentials = service_account.Credentials.from_service_account_file(key_path,
-        scopes=["https://www.googleapis.com/auth/cloud-platform"], )
+                                                                        scopes=[
+                                                                            "https://www.googleapis.com/auth/cloud-platform"], )
 client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 dataset = client.dataset("net_expr")
 table = dataset.table("trials")
@@ -69,10 +70,12 @@ table = dataset.table("trials")
 N_PER_WORLD = 20
 SOURCE_LABEL = "For this object, we also asked AI to come up with ideas! "
 CONDITIONS = {'h': {'n_human': 6, 'n_ai': 0, 'label': False}, 'f_l': {'n_human': 4, 'n_ai': 2, 'label': True},
-    'f_u': {'n_human': 4, 'n_ai': 2, 'label': False}, 'm_l': {'n_human': 2, 'n_ai': 4, 'label': True},
-    'm_u': {'n_human': 2, 'n_ai': 4, 'label': False}, }
+              'f_u': {'n_human': 4, 'n_ai': 2, 'label': False}, 'm_l': {'n_human': 2, 'n_ai': 4, 'label': True},
+              'm_u': {'n_human': 2, 'n_ai': 4, 'label': False}, }
 ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
+
+
 ############################################################################################################
 ############################################################################################################
 
@@ -103,16 +106,26 @@ def start_experiment():
     # Get creativity values from sliders
     creativity_ai = request.args.get('creativitySliderAIValue')
     creativity_human = request.args.get('creativitySliderHumanValue')
-    session['creativity_ai'] = int(creativity_ai) if creativity_ai != '' else 50
-    session['creativity_human'] = int(creativity_human) if creativity_human != '' else 50
+
+    # WANT TO GET THESE
+    ai_feeling = request.args.get('aiFeelingValue')
+    country = request.args.get('countryValue')
+
+    session['creativity_ai'] = int(creativity_ai) if creativity_ai != '' else None
+    session['creativity_human'] = int(creativity_human) if creativity_human != '' else None
+    session['ai_feeling'] = ai_feeling
+    session['country'] = country
     session['participant_ip'] = get_client_ip()
     session.modified = True
 
     # Add participant to the person table
     person_table = dataset.table("person")
     row = {"participant_id": session['participant_id'], "creativity_ai": session['creativity_ai'],
-        "creativity_human": session['creativity_human'], "ip_address": session['participant_ip'],
-        "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}
+           "creativity_human": session['creativity_human'], "ip_address": session['participant_ip'],
+           "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 'ai_feeling': session['ai_feeling'],
+           'country': session['country']}
+
+    print(session)
 
     errors = client.insert_rows_json(person_table, [row])
     if errors:
@@ -237,9 +250,9 @@ def render_trial(condition_no):
 
         # Insert the participant's response into the BigQuery table
         row = {"item": item, "response_id": response_id, "participant_id": participant_id,
-            "condition_order": condition_no, "response_text": response_text,
-            "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), "condition": condition,
-            "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, }
+               "condition_order": condition_no, "response_text": response_text,
+               "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), "condition": condition,
+               "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, }
         errors = client.insert_rows_json(table, [row])
         if not errors:
             print("New rows have been added.")

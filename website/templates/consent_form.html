@@ -44,33 +44,32 @@
             max-width: 800px;
         }
 
-            /* Add this CSS for the button animation */
-    /* Add this CSS for the button animation */
-    .btn-primary {
-        background-color: #1f4286;
-        border-color: #1f4286;
-        border-radius: 25px;
-        font-size: 1.5rem;
-        padding: 1.5rem 3rem;
-        position: relative;
-        overflow: hidden;
-        color: #fff;
-        z-index: 1;
-        animation: pulse 1.5s ease-in-out infinite;
-    }
+        /* Add this CSS for the button animation */
+        /* Add this CSS for the button animation */
+        .btn-primary {
+            background-color: #1f4286;
+            border-color: #1f4286;
+            border-radius: 25px;
+            font-size: 1.5rem;
+            padding: 1.5rem 3rem;
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+            z-index: 1;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
 
-    @keyframes pulse {
-        0% {
-            transform: scale(1);
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
-        50% {
-            transform: scale(1.05);
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
-
 
 
         /* Add this CSS for the slider */
@@ -185,7 +184,8 @@
 <div class="creative-section">
     <h4 class="mb-4">How <span class="highlight">creative</span> are you?</h4>
     <p class="lead mb-4">Guess how creative you are <span class="highlight">compared to humans and AI</span>. By the end
-        of the experiment, we'll show how your creativity compares to humans, to AI, and how well you can guess the creativity of other people's ideas!
+        of the experiment, we'll show how your creativity compares to humans, to AI, and how well you can guess the
+        creativity of other people's ideas!
 
     <div class="slider-group">
         <div>
@@ -208,8 +208,6 @@
 </div>
 
 
-
-
 <!--<h4 class="mb-4">How creative are you?</h4>-->
 <!--<p class="lead mb-4"> Guess how creative you are compared to humans and AI. At the end of the experiment, we'll show you-->
 <!--    your score! And if you submit the most creative response, you get $100.</p>-->
@@ -219,30 +217,145 @@
 <p class="lead mb-4">We'll show you 5 common items, and you'll come up with creative uses for each item.
     To spark your imagination, you'll see ideas from prior participants and even from AI (i.e: ChatGPT).
     You'll be asked to rank these ideas in order of creativity.
-    The ideas you write may be anonymously shown to future participants to spark  <em> their </em> imagination.
-      </p>
+    The ideas you write may be anonymously shown to future participants to spark <em> their </em> imagination.
+</p>
 <h4 class="mb-4">What you will learn about yourself</h4>
 <ul class="lead mb-4">
-  <li>How creative you are compared to other humans</li>
-  <li>How creative you are compared to AI</li>
-  <li>How well you can rank creative ideas</li>
+    <li>How creative you are compared to other humans</li>
+    <li>How creative you are compared to AI</li>
+    <li>How well you can rank creative ideas</li>
 </ul>
 
-<h4>Consent</h4>
+<h4> Two quick questions (optional) </h4>
+<div class="form-group">
+    <label for="ai-feeling">Would you say the increased use of artificial intelligence computer programs in daily life
+        makes you feel...</label>
+    <select class="form-control" id="ai-feeling" name="ai-feeling" onchange="storeAboutYouValues()">
+        <option value="">---</option>
+        <option id="option-1" value="excited">Very/Somewhat Excited</option>
+        <option id="option-2" value="concerned">Very/Somewhat Concerned</option>
+        <option value="neutral">Equally Excited and Concerned</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="country">What country are you from?</label>
+    <select class="form-control" id="country" name="country" onchange="storeAboutYouValues()">
+        <option value="">Select a country</option>
+        <option value="Argentina">Argentina</option>
+        <option value="Australia">Australia</option>
+        <option value="Austria">Austria</option>
+        <option value="Belgium">Belgium</option>
+        <option value="Brazil">Brazil</option>
+        <option value="Canada">Canada</option>
+        <option value="Chile">Chile</option>
+        <option value="China">China</option>
+        <option value="Colombia">Colombia</option>
+        <option value="Costa Rica">Costa Rica</option>
+        <option value="Croatia">Croatia</option>
+        <option value="Czech Republic">Czech Republic</option>
+        <option value="Denmark">Denmark</option>
+        <option value="Egypt">Egypt</option>
+        <option value="Estonia">Estonia</option>
+        <option value="Finland">Finland</option>
+        <option value="France">France</option>
+        <option value="Germany">Germany</option>
+        <option value="Greece">Greece</option>
+        <option value="Hong Kong">Hong Kong</option>
+        <option value="Hungary">Hungary</option>
+        <option value="Iceland">Iceland</option>
+        <option value="India">India</option>
+        <option value="Indonesia">Indonesia</option>
+        <option value="Iran">Iran</option>
+        <option value="Ireland">Ireland</option>
+        <option value="Israel">Israel</option>
+        <option value="Italy">Italy</option>
+        <option value="Jamaica">Jamaica</option>
+        <option value="Japan">Japan</option>
+        <option value="Kenya">Kenya</option>
+        <option value="Latvia">Latvia</option>
+        <option value="Lithuania">Lithuania</option>
+        <option value="Malaysia">Malaysia</option>
+        <option value="Mexico">Mexico</option>
+        <option value="Netherlands">Netherlands</option>
+        <option value="New Zealand">New Zealand</option>
+        <option value="Nigeria">Nigeria</option>
+        <option value="Norway">Norway</option>
+        <option value="Pakistan">Pakistan</option>
+        <option value="Peru">Peru</option>
+        <option value="Philippines">Philippines</option>
+        <option value="Poland">Poland</option>
+        <option value="Portugal">Portugal</option>
+        <option value="Romania">Romania</option>
+        <option value="Russia">Russia</option>
+        <option value="Saudi Arabia">Saudi Arabia</option>
+        <option value="Singapore">Singapore</option>
+        <option value="Slovakia">Slovakia</option>
+        <option value="South Africa">South Africa</option>
+        <option value="South Korea">South Korea</option>
+        <option value="Spain">Spain</option>
+        <option value="Sweden">Sweden</option>
+        <option value="Switzerland">Switzerland</option>
+        <option value="Taiwan">Taiwan</option>
+        <option value="Thailand">Thailand</option>
+        <option value="Turkey">Turkey</option>
+        <option value="Ukraine">Ukraine</option>
+        <option value="United Arab Emirates">United Arab Emirates</option>
+        <option value="United Kingdom">United Kingdom</option>
+        <option value="United States">United States</option>
+        <option value="Venezuela">Venezuela</option>
+        <option value="Vietnam">Vietnam</option>
+        <option value="Other">Other</option>
+        <!-- add more countries as options here -->
+    </select>
+</div>
+
+<h5><br> Consent </br>  </h5>
 <p class="mb-4">By continuing, you indicate that you are at least 18, read and understood the
-    terms above,  agree to participate, and are not living in the EU (for GDPR reasons). Participation is voluntary and you may withdraw at any time. If you do not consent, we will delete your
-    responses to the questions asked above. This study has been deemed exempt from ongoing oversight by the
-    University of Michigan IRB for Health Sciences and Behavioral Sciences. For more information, please contact jashkina@umich.edu.</p>
+    terms above, agree to participate, and are not living in the EU (for GDPR reasons). Participation is voluntary. You
+    may withdraw at any time. If you do not consent, we will delete your
+    responses to the previous questions. This study has been deemed exempt from ongoing oversight by the
+    University of Michigan IRB for Health Sciences and Behavioral Sciences. For more information, contact
+    jashkina@umich.edu.</p>
 
 <form action="/start-experiment" method="get">
     <input type="hidden" id="creativitySliderAIValue" name="creativitySliderAIValue">
     <input type="hidden" id="creativitySliderHumanValue" name="creativitySliderHumanValue">
+    <input type="hidden" id="aiFeelingValue" name="aiFeelingValue"> <!-- Kept this -->
+    <input type="hidden" id="countryValue" name="countryValue"> <!-- Kept this -->
     <div class="form-group">
         <button type="submit" class="btn btn-primary"> Click here to start!</button>
     </div>
 </form>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const option1 = document.getElementById('option-1');
+        const option2 = document.getElementById('option-2');
 
+        if (Math.random() < 0.5) {
+            option1.text = 'Very/somewhat excited';
+            option1.value = 'excited';
+            option2.text = 'Very/somewhat concerned';
+            option2.value = 'concerned';
+        } else {
+            option1.text = 'Very/somewhat concerned';
+            option1.value = 'concerned';
+            option2.text = 'Very/somewhat excited';
+            option2.value = 'excited';
+        }
+    });
+</script>
+
+<script>
+    function storeAboutYouValues() {
+        const aiFeeling = document.getElementById('ai-feeling').value;
+        const country = document.getElementById('country').value;
+
+        document.getElementById('aiFeelingValue').value = aiFeeling;
+        document.getElementById('countryValue').value = country;
+    }
+</script>
 
 <script>
     var sliderAI = document.getElementById("creativitySliderAI");
@@ -257,10 +370,8 @@
     sliderHuman.oninput = function () {
         outputHuman.innerHTML = "I am more creative than " + this.value + "% of Humans";
         document.getElementById("creativitySliderHumanValue").value = this.value;
-
     }
 </script>
-
 
 </body>
 </html>
