@@ -116,7 +116,7 @@ def calculate_similarity(sentence1, sentence2):
     try:
         # Remove labels
         sentence1 = sentence1.split('<span', 1)[0].strip()
-        sentence2 = sentence1.split('<span', 1)[0].strip()
+        sentence2 = sentence2.split('<span', 1)[0].strip()
         sentence1_vector = sentence_vector(sentence1, model)
         sentence2_vector = sentence_vector(sentence2, model)
         if sentence1_vector is None or sentence2_vector is None:
