@@ -106,8 +106,6 @@ def start_experiment():
     session['creativity_ai'] = int(creativity_ai) if creativity_ai != '' else 50
     session['creativity_human'] = int(creativity_human) if creativity_human != '' else 50
     session['participant_ip'] = get_client_ip()
-
-    print(session)
     session.modified = True
 
     # Add participant to the person table
@@ -214,7 +212,6 @@ def render_trial(condition_no):
         rows, ids = zip(*rows_with_ids)
         data = zip(rows, ids)
         init_array = ','.join(map(str, ids))
-        print(rows)
         session['last_human_response'] = human_rows[-1]
         session.modified = True  # Explicitly mark the session as modified
 
