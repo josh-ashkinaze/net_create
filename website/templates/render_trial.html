@@ -148,51 +148,50 @@
     </style>
 </head>
 <body class="container py-4">
-<h3>Item {{ trial_no }} of 5: Generate a creative use for {% if item != 'pants' %}a {% endif %}<strong>{{ item
-    }}</strong>.</h3>
+<h3>Item {{ trial_no }} of 5: Generate a creative use for {% if item != 'pants' %}a {% endif %}
+    <strong>{{ item }}</strong>.</h3>
 
 <h4> Task </h4>
-<p>For this task, submit an original and creative use for {% if item != 'pants' %}a {% endif %}<strong>{{
-    item }}</strong>. But before submitting your idea, here are some ideas for inspiration. </p>
-
+<p>For this task, submit an original and creative use for {% if item != 'pants' %}a {% endif %}
+    <strong>{{ item }}</strong>. But before submitting your idea, here are some ideas for inspiration. </p>
 
 
 <h4> Previous Ideas </h4>
 {% if label %}
-<h5 class='ai-generated'>
-    {{ label }}
-</h5>
+    <h5 class='ai-generated'>
+        {{ label }}
+    </h5>
 {% endif %}
 
 <ul>
-    <li> Rank these ideas in order of creativity, with the most creative use on top. </li>
-    <li> We'll show you how your ranking compares to the actual rankings. </li>
+    <li> Rank these ideas in order of creativity, with the most creative use on top.</li>
+    <li> We'll show you how your ranking compares to the actual rankings.</li>
 </ul>
 
 
 <ul class="sortable-list">
 
     {% for row, r_id in data %}
-    {% if "(Source: <strong>A.I</strong>)</span>" in row %}
-    <li class="noselect ai-generated" data-r-id="{{ r_id }}">
-        <span class="rank"></span> {{ row|safe }}
-    </li>
-    {% elif "(Source: <strong>Human</strong>)</span>" in row %}
-    <li class="noselect human-generated" data-r-id="{{ r_id }}">
-        <span class="rank"></span> {{ row|safe }}
-    </li>
-    {% else %}
-    <li class="noselect human-generated" data-r-id="{{ r_id }}">
-        <span class="rank"></span> {{ row|safe }}
-    </li>
-    {% endif %}
+        {% if "(Source: <strong>A.I</strong>)</span>" in row %}
+            <li class="noselect ai-generated" data-r-id="{{ r_id }}">
+                <span class="rank"></span> {{ row|safe }}
+            </li>
+        {% elif "(Source: <strong>Human</strong>)</span>" in row %}
+            <li class="noselect human-generated" data-r-id="{{ r_id }}">
+                <span class="rank"></span> {{ row|safe }}
+            </li>
+        {% else %}
+            <li class="noselect human-generated" data-r-id="{{ r_id }}">
+                <span class="rank"></span> {{ row|safe }}
+            </li>
+        {% endif %}
     {% endfor %}
 </ul>
 
 <h4> Your Idea </h4>
-<p> Now it's your turn! Write down an original and creative use for {% if item != 'pants' %}a {% endif %}<strong>{{
-    item }}</strong>. Certainly there are common, unoriginal ways to use {% if item != 'pants' %}a {% endif %}<strong>{{
-    item }}</strong>.
+<p> Now it's your turn! Write down an original and creative use for {% if item != 'pants' %}a {% endif %}
+    <strong>{{ item }}</strong>. Certainly there are common, unoriginal ways to use {% if item != 'pants' %}
+        a {% endif %}<strong>{{ item }}</strong>.
     But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
 
 
@@ -219,116 +218,119 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 <script>
-// When the DOM is fully loaded, execute the code inside this function
-$(document).ready(function () {
-    // Initialize the Sortable library on the sortable list
-    var sortable = new Sortable(document.querySelector('.sortable-list'), {
-        animation: 150,
-        chosenClass: "sortable-chosen",
-        dragClass: "sortable-drag",
-        onSort: function (evt) {
-            updateRIdArray();
-        }
-    });
-
-    function updateRIdArray() {
-        var rIdArray = [];
-        var listItems = document.querySelectorAll('.sortable-list li');
-        listItems.forEach(function (item, index) {
-            rIdArray.push(item.dataset.rId);
-            item.querySelector('.rank').textContent = (index + 1) + ') ';
+    // When the DOM is fully loaded, execute the code inside this function
+    $(document).ready(function () {
+        // Initialize the Sortable library on the sortable list
+        var sortable = new Sortable(document.querySelector('.sortable-list'), {
+            animation: 150,
+            chosenClass: "sortable-chosen",
+            dragClass: "sortable-drag",
+            onSort: function (evt) {
+                updateRIdArray();
+            }
         });
-        document.querySelector('input[name="ranked_array"]').value = rIdArray.join(',');
-    }
 
-    updateRIdArray();
+        function updateRIdArray() {
+            var rIdArray = [];
+            var listItems = document.querySelectorAll('.sortable-list li');
+            listItems.forEach(function (item, index) {
+                rIdArray.push(item.dataset.rId);
+                item.querySelector('.rank').textContent = (index + 1) + ') ';
+            });
+            document.querySelector('input[name="ranked_array"]').value = rIdArray.join(',');
+        }
 
-    document.querySelector('form').addEventListener('submit', function (event) {
-        event.preventDefault();
+        updateRIdArray();
 
-        var response = document.querySelector('input[name="participant_response"]').value;
-        var initArray = $('input[name="init_array"]').val();
-        var rankedArray = $('input[name="ranked_array"]').val();
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault();
 
-        // In old logic we forced people to rank
+            var response = document.querySelector('input[name="participant_response"]').value;
+            var initArray = $('input[name="init_array"]').val();
+            var rankedArray = $('input[name="ranked_array"]').val();
 
-        // if (initArray === rankedArray) {
-        //     alert("Please move at least one ranking before continuing!");
-        //     return;
-        // }
+            // In old logic we forced people to rank
+            console.log("initArray:", initArray);
+            console.log("rankedArray:", rankedArray);
+            if (initArray === rankedArray) {
+                var confirmation = window.confirm("Please move at least one ranking before continuing! Do you want to go back?");
+                if (confirmation) {
+                    return; // Go back
+                }
+            }
 
-        var submitButton = document.querySelector('button[type="submit"]');
-        submitButton.textContent = "Calculating...";
-        submitButton.disabled = true;
-        submitButton.style.backgroundColor = "#0E2A56"; // Match the hover background color
-        submitButton.style.borderColor = "#0E2A56"; // Match the hover border color
-        submitButton.style.color = "white"; // Use any desired text color
+            var submitButton = document.querySelector('button[type="submit"]');
+            submitButton.textContent = "Calculating...";
+            submitButton.disabled = true;
+            submitButton.style.backgroundColor = "#0E2A56"; // Match the hover background color
+            submitButton.style.borderColor = "#0E2A56"; // Match the hover border color
+            submitButton.style.color = "white"; // Use any desired text color
 
-        calculateSimilarity(response, function (similarityScore) {
-            calculateRankSimilarity(rankedArray, function (rankSimilarityScore) {
-                showDialog(similarityScore, rankSimilarityScore);
+            calculateSimilarity(response, function (similarityScore) {
+                calculateRankSimilarity(rankedArray, function (rankSimilarityScore) {
+                    showDialog(similarityScore, rankSimilarityScore);
+                });
             });
         });
     });
-});
 
-function showDialog(similarityScore, rankSimilarityScore) {
-    var dialogOverlay = document.getElementById("dialogOverlay");
-    var similarityScoreElement = document.getElementById("similarityScore");
-    similarityScoreElement.textContent = "Your response was " + similarityScore + "% similar to the last person's response!";
+    function showDialog(similarityScore, rankSimilarityScore) {
+        var dialogOverlay = document.getElementById("dialogOverlay");
+        var similarityScoreElement = document.getElementById("similarityScore");
+        similarityScoreElement.textContent = "Your response was " + similarityScore + "% similar to the last person's response!";
 
-    if (rankSimilarityScore) {
-        var rankSimilarityScoreElement = document.getElementById("rankSimilarityScore");
-        rankSimilarityScoreElement.textContent = "Your rankings were " + rankSimilarityScore + "% similar to the true creativity rankings!";
+        if (rankSimilarityScore) {
+            var rankSimilarityScoreElement = document.getElementById("rankSimilarityScore");
+            rankSimilarityScoreElement.textContent = "Your rankings were " + rankSimilarityScore + "% similar to the true creativity rankings!";
+        }
+
+        dialogOverlay.style.display = "flex";
     }
 
-    dialogOverlay.style.display = "flex";
-}
+    function closeDialog() {
+        var dialogOverlay = document.getElementById("dialogOverlay");
+        var submitButton = document.querySelector('button[type="submit"]');
 
-function closeDialog() {
-    var dialogOverlay = document.getElementById("dialogOverlay");
-    var submitButton = document.querySelector('button[type="submit"]');
+        dialogOverlay.style.display = "none";
+        submitButton.textContent = "Loading...";
+        submitButton.disabled = true;
 
-    dialogOverlay.style.display = "none";
-    submitButton.textContent = "Loading...";
-    submitButton.disabled = true;
+        document.querySelector('form').submit();
+    }
 
-    document.querySelector('form').submit();
-}
+    function calculateSimilarity(response, callback) {
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('calculate_similarity_route') }}",
+            data: {response: response},
+            success: function (score) {
+                callback(score);
+            },
+            error: function (xhr, status, error) {
+                console.log("Error:", error);
+                callback(randomBetween(30, 70));
+            }
+        });
+    }
 
-function calculateSimilarity(response, callback) {
-    $.ajax({
-        type: "POST",
-        url: "{{ url_for('calculate_similarity_route') }}",
-        data: {response: response},
-        success: function (score) {
-            callback(score);
-        },
-        error: function (xhr, status, error) {
-            console.log("Error:", error);
-            callback(randomBetween(30, 70));
-        }
-    });
-}
+    function calculateRankSimilarity(rankedArray, callback) {
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('calculate_rank_similarity_route') }}",
+            data: {ranked_array: rankedArray},
+            success: function (score) {
+                callback(score);
+            },
+            error: function (xhr, status, error) {
+                console.log("Error:", error);
+                callback(randomBetween(30, 70));
+            }
+        });
+    }
 
-function calculateRankSimilarity(rankedArray, callback) {
-    $.ajax({
-        type: "POST",
-        url: "{{ url_for('calculate_rank_similarity_route') }}",
-        data: {ranked_array: rankedArray},
-        success: function (score) {
-            callback(score);
-        },
-        error: function (xhr, status, error) {
-            console.log("Error:", error);
-            callback(randomBetween(30, 70));
-        }
-    });
-}
-
-function randomBetween(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
+    function randomBetween(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
 </script>
 
 </body>
