@@ -32,9 +32,11 @@ from render_feedback import make_graphs, calculate_similarity
 ##############################
 # Figure out if we're running locally or on Heroku. This will matter for file paths.
 if 'DYNO' in os.environ:
+    print("Is local: False")
     is_local = False
     file_prefix = ""
 else:
+    print("Is local: True")
     is_local = True
     file_prefix = "../"
 
