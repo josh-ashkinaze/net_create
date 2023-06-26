@@ -124,6 +124,7 @@ def calculate_similarity(sentence1, sentence2):
             return random.uniform(0.3, 0.7)
 
         similarity = 1 - cosine_distance(sentence1_vector, sentence2_vector)
+        print("Similarity loaded succesfully")
         return similarity
     except Exception as e:
         print("ERROR", sentence1, sentence2, e)
