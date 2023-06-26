@@ -121,7 +121,7 @@ def start_experiment():
     # Add participant to the person table
     person_table = dataset.table("person")
     row = {"participant_id": session['participant_id'], "creativity_ai": session['creativity_ai'],
-           "creativity_human": session['creativity_human'], "ip_address": session['participant_ip'],
+           "creativity_human": session['creativity_human'],
            "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 'ai_feeling': session['ai_feeling'],
            'country': session['country']}
 
@@ -331,15 +331,6 @@ def get_graphs():
 
     reset_session()  # Add this line
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
-
-
-def get_client_ip():
-    if 'HTTP_X_FORWARDED_FOR' in request.environ:
-        # In case of multiple proxies, the client IP would be the first one.
-        return request.environ['HTTP_X_FORWARDED_FOR'].split(',')[0]
-    else:
-        return request.remote_addr
-
 
 def get_world():
     """Get the current world number.
