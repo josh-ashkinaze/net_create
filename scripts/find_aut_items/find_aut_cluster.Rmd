@@ -128,7 +128,15 @@ print(aut_freq_table, include.rownames=FALSE, sanitize.text.function = function(
 ```{r}
 items <- aut_items$`AUT Item`
 write.csv(data.frame(aut_item = items), file = "../../data/chosen_aut_items.csv", row.names = FALSE)
+
+# We have 1500 AI responses so let's bootstrap to get 1500 human responses, too
+subset_scored <- scores %>% filter(aut_item %in% items)
+bootstrap_subset <- subset_scored %>% 
+  sample_n(size = 1500, replace = TRUE)
+write.csv(bootstrap_subset, file = "../../data/scored_prior_responses.csv", row.names = FALSE)
+
 ```
+
 
 ```{r}
 correlation_subset <- cor(scores$score[scores$aut_item %in% items], scores$predicted[scores$aut_item %in% items])
@@ -136,7 +144,7 @@ correlation_subset <- cor(scores$score[scores$aut_item %in% items], scores$predi
 ggplot(scores %>% filter(aut_item %in% items ), aes(x = score, y = predicted)) +
  geom_point() +   geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
 
-  labs(title=sprintf("Originality Classifier Accuracy of 5-Item Subset \nCorrelation: %.2f", correlation_subset)) +
+  labs(title=sprintf("Originality Classifier Accuracy of 5-Item Subset \n(r= %.2f)", correlation_subset)) +
   xlab("Actual Score") +
   ylab("Predicted Score") +
   theme_nice()
