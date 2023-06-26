@@ -112,7 +112,7 @@ def sentence_vector(sentence, model):
         return None
     return np.mean(word_vectors, axis=0)
 
-def calculate_similarity(sentence1, sentence2, file_prefix="../"):
+def calculate_similarity(sentence1, sentence2):
     try:
         sentence1_vector = sentence_vector(sentence1, model)
         sentence2_vector = sentence_vector(sentence2, model)
