@@ -63,16 +63,16 @@
         }
 
         /* Add this CSS for buttons container */
-        .buttons-container {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-        }
+.buttons-container {
+    display: flex;
+    flex-direction: column; /* Add this line to stack the buttons vertically */
+    flex-wrap: nowrap; /* Add this line to prevent wrapping */
+    margin-bottom: 1rem;
+}
 
-        .buttons-container .btn {
-            margin-bottom: 0.5rem;
-        }
+.buttons-container .btn {
+    margin-bottom: 0.5rem; /* Add this line to create space between the buttons */
+}
     </style>
 </head>
 <body class="container py-4">
@@ -80,8 +80,8 @@
 
 <!-- Wrap buttons in a div container -->
 <div class="buttons-container">
-    <button class="btn btn-primary" onclick="copyExperimentLink()">Share or Take Experiment</button>
-    <button class="btn btn-primary" onclick="copyResultsLink()">Share Your Results</button>
+    <button class="btn btn-primary" onclick="copyExperimentLink()">Copy link to experiment </button>
+    <button class="btn btn-primary" onclick="copyResultsLink()"> Copy link to your results </button>
 </div>
 
 
@@ -164,7 +164,7 @@ function showSuccessMessage() {
     Swal.fire({
         icon: 'success',
         title: 'Copied!',
-        text: 'Link copied to clipboard. You can now share it!',
+        text: 'Link copied to clipboard',
         showConfirmButton: true
     });
 }
