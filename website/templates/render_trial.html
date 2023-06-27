@@ -219,7 +219,7 @@
     <div class="form-group">
         <input type="hidden" name="init_array" value="{{ init_array }}">
         <input type="hidden" name="ranked_array" value="">
-        <input type="text" class="form-control" name="participant_response" required placeholder="Write your idea here">
+        <input type="text" class="form-control" id="participantResponse" name="participant_response" required placeholder="Write your idea here">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
@@ -358,6 +358,10 @@
     function randomBetween(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
+
+    document.getElementById('participantResponse').addEventListener('paste', (e) => {
+  e.preventDefault();
+});
 </script>
 
 
