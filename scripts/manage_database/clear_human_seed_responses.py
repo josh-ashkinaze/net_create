@@ -24,6 +24,11 @@ def delete_rows(credentials, dataset_id, table_id):
     logging.info(f"All rows with participant_id='seed' deleted from {dataset_id}.{table_id}")
 
 if __name__ == "__main__":
+    confirm = input("Type 'confirm' to proceed with clear human seed responses")
+    if confirm.lower() != 'confirm':
+        print("Operation cancelled.")
+        exit()
+
     key_path = "../../secrets/google_creds.json"
     credentials = service_account.Credentials.from_service_account_file(
         key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
