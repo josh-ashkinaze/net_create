@@ -115,7 +115,6 @@ def start_experiment():
     session['creativity_human'] = int(creativity_human) if creativity_human != '' else None
     session['ai_feeling'] = ai_feeling
     session['country'] = country
-    session['participant_ip'] = get_client_ip()
     session.modified = True
 
     # Add participant to the person table
