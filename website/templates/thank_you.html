@@ -115,10 +115,12 @@
 
 
 <!-- Async fetch graphs -->
+<!-- Async fetch graphs -->
 <input type="hidden" id="uuid" value="{{ uuid }}">
+<input type="hidden" id="from_uuid" data-value="{{ from_uuid }}">
 <script>
-    async function fetchGraphs(uuid) {
-        const endpoint = uuid ? `/get-graphs/${uuid}` : '/get-graphs';
+    async function fetchGraphs(uuid, from_uuid) {
+        const endpoint = from_uuid ? `/get-graphs/${uuid}` : '/get-graphs';
         const response = await fetch(endpoint);
         const data = await response.json();
         document.getElementById('human-graph').src = 'data:image/png;base64,' + data.human_graph;
@@ -130,9 +132,11 @@
     }
     window.onload = () => {
         const uuid = document.getElementById('uuid').value;
-        fetchGraphs(uuid);
+        const from_uuid = document.getElementById('from_uuid').dataset.value.toLowerCase() === 'true'; // convert string to boolean
+        fetchGraphs(uuid, from_uuid);
     };
 </script>
+
 
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

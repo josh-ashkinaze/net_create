@@ -265,7 +265,7 @@ def render_trial(condition_no):
 @app.route("/thank-you")
 def thank_you():
     """Thank you page"""
-    return render_template('thank_you.html')
+    return render_template('thank_you.html', uuid=session['participant_id'], from_uuid=False)
 
 
 @app.route('/calculate_similarity', methods=['POST'])
