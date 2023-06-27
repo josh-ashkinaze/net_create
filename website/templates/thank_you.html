@@ -61,58 +61,34 @@
             margin-top: 2rem;
             text-align: center;
         }
+
+        /* Add this CSS for buttons container */
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .buttons-container .btn {
+            margin-bottom: 0.5rem;
+        }
     </style>
 </head>
 <body class="container py-4">
 <h1 class="mb-4">Thank you for participating!</h1>
-<button class="btn btn-primary mb-4" onclick="copyExperimentLink()">Share or Take Experiment</button>
-<button class="btn btn-primary mb-4" onclick="copyResultsLink()">Share Your Results</button>
+
+<!-- Wrap buttons in a div container -->
+<div class="buttons-container">
+    <button class="btn btn-primary" onclick="copyExperimentLink()">Share or Take Experiment</button>
+    <button class="btn btn-primary" onclick="copyResultsLink()">Share Your Results</button>
+</div>
+
+
 
 
 <p><strong> We have some graphs of the creativity of your responses! </strong></p>
 
-<!-- Modal -->
-<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="shareModalLabel">Share the Experiment</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Copy the link below:</p>
-                <textarea class="form-control" readonly onclick="copyToClipboard(this)">https://createwithai.herokuapp.com/</textarea>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="shareResultsModal" tabindex="-1" role="dialog" aria-labelledby="shareResultsModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="shareResultsModalLabel">Share results</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Copy the link below after the graphs load:</p>
-                <textarea class="form-control" id="shareResultsModalLink" readonly onclick="copyToClipboard(this)">https://createwithai.herokuapp.com/results/{{ uuid }}</textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Add the spinner -->
 <div class="spinner" id="loading-spinner"></div>
 <div id="graphs" style="display:none;">
