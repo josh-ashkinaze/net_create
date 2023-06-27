@@ -47,7 +47,7 @@ def seed_database():
     with open("../../data/seed_human_responses.csv", newline="") as csvfile:
         logging.info("Trying to seed human responses")
         reader = csv.DictReader(csvfile)
-        response_date = datetime(2022, 1, 1)
+        response_date = datetime(2020, 1, 1)
 
         for row in reader:
             # Create a dictionary with the required BigQuery fields and their respective values
@@ -83,7 +83,7 @@ def seed_database():
                         raise e
 
             # Increment the response_date by 1 minute
-            response_date += timedelta(minutes=1)
+            response_date += timedelta(minutes=0.01)
     logging.info("Finished seeding human responses")
 
 if __name__ == "__main__":

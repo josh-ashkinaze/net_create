@@ -350,6 +350,8 @@ def get_world():
     query_job = client.query(query)
     results = query_job.result()
     trials = list(results)[0]['min_count']
+    if not trials:
+        trials  = 0
     current_world = trials // N_PER_WORLD
     return current_world
 
