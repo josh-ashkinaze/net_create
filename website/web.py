@@ -331,6 +331,41 @@ def get_graphs():
     reset_session()  # Add this line
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
 
+# These two functions are how we generate reports for specific participants.
+# 1. The `results' endpoint calls the `thank_you.html` template passing in the UUID
+# 2. From there, the `thank_you.html` template calls the `get_graphs_for_uuid` endpoint
+@app.route("/results/<uuid>")
+def results(uuid):
+    """Results page for a specific UUID"""
+    return render_template('thank_you.html', uuid=uuid, from_uuid=True)
+@app.route("/get-graphs/<uuid>")
+def get_graphs_for_uuid(uuid):
+    """Generate graphs for a specific UUID and return them as JSON"""
+
+    # Fetch the participant data from the database using the UUID
+    # This is a simplified example; adjust this code to fit your actual database structure and API
+
+    query = f"""
+        SELECT responses.rating, trials.condition
+        FROM `net_expr.trials` AS trials
+        INNER JOIN `net_expr.responses` AS responses
+        ON trials.response_id = responses.response_id
+        WHERE trials.participant_id = '{uuid}'
+        ORDER BY trials.world DESC
+        LIMIT 5
+    """
+    query_job = client.query(query)
+    results = list(query_job.result())  # Store the rows in a list
+
+    # Convert the result into lists
+    ratings = [row.rating for row in results]
+    conditions = [row.condition for row in results]
+
+    human_graph, ai_graph, human_ai_graph, _ = make_graphs(participant_responses=None,
+                                                           conditions=conditions, participant_scores=ratings, file_prefix=file_prefix)
+    return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
+
+
 def get_world():
     """Get the current world number.
 

@@ -91,12 +91,26 @@ def plot_ai_human(conditions, scores):
     return img_base64_2
 
 
-def make_graphs(participant_responses, conditions, file_prefix="../"):
+def make_graphs(participant_responses, conditions, file_prefix="../", participant_scores=None):
+    """
+    Generates graphs for the feedback page.
+
+    If we are doing this from UUID then we can pass in participant_scores directly.
+    Otherwise, we need to score the responses first.
+
+    :param participant_responses: A zip file of the participant's responses for each item
+    :param conditions: A list of item conditions
+    :param file_prefix: Where to locate comparison files
+    :param participant_scores: Optional, include if we are doing this from UUID because already scored
+    :return: graphs for human, AI, and AI + human comparisons
+    """
     font_path = file_prefix + "website/resources/Roboto.ttf"
     fm.fontManager.addfont(font_path)
     plt.rcParams['font.family'] = 'Roboto'
-
-    participant_scores = my_utils.batch_score_responses(participant_responses)['originality'].tolist()
+    if not participant_scores:
+        participant_scores = my_utils.batch_score_responses(participant_responses)['originality'].tolist()
+    else:
+        pass
     ai_graph = comparison_graph(participant_scores, "AI", file_prefix)
     human_graph = comparison_graph(participant_scores, "human", file_prefix)
     ai_human_graph = plot_ai_human(conditions, participant_scores)
