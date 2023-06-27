@@ -65,8 +65,9 @@
 </head>
 <body class="container py-4">
 <h1 class="mb-4">Thank you for participating!</h1>
-<button class="btn btn-primary mb-4" data-toggle="modal" data-target="#shareModal">Share or Take Experiment </button>
-<button class="btn btn-primary mb-4" data-toggle="modal" data-target="#shareResultsModal">Share Your Results </button>
+<button class="btn btn-primary mb-4" onclick="copyExperimentLink()">Share or Take Experiment</button>
+<button class="btn btn-primary mb-4" onclick="copyResultsLink()">Share Your Results</button>
+
 
 <p><strong> We have some graphs of the creativity of your responses! </strong></p>
 
@@ -83,7 +84,8 @@
             </div>
             <div class="modal-body">
                 <p>Copy the link below:</p>
-                <textarea class="form-control" readonly>https://createwithai.herokuapp.com/</textarea>
+                <textarea class="form-control" readonly onclick="copyToClipboard(this)">https://createwithai.herokuapp.com/</textarea>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -103,7 +105,7 @@
             </div>
             <div class="modal-body">
                 <p>Copy the link below after the graphs load:</p>
-                <textarea class="form-control" id="shareResultsModalLink" readonly>https://createwithai.herokuapp.com/results/{{ uuid }}</textarea>
+                <textarea class="form-control" id="shareResultsModalLink" readonly onclick="copyToClipboard(this)">https://createwithai.herokuapp.com/results/{{ uuid }}</textarea>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -164,6 +166,52 @@
         });
     }
 }
+
+
+function copyToClipboardFallback(text) {
+    const textArea = document.createElement('textarea');
+    textArea.style.position = 'fixed';
+    textArea.style.opacity = '0';
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        showSuccessMessage();
+    } catch (err) {
+        console.error('Fallback copy method failed:', err);
+    }
+    document.body.removeChild(textArea);
+}
+
+function showSuccessMessage() {
+    Swal.fire({
+        icon: 'success',
+        title: 'Copied!',
+        text: 'Link copied to clipboard. You can now share it!',
+        showConfirmButton: true
+    });
+}
+
+function copyExperimentLink() {
+    const link = 'https://createwithai.herokuapp.com/';
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(link).then(showSuccessMessage, () => copyToClipboardFallback(link));
+    } else {
+        copyToClipboardFallback(link);
+    }
+}
+
+function copyResultsLink() {
+    const uuid = document.getElementById('uuid').value;
+    const link = `https://createwithai.herokuapp.com/results/${uuid}`;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(link).then(showSuccessMessage, () => copyToClipboardFallback(link));
+    } else {
+        copyToClipboardFallback(link);
+    }
+}
+
     window.onload = () => {
         const uuid = document.getElementById('uuid').value;
         const from_uuid = document.getElementById('from_uuid').dataset.value.toLowerCase() === 'true'; // convert string to boolean
