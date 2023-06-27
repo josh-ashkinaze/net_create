@@ -280,22 +280,17 @@ def calculate_similarity_route():
 def calculate_rank_similarity_route():
     try:
         ranked_array = request.form.get('ranked_array', '').split(',')
-        print(ranked_array)
         ranked_array_str = ",".join([f'"{item}"' for item in ranked_array])
-        print(ranked_array_str)
         query = f"""
                 SELECT response_id, IFNULL(rating, 2.5) as rating
                 FROM `net_expr.responses`
                 WHERE response_id IN UNNEST([{ranked_array_str}])
                 """
         query_job = client.query(query)
-        print(query_job)
         scores_dict = {row['response_id']: row['rating'] for row in query_job.result()}
-        print(scores_dict)
         ranked_scores = [scores_dict.get(id, 2.5) for id in ranked_array]
         rank_similarity, _ = spearmanr(np.arange(1, len(ranked_array) + 1), ranked_scores)
         rank_similarity = (-1 * rank_similarity + 1) / 2  # -1 bc first idea is most creative
-        print(rank_similarity)
         return str(int(rank_similarity * 100))
     except Exception as e:
         print("Error:", e)
