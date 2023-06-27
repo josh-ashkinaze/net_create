@@ -38,64 +38,57 @@ def load_data(comparison, prefix="../"):
 
 
 def comparison_graph(participant_scores, comparison, prefix="../"):
-    try:
-        make_aesthetic()
-        mean_score = np.mean(participant_scores)
-        comparison_scores = load_data(comparison, prefix)
+    make_aesthetic()
+    mean_score = np.mean(participant_scores)
+    comparison_scores = load_data(comparison, prefix)
 
-        percentile = int(percentileofscore(comparison_scores, mean_score))
+    percentile = int(percentileofscore(comparison_scores, mean_score))
 
-        fig, ax = plt.subplots(figsize=(12, 8))
+    fig, ax = plt.subplots(figsize=(12, 8))
 
-        sns.histplot(comparison_scores, bins=10, stat='percent', color='#1F4287', alpha=0.8)
-        plt.suptitle("Your average response was more creative than\n{}% of {} responses.".format(percentile, comparison),
-                     ha='left', x=0.125, fontweight='bold', y=1.07, fontsize=26)
-        ax.set_title(
-            f"The graph shows creativity of {comparison}-generated responses on a scale of 1-5,\nwith a dashed line for your average creativity score.",
-            loc='left', pad=10, fontsize=20)
-        ax.set_xlabel("Creativity (1-5)")
-        ax.set_ylabel(f"Percent of {comparison.title()} Responses")
-        ax.axvline(x=mean_score, linewidth=4, color='#FFD23F', linestyle='--')
-        plt.savefig("img.png", bbox_inches='tight')
-        buf = io.BytesIO()
-        plt.savefig(buf, format='png', bbox_inches='tight')
-        buf.seek(0)
-        img_base64 = base64.b64encode(buf.read()).decode('utf-8')
-        return img_base64
-    except Exception as e:
-        print(e)
-        return None
+    sns.histplot(comparison_scores, bins=10, stat='percent', color='#1F4287', alpha=0.8)
+    plt.suptitle("Your average response was more creative than\n{}% of {} responses.".format(percentile, comparison),
+                 ha='left', x=0.125, fontweight='bold', y=1.07, fontsize=26)
+    ax.set_title(
+        f"The graph shows creativity of {comparison}-generated responses on a scale of 1-5,\nwith a dashed line for your average creativity score.",
+        loc='left', pad=10, fontsize=20)
+    ax.set_xlabel("Creativity (1-5)")
+    ax.set_ylabel(f"Percent of {comparison.title()} Responses")
+    ax.axvline(x=mean_score, linewidth=4, color='#FFD23F', linestyle='--')
+    plt.savefig("img.png", bbox_inches='tight')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+    img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+    return img_base64
+
 
 def plot_ai_human(conditions, scores):
-    try:
-        make_aesthetic()
-        color_dict = {'Human Only': '#1F4287', 'AI + Human': '#FFD23F'}
-        df = pd.DataFrame({'conditions': conditions, 'scores': scores})
-        df['source'] = df['conditions'].apply(lambda x: "Human Only" if x == 'h' else 'AI + Human')
-        means = df.groupby(by='source')['scores'].mean().reset_index()
-        no_ai = means.query("source=='Human Only'")['scores'].tolist()[0]
-        with_ai = means.query("source=='AI + Human'")['scores'].tolist()[0]
+    make_aesthetic()
+    color_dict = {'Human Only': '#1F4287', 'AI + Human': '#FFD23F'}
+    df = pd.DataFrame({'conditions': conditions, 'scores': scores})
+    df['source'] = df['conditions'].apply(lambda x: "Human Only" if x == 'h' else 'AI + Human')
+    means = df.groupby(by='source')['scores'].mean().reset_index()
+    no_ai = means.query("source=='Human Only'")['scores'].tolist()[0]
+    with_ai = means.query("source=='AI + Human'")['scores'].tolist()[0]
 
-        if with_ai >= no_ai:
-            adj = "more"
-        else:
-            adj = "less"
-        percent_diff = abs(int(((with_ai - no_ai) / (no_ai)) * 100))
-        fig, ax = plt.subplots(figsize=(12, 8))
-        plt.suptitle(
-            f"Your responses were {percent_diff}% {adj} creative when\nexposed to AI ideas than when exposed\nto only human ideas.",
-            ha='left', x=0.125, fontweight='bold', y=1.07, fontsize=26)
-        sns.barplot(data=means, x='source', y='scores', ci=False, palette=color_dict)
-        ax.set_xlabel("Idea Exposure")
-        ax.set_ylabel("Average Creativity (1-5)")
-        buf2 = io.BytesIO()
-        plt.savefig(buf2, format='png', bbox_inches='tight')
-        buf2.seek(0)
-        img_base64_2 = base64.b64encode(buf2.read()).decode('utf-8')
-        return img_base64_2
-    except Exception as e:
-        print(e)
-        return None
+    if with_ai >= no_ai:
+        adj = "more"
+    else:
+        adj = "less"
+    percent_diff = abs(int(((with_ai - no_ai) / (no_ai)) * 100))
+    fig, ax = plt.subplots(figsize=(12, 8))
+    plt.suptitle(
+        f"Your responses were {percent_diff}% {adj} creative when\nexposed to AI ideas than when exposed\nto only human ideas.",
+        ha='left', x=0.125, fontweight='bold', y=1.07, fontsize=26)
+    sns.barplot(data=means, x='source', y='scores', ci=False, palette=color_dict)
+    ax.set_xlabel("Idea Exposure")
+    ax.set_ylabel("Average Creativity (1-5)")
+    buf2 = io.BytesIO()
+    plt.savefig(buf2, format='png', bbox_inches='tight')
+    buf2.seek(0)
+    img_base64_2 = base64.b64encode(buf2.read()).decode('utf-8')
+    return img_base64_2
 
 
 def make_graphs(participant_responses, conditions, file_prefix="../", participant_scores=None):
@@ -111,21 +104,17 @@ def make_graphs(participant_responses, conditions, file_prefix="../", participan
     :param participant_scores: Optional, include if we are doing this from UUID because already scored
     :return: graphs for human, AI, and AI + human comparisons
     """
-    try:
-        font_path = file_prefix + "website/resources/Roboto.ttf"
-        fm.fontManager.addfont(font_path)
-        plt.rcParams['font.family'] = 'Roboto'
-        if not participant_scores:
-            participant_scores = my_utils.batch_score_responses(participant_responses)['originality'].tolist()
-        else:
-            pass
-        ai_graph = comparison_graph(participant_scores, "AI", file_prefix)
-        human_graph = comparison_graph(participant_scores, "human", file_prefix)
-        ai_human_graph = plot_ai_human(conditions, participant_scores)
-        return human_graph, ai_graph, ai_human_graph, participant_scores
-    except Exception as e:
-        print(e)
-        return None, None, None, None
+    font_path = file_prefix + "website/resources/Roboto.ttf"
+    fm.fontManager.addfont(font_path)
+    plt.rcParams['font.family'] = 'Roboto'
+    if not participant_scores:
+        participant_scores = my_utils.batch_score_responses(participant_responses)['originality'].tolist()
+    else:
+        pass
+    ai_graph = comparison_graph(participant_scores, "AI", file_prefix)
+    human_graph = comparison_graph(participant_scores, "human", file_prefix)
+    ai_human_graph = plot_ai_human(conditions, participant_scores)
+    return human_graph, ai_graph, ai_human_graph, participant_scores
 
 
 def sentence_vector(sentence, model):
