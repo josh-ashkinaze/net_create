@@ -56,7 +56,7 @@ def comparison_graph(participant_scores, comparison, prefix="../"):
         loc='left', pad=10, fontsize=20)
     ax.set_xlabel("Creativity (1-5)")
     ax.set_ylabel(f"Percent of {comparison.title()} Responses")
-    ax.axvline(x=mean_score, linewidth=4, color='#FFD23F', linestyle='--')
+    ax.axvline(x=mean_score, linewidth=4, color='#E1DD8F', linestyle='--')
     plt.savefig("img.png", bbox_inches='tight')
     buf = io.BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight')
@@ -67,7 +67,7 @@ def comparison_graph(participant_scores, comparison, prefix="../"):
 
 def plot_ai_human(conditions, scores):
     make_aesthetic()
-    color_dict = {'Human Only': '#1F4287', 'AI + Human': '#FFD23F'}
+    color_dict = {'Human Only': '#1F4287', 'AI + Human': '#E1DD8F'}
     df = pd.DataFrame({'conditions': conditions, 'scores': scores})
     df['source'] = df['conditions'].apply(lambda x: "Human Only" if x == 'h' else 'AI + Human')
     means = df.groupby(by='source')['scores'].mean().reset_index()
@@ -139,7 +139,7 @@ def calculate_similarity(sentence1, sentence2):
             return random.uniform(0.3, 0.7)
 
         similarity = 1 - cosine_distance(sentence1_vector, sentence2_vector)
-        print("Similarity loaded succesfully")
+        print("Similarity loaded successfully")
         return similarity
     except Exception as e:
         print("ERROR", sentence1, sentence2, e)
