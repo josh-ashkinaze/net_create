@@ -102,7 +102,7 @@
 <h4 id="loading-message"> Hang tight! We are computing the creativity of your responses. </h4>
 
 <!-- Add the spinner -->
-<img id="loading-cat" src="{{ url_for('static', filename='dance_cat_1.gif') }}" style="display: none;" alt="Loading...">
+<img id="loading-img" src="{{ url_for('static', filename='ring_gif.gif') }}" style="display: none;" alt="Loading...">
 
 <div id="graphs" style="display:none;">
     <h2>Creativity With/Without AI</h2>
@@ -114,7 +114,7 @@
 </div>
 
 <!-- Add the footer with cite for creativity scores -->
-<h4>How are creativity scores calculated?</h4>
+<h5>How are creativity scores calculated?</h5>
 <p style="text-align: left;">
     Creativity was measured using the model from: <a
         href="https://www.researchgate.net/publication/363456838_Beyond_Semantic_Distance_Automated_Scoring_of_Divergent_Thinking_Greatly_Improves_with_Large_Language_Models?channel=doi&linkId=631cdfb2873eca0c0078a9c4&showFulltext=true">Organisciak,
@@ -137,7 +137,7 @@
     async function fetchGraphs(uuid, from_uuid) {
     const endpoint = from_uuid ? `/get-graphs/${uuid}` : '/get-graphs';
     try {
-        document.getElementById('loading-cat').style.display = 'block';  // Show the dancing cat
+        document.getElementById('loading-img').style.display = 'block';  // Show the dancing cat
         document.getElementById('loading-message').style.display = 'block';  // Show loading message
         const response = await fetch(endpoint);
         if (!response.ok) {
@@ -148,11 +148,11 @@
         document.getElementById('ai-graph').src = 'data:image/png;base64,' + data.ai_graph;
         document.getElementById('human-ai-graph').src = 'data:image/png;base64,' + data.human_ai_graph;
         document.querySelector('p').style.display = 'none';
-        document.getElementById('loading-cat').style.display = 'none';  // Hide the dancing cat
+        document.getElementById('loading-img').style.display = 'none';  // Hide the dancing cat
         document.getElementById('loading-message').style.display = 'none';  // Hide loading message
         document.getElementById('graphs').style.display = 'block';
     } catch (error) {
-        document.getElementById('loading-cat').style.display = 'none';  // Hide the dancing cat
+        document.getElementById('loading-img').style.display = 'none';  // Hide the dancing cat
         document.getElementById('loading-message').style.display = 'none';  // Hide loading message
         Swal.fire({
             icon: 'error',
