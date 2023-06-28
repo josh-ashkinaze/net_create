@@ -84,13 +84,15 @@
 
 <!-- Wrap buttons in a div container -->
 <div class="buttons-container">
-    <button class="btn btn-primary" onclick="copyExperimentLink()">Copy link to the experiment</button>
-    <button class="btn btn-primary" onclick="copyResultsLink()"> Copy link to your results</button>
+    <button class="btn btn-primary" onclick="copyExperimentLink()">Click for link to the experiment</button>
+    <button class="btn btn-primary" onclick="copyResultsLink()"> Click for link to your results</button>
     <div class="social-share-buttons">
         <a href="#" id="share-twitter" class="btn btn-secondary"><i class="fab fa-twitter"></i> Share on Twitter</a>
         <a href="#" id="share-facebook" class="btn btn-secondary"><i class="fab fa-facebook-f"></i> Share on
             Facebook</a>
         <a href="#" id="share-reddit" class="btn btn-secondary"><i class="fab fa-reddit-alien"></i> Share on Reddit</a>
+        <a href="#" id="share-whatsapp" class="btn btn-secondary"><i class="fab fa-whatsapp"></i> Share on WhatsApp</a>
+        <a href="#" id="share-telegram" class="btn btn-secondary"><i class="fab fa-telegram"></i> Share on Telegram</a>
         <a href="#" id="share-linkedin" class="btn btn-secondary"><i class="fab fa-linkedin-in"></i> Share on
             LinkedIn</a>
     </div>
@@ -111,20 +113,20 @@
 </div>
 
 <!-- Add the footer with cite for creativity scores -->
-<footer>
+<h2>How are creativity scores calculated?</h2>
     <p style="text-align: left;">
         Creativity was measured using the model from: <a
             href="https://www.researchgate.net/publication/363456838_Beyond_Semantic_Distance_Automated_Scoring_of_Divergent_Thinking_Greatly_Improves_with_Large_Language_Models?channel=doi&linkId=631cdfb2873eca0c0078a9c4&showFulltext=true">Organisciak,
         P., Acar, S., Dumas, D., & Berthiaume, K. (2022). "Beyond Semantic Distance: Automated Scoring of Divergent
         Thinking Greatly Improves with Large Language Models."</a> That model predicted the originality of responses to
-        this task (Alternate Uses Test), based on human judgements of over 27k responses. The model is highly accurate:
-        On a scale of -1 to 1, its similarity with scores given by actual humans is r=0.81.
+        the task (Alternate Uses Test) you just took. The model was based on human judgements of over 27k responses and is highly accurate:
+        On a scale of -1 to 1, its similarity with scores given by actual humans is r = 0.81.
     </p>
     <p style="text-align: left;">
         We queried the public API available at: <a href="https://openscoring.du.edu/">https://openscoring.du.edu/</a>
     </p>
 
-</footer>
+
 
 
 <!-- Async fetch graphs -->
@@ -201,33 +203,39 @@
         }
     }
 
-    function getShareUrl(platform) {
-        const uuid = document.getElementById('uuid').value;
-        const url = encodeURIComponent(`https://createwithai.herokuapp.com/results/${uuid}`);
-        const text = encodeURIComponent("Check out my results from this creativity experiment!");
+function getShareUrl(platform) {
+    const uuid = document.getElementById('uuid').value;
+    const url = encodeURIComponent(`https://createwithai.herokuapp.com/results/${uuid}`);
+    const text = encodeURIComponent("Check out my results from this creativity experiment!");
 
-        switch (platform) {
-            case 'twitter':
-                return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-            case 'facebook':
-                return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-            case 'reddit':
-                return `https://reddit.com/submit?url=${url}&title=${text}`;
-            case 'linkedin':
-                return `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
-        }
+    switch (platform) {
+        case 'twitter':
+            return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+        case 'facebook':
+            return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        case 'reddit':
+            return `https://reddit.com/submit?url=${url}&title=${text}`;
+        case 'linkedin':
+            return `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
+        case 'whatsapp':
+            return `https://api.whatsapp.com/send?text=${text} ${url}`;  // Whatsapp sharing URL format
+        case 'telegram':
+            return `https://t.me/share/url?url=${url}&text=${text}`;   // Telegram sharing URL format
     }
+}
 
 
-    window.onload = () => {
-        const uuid = document.getElementById('uuid').value;
-        const from_uuid = document.getElementById('from_uuid').dataset.value.toLowerCase() === 'true'; // convert string to boolean
-        document.getElementById('share-twitter').href = getShareUrl('twitter');
-        document.getElementById('share-facebook').href = getShareUrl('facebook');
-        document.getElementById('share-reddit').href = getShareUrl('reddit');
-        document.getElementById('share-linkedin').href = getShareUrl('linkedin');
-        fetchGraphs(uuid, from_uuid);
-    };
+window.onload = () => {
+    const uuid = document.getElementById('uuid').value;
+    const from_uuid = document.getElementById('from_uuid').dataset.value.toLowerCase() === 'true'; // convert string to boolean
+    document.getElementById('share-twitter').href = getShareUrl('twitter');
+    document.getElementById('share-facebook').href = getShareUrl('facebook');
+    document.getElementById('share-reddit').href = getShareUrl('reddit');
+    document.getElementById('share-linkedin').href = getShareUrl('linkedin');
+    document.getElementById('share-whatsapp').href = getShareUrl('whatsapp');  // add this line
+    document.getElementById('share-telegram').href = getShareUrl('telegram');  // add this line
+    fetchGraphs(uuid, from_uuid);
+};
 </script>
 
 
