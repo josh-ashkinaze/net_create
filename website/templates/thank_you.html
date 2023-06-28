@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/5v7In3p+2qLt6e7f5M1TEs5D5z9tm3/8S3aURJ" crossorigin="anonymous">
     <style>
         body {
             min-height: 100vh;
@@ -63,27 +64,32 @@
         }
 
         /* Add this CSS for buttons container */
-        .buttons-container {
-            display: flex;
-            flex-direction: column; /* Add this line to stack the buttons vertically */
-            flex-wrap: nowrap; /* Add this line to prevent wrapping */
-            margin-bottom: 1rem;
-        }
+.buttons-container {
+    display: flex;
+    flex-direction: row; /* Change to row for a horizontal layout */
+    flex-wrap: wrap; /* Change to wrap to allow buttons to wrap to next line */
+    margin-bottom: 1rem;
+    justify-content: space-between; /* Add space between the buttons */
+}
 
-        .buttons-container .btn {
-            margin-bottom: 0.5rem; /* Add this line to create space between the buttons */
-        }
+.buttons-container .btn {
+    margin-bottom: 0.5rem;
+    font-size: 0.8em; /* Make the font size smaller */
+}
     </style>
 </head>
 <body class="container py-4">
 <h1 class="mb-4">Thank you for participating!</h1>
 
 <!-- Wrap buttons in a div container -->
-<div class="buttons-container">
-    <button class="btn btn-primary" onclick="copyExperimentLink()">Copy link to experiment</button>
-    <button class="btn btn-primary" onclick="copyResultsLink()"> Copy link to your results</button>
+<div class="buttons-container mt-3">
+    <a href="#" class="btn btn-primary" onclick="copyExperimentLink()">Copy link to experiment</a>
+    <a href="#" class="btn btn-primary" onclick="copyResultsLink()">Copy link to your results</a>
+    <a href="#" class="btn btn-outline-secondary btn-sm" onclick="shareToTwitter()"><i class="fab fa-twitter"></i> Share</a>
+    <a href="#" class="btn btn-outline-secondary btn-sm" onclick="shareToFacebook()"><i class="fab fa-facebook-f"></i> Share</a>
+    <a href="#" class="btn btn-outline-secondary btn-sm" onclick="shareToReddit()"><i class="fab fa-reddit-alien"></i> Share</a>
+    <a href="#" class="btn btn-outline-secondary btn-sm" onclick="shareToLinkedIn()"><i class="fab fa-linkedin-in"></i> Share</a>
 </div>
-
 
 <p><strong> We have some graphs of the creativity of your responses! </strong></p>
 
@@ -191,6 +197,35 @@
         const from_uuid = document.getElementById('from_uuid').dataset.value.toLowerCase() === 'true'; // convert string to boolean
         fetchGraphs(uuid, from_uuid);
     };
+
+    function shareToTwitter() {
+    const uuid = document.getElementById('uuid').value;
+    const url = encodeURIComponent(`https://createwithai.herokuapp.com/results/${uuid}`);
+    const text = encodeURIComponent('Check out my creativity results!');
+    const shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+    window.open(shareUrl, '_blank');
+}
+
+function shareToFacebook() {
+    const uuid = document.getElementById('uuid').value;
+    const url = encodeURIComponent(`https://createwithai.herokuapp.com/results/${uuid}`);
+    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    window.open(shareUrl, '_blank');
+}
+
+function shareToReddit() {
+    const uuid = document.getElementById('uuid').value;
+    const url = encodeURIComponent(`https://createwithai.herokuapp.com/results/${uuid}`);
+    const shareUrl = `https://www.reddit.com/submit?url=${url}`;
+    window.open(shareUrl, '_blank');
+}
+
+function shareToLinkedIn() {
+    const uuid = document.getElementById('uuid').value;
+    const url = encodeURIComponent(`https://createwithai.herokuapp.com/results/${uuid}`);
+    const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+    window.open(shareUrl, '_blank');
+}
 </script>
 
 
