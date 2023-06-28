@@ -170,8 +170,11 @@
 {% endif %}
 
 <ul>
-    <li> Rank these ideas in order of creativity, with the most creative use on top. Drag ideas to rank them. </li>
-    <li> We'll show you how your rankings compare to rankings from a highly accurate model trained on human judgements. </li>
+    <li><strong>Rank these ideas</strong> in order of creativity, with the most creative use on top. Drag ideas to rank
+        them.
+    </li>
+    <li> We'll show you how your rankings compare to rankings from a highly accurate model.
+    </li>
 </ul>
 
 
@@ -220,7 +223,8 @@
     <div class="form-group">
         <input type="hidden" name="init_array" value="{{ init_array }}">
         <input type="hidden" name="ranked_array" value="">
-        <input type="text" class="form-control" id="participantResponse" name="participant_response" required placeholder="Write your idea here">
+        <input type="text" class="form-control" id="participantResponse" name="participant_response" required
+               placeholder="Write your idea here">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
@@ -361,8 +365,8 @@
     }
 
     document.getElementById('participantResponse').addEventListener('paste', (e) => {
-  e.preventDefault();
-});
+        e.preventDefault();
+    });
 </script>
 
 
