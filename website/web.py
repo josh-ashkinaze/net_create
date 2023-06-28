@@ -100,6 +100,7 @@ def start_experiment():
     """
 
     # Assign UUID to participant
+    reset_session()  # Add this line
     session['participant_id'] = str(uuid.uuid4())
     session['world'] = get_world()
 
@@ -152,7 +153,7 @@ def render_trial(condition_no):
 
     IF the current condition_no number is more than the number of items:
         Return the thank_you page since our experiment is done.
-    
+
     ELSE if there are still trials to go:
         1. If the HTTP method is GET (i.e: response not submitted), retrieve the necessary context from the session
          and generate a render_trial instance. Upon submitting a response, this submits a post request.
@@ -321,8 +322,6 @@ def get_graphs():
         print(f"Encountered errors while inserting rows: {errors}")
     else:
         print("All rows have been added to responses.")
-
-    reset_session()  # Add this line
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
 
 
