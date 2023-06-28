@@ -103,16 +103,15 @@ def start_experiment():
     session['participant_id'] = str(uuid.uuid4())
     session['world'] = get_world()
 
-    # Get creativity values from sliders
     creativity_ai = request.args.get('creativitySliderAIValue')
     creativity_human = request.args.get('creativitySliderHumanValue')
-
-    # WANT TO GET THESE
     ai_feeling = request.args.get('aiFeelingValue')
     country = request.args.get('countryValue')
+    age = request.args.get('ageValue')
 
     session['creativity_ai'] = int(creativity_ai) if creativity_ai != '' else None
     session['creativity_human'] = int(creativity_human) if creativity_human != '' else None
+    session['age'] = int(age) if age != '' else None
     session['ai_feeling'] = ai_feeling
     session['country'] = country
     session.modified = True
@@ -120,7 +119,7 @@ def start_experiment():
     # Add participant to the person table
     person_table = dataset.table("person")
     row = {"participant_id": session['participant_id'], "creativity_ai": session['creativity_ai'],
-           "creativity_human": session['creativity_human'],
+           "creativity_human": session['creativity_human'], "age": session['age'],
            "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 'ai_feeling': session['ai_feeling'],
            'country': session['country']}
 
@@ -326,6 +325,7 @@ def get_graphs():
     reset_session()  # Add this line
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
 
+
 # These two functions are how we generate reports for specific participants.
 # 1. The `results' endpoint calls the `thank_you.html` template passing in the UUID
 # 2. From there, the `thank_you.html` template calls the `get_graphs_for_uuid` endpoint
@@ -333,6 +333,8 @@ def get_graphs():
 def results(uuid):
     """Results page for a specific UUID"""
     return render_template('thank_you.html', uuid=uuid, from_uuid=True)
+
+
 @app.route("/get-graphs/<uuid>")
 def get_graphs_for_uuid(uuid):
     """Generate graphs for a specific UUID and return them as JSON"""
@@ -357,7 +359,8 @@ def get_graphs_for_uuid(uuid):
     conditions = [row.condition for row in results]
 
     human_graph, ai_graph, human_ai_graph, _ = make_graphs(participant_responses=None,
-                                                           conditions=conditions, participant_scores=ratings, file_prefix=file_prefix)
+                                                           conditions=conditions, participant_scores=ratings,
+                                                           file_prefix=file_prefix)
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
 
 
@@ -381,7 +384,7 @@ def get_world():
     results = query_job.result()
     trials = list(results)[0]['min_count']
     if not trials:
-        trials  = 0
+        trials = 0
     current_world = trials // N_PER_WORLD
     return current_world
 

@@ -226,7 +226,9 @@
     <li>How well you can rank creative ideas</li>
 </ul>
 
-<h4> Two quick questions (optional) </h4>
+<hr>
+
+<h5> About you </h5>
 <div class="form-group">
     <label for="ai-feeling">Would you say the increased use of artificial intelligence computer programs in daily life
         makes you feel...</label>
@@ -237,6 +239,7 @@
         <option value="neutral">Equally Excited and Concerned</option>
     </select>
 </div>
+
 
 <div class="form-group">
     <label for="country">What country are you from?</label>
@@ -310,11 +313,16 @@
     </select>
 </div>
 
+<div class="form-group">
+    <label for="age">Please enter your age:</label>
+    <input type="number" placeholder="Enter an age" class="form-control" id="age" name="age" onchange="storeAboutYouValues()">
+</div>
+
+<hr>
 <h5><br> Consent </br>  </h5>
-<p class="mb-4">By continuing, you indicate that you are at least 18, read and understood the
-    terms above, agree to participate, and are not living in the EU (for GDPR reasons). Participation is voluntary. You
-    may withdraw at any time. If you do not consent, we will delete your
-    responses to the previous questions. This study has been deemed exempt from ongoing oversight by the
+<p class="mb-4">By continuing, you indicate that you are at least 18 and agree to participate in the study. All of your answers are anonymous.
+    We store no personally identifying information. If you do not consent, we will delete your
+    responses to the previous questions. Participation in this study is voluntary, meaning you can withdraw at any time. This study has been deemed exempt from ongoing oversight by the
     University of Michigan IRB for Health Sciences and Behavioral Sciences. For more information, contact
     jashkina@umich.edu.</p>
 
@@ -323,6 +331,7 @@
     <input type="hidden" id="creativitySliderHumanValue" name="creativitySliderHumanValue">
     <input type="hidden" id="aiFeelingValue" name="aiFeelingValue"> <!-- Kept this -->
     <input type="hidden" id="countryValue" name="countryValue"> <!-- Kept this -->
+    <input type="hidden" id="ageValue" name="ageValue"> <!-- Kept this -->
     <div class="form-group">
         <button type="submit" class="btn btn-primary"> Click here to start!</button>
     </div>
@@ -351,9 +360,12 @@
     function storeAboutYouValues() {
         const aiFeeling = document.getElementById('ai-feeling').value;
         const country = document.getElementById('country').value;
+        const age = document.getElementById('age').value;
 
         document.getElementById('aiFeelingValue').value = aiFeeling;
         document.getElementById('countryValue').value = country;
+        document.getElementById('ageValue').value = age;
+
     }
 </script>
 
