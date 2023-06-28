@@ -100,7 +100,8 @@ def start_experiment():
     """
 
     # Assign UUID to participant
-    reset_session()  # Add this line
+    if is_local:
+        reset_session()  # Add this line
     session['participant_id'] = str(uuid.uuid4())
     session['world'] = get_world()
 
@@ -172,7 +173,8 @@ def render_trial(condition_no):
     """
     # If the participant has completed all condition_nos, redirect to thank you page
     if condition_no > len(ITEMS) - 1:
-        return redirect(url_for('thank_you'))
+        return redirect(url_for('results', uuid=session['participant_id']) + "?from_uuid=False")
+
     else:
         pass
 
@@ -262,12 +264,6 @@ def render_trial(condition_no):
         return redirect(url_for('render_trial', condition_no=condition_no + 1, method="GET"))
 
 
-@app.route("/thank-you")
-def thank_you():
-    """Thank you page"""
-    return render_template('thank_you.html', uuid=session['participant_id'], from_uuid=False)
-
-
 @app.route('/calculate_similarity', methods=['POST'])
 def calculate_similarity_route():
     response_text = request.form.get('response')
@@ -331,8 +327,9 @@ def get_graphs():
 @app.route("/results/<uuid>")
 def results(uuid):
     """Results page for a specific UUID"""
-    return render_template('thank_you.html', uuid=uuid, from_uuid=True)
-
+    from_uuid_str = request.args.get('from_uuid', default='True')
+    from_uuid = from_uuid_str.lower() == 'true'
+    return render_template('thank_you.html', uuid=uuid, from_uuid=from_uuid)
 
 @app.route("/get-graphs/<uuid>")
 def get_graphs_for_uuid(uuid):
