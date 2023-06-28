@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Feedback"/>
+    <meta property="og:description" content="We'd love to hear from you!"/>
+    <title>Feedback</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <style>
+        body {
+            color: #272727;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin-top: 2rem;
+        }
+
+        body a {
+            color: #1F4287;
+            text-decoration: none;
+        }
+
+        body a:hover {
+            color: #0E2860;
+            text-decoration: underline;
+        }
+
+        h1 {
+            color: #1F4287;
+            border-bottom: 3px solid #1F4287;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .btn {
+            background-color: #DA4167;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition-duration: 0.4s;
+        }
+
+        .btn:hover {
+            background-color: #1F4287;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+        }
+
+        .form-section {
+            margin-bottom: 3rem;
+        }
+
+        .form-section h2 {
+            margin-bottom: 1rem;
+        }
+
+            /* Define a new class for the primary buttons */
+        .btn-primary {
+            background-color: #E1DD8F; /* Change the color to green */
+            border: none;
+            color: black;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition-duration: 0.4s; /* Optional: adds a "smooth" transition effect when the button changes color */
+        }
+
+        .btn-experiment {
+            background-color: #DA4167;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition-duration: 0.4s; /* Optional: adds a "smooth" transition effect when the button changes color */
+        }
+
+        .btn-experiment:hover {
+            background-color: #1F4287; /* Change the color to darker green */
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #F7C1BB; /* Change the color to darker green */
+            color: black;
+        }
+    </style>
+</head>
+<body class="container py-4">
+
+<div class="form-section">
+    <h2>Experiment Feedback</h2>
+    <form id="feedbackForm1" action="/submit-feedback-experiment" method="post">
+        <div class="form-group">
+            <label for="experimentFeedback">Do you have any feedback about the experiment?</label>
+            <textarea class="form-control" id="experimentFeedback" name="experimentFeedback" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn">Submit Feedback</button>
+         <button class="btn btn-primary" onclick="window.location.href='https://createwithai.herokuapp.com'"><i
+            class="fas fa-flask"></i> Take Experiment
+    </button>
+
+
+    <button class="btn btn-primary" onclick="copyExperimentLink()"><i class="fas fa-link"></i> Copy Experiment Link
+    </button>
+
+
+
+    </form>
+</div>
+
+
+<hr>
+<h2>Other fun studies to check out on Lab in The Wild! </h2>
+<ul>
+    <li><a href="https://www.labinthewild.org/studies/personality/">What’s your personality?</a></li>
+    <li><a href="https://friends.labinthewild.org/friends/">How do you make online connections?</a></li>
+    <li><a href="https://www.labinthewild.org/studies/wikipedia/">What percentage of Wikipedia do you know?</a></li>
+    <li><a href="https://aliens.labinthewild.org/aliens/">Do you make assumptions about people without knowing it?</a>
+    </li>
+</ul>
+
+<script>
+    function submitForm(formId) {
+        document.getElementById(formId).submit();
+        var formButton = document.getElementById(formId).querySelector('button');
+        formButton.innerText = "Submitted";
+        formButton.disabled = true;
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#feedbackForm1").on('submit', function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: '/submit-feedback-experiment',
+                data: formData,
+                success: function () {
+                    swal({
+                        title: "Success!",
+                        text: "Thank you for your feedback",
+                        icon: "success",
+                        button: {
+                            text: "OK",
+                            closeModal: true,
+                        },
+                    });
+                    var formButton = $('#feedbackForm1 button');
+                    formButton.text("Submitted");
+                    formButton.addClass("submitted");
+                    formButton.prop("disabled", true);
+                },
+                error: function () {
+                    swal("Oops!", "Something went wrong. Please try again.", "error");
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

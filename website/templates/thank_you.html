@@ -35,8 +35,6 @@
         }
 
 
-
-
         /* Add this CSS to control the size of the image */
         img {
             width: 100%; /* adjust the width as needed */
@@ -67,42 +65,41 @@
         }
 
         /* Define a new class for the primary buttons */
-    .btn-primary {
-        background-color: #E1DD8F;  /* Change the color to green */
-        border: none;
-        color: black;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        margin: 4px 2px;
-        cursor: pointer;
-        transition-duration: 0.4s; /* Optional: adds a "smooth" transition effect when the button changes color */
-    }
+        .btn-primary {
+            background-color: #E1DD8F; /* Change the color to green */
+            border: none;
+            color: black;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition-duration: 0.4s; /* Optional: adds a "smooth" transition effect when the button changes color */
+        }
 
         .btn-experiment {
-        background-color: #DA4167;  /* Change the color to green */
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        margin: 4px 2px;
-        cursor: pointer;
-        transition-duration: 0.4s; /* Optional: adds a "smooth" transition effect when the button changes color */
-    }
+            background-color: #DA4167;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition-duration: 0.4s; /* Optional: adds a "smooth" transition effect when the button changes color */
+        }
 
         .btn-experiment:hover {
-        background-color: #1F4287;  /* Change the color to darker green */
-        color: white;
-    }
+            background-color: #1F4287; /* Change the color to darker green */
+            color: white;
+        }
 
-    .btn-primary:hover {
-        background-color: #F7C1BB;  /* Change the color to darker green */
-        color: black;
-    }
-
+        .btn-primary:hover {
+            background-color: #F7C1BB; /* Change the color to darker green */
+            color: black;
+        }
 
 
     </style>
@@ -115,11 +112,18 @@
 
 <!-- Wrap buttons in a div container -->
 <div class="buttons-container">
-    <button class="btn btn-experiment" onclick="window.location.href='https://createwithai.herokuapp.com'"><i class="fas fa-flask"></i> Take Experiment</button>
+    <button class="btn btn-experiment" onclick="window.location.href='https://createwithai.herokuapp.com'"><i
+            class="fas fa-flask"></i> Take Experiment
+    </button>
+    <button class="btn btn-primary" onclick="copyResultsLink()"><i class="fas fa-chart-bar"></i> Copy Results Link
+    </button>
 
     <button class="btn btn-primary" onclick="copyExperimentLink()"><i class="fas fa-link"></i> Copy Experiment Link
     </button>
-<button class="btn btn-primary" onclick="copyResultsLink()"><i class="fas fa-chart-bar"></i> Copy Results Link</button>
+
+    <button class="btn btn-primary" onclick="window.location.href='/feedback'">
+        <i class="fas fa-comment"></i> Leave feedback </button>
+
     <div class="social-share-buttons">
         <a href="#" id="share-twitter" class="btn btn-secondary" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
         <a href="#" id="share-facebook" class="btn btn-secondary" title="Share on Facebook"><i
@@ -136,6 +140,7 @@
 
 </div>
 </div>
+
 
 <h4 id="loading-message"> Hang tight! We are computing the creativity of your responses. </h4>
 

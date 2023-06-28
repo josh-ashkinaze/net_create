@@ -21,7 +21,7 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
-from flask import flash, Flask, render_template, request, redirect, url_for, session
+from flask import flash, Flask, render_template, request, redirect, url_for, session, jsonify
 from google.cloud import bigquery
 from google.oauth2 import service_account
 from scipy.stats import spearmanr
@@ -332,6 +332,7 @@ def results(uuid):
     print(from_uuid)
     return render_template('thank_you.html', uuid=uuid, from_uuid=from_uuid)
 
+
 @app.route("/get-graphs/<uuid>")
 def get_graphs_for_uuid(uuid):
     """Generate graphs for a specific UUID and return them as JSON"""
@@ -359,6 +360,35 @@ def get_graphs_for_uuid(uuid):
                                                            conditions=conditions, participant_scores=ratings,
                                                            file_prefix=file_prefix)
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
+
+
+@app.route('/feedback')
+def feedback():
+    return render_template('feedback_form.html')
+
+
+@app.route('/submit-feedback-experiment', methods=['POST'])
+def submit_feedback_experiment():
+    if request.method == 'POST':
+        experiment_feedback = request.form.get('experimentFeedback')
+        experiment_feedback = experiment_feedback if experiment_feedback != '' else None
+
+        # In the default case, the person came here after seeing resuls,
+        # so we must have their UUID. But, let's say somebody shared resuls,
+        # then random person decided to leave feedback -- we'd have no UUID.
+        try:
+            uuid = session['participant_id']
+        except:
+            uuid = None
+
+        feedback_table = dataset.table("feedback")
+        rows_to_insert = [{"feedback": experiment_feedback, 'participant_id': None}]
+        errors = client.insert_rows_json(feedback_table, rows_to_insert)
+        if errors:
+            print(f"Encountered errors while inserting rows: {errors}")
+        else:
+            print("All rows have been added to feedback.")
+        return jsonify({'success': True})
 
 
 def get_world():
