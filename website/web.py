@@ -100,7 +100,8 @@ def start_experiment():
     """
 
     # Assign UUID to participant
-    reset_session()  # Add this line
+    if is_local:
+        reset_session()  # Add this line
     session['participant_id'] = str(uuid.uuid4())
     session['world'] = get_world()
 
