@@ -7,13 +7,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from scipy.spatial.distance import cosine as cosine_distance
-from scipy.stats import percentileofscore
 from gensim.models import Word2Vec as w2v
 from gensim.utils import simple_preprocess as preprocess
+from scipy.spatial.distance import cosine as cosine_distance
+from scipy.stats import percentileofscore
+
 from helpers import helpers as my_utils
 
 model = w2v.load("data/filtered_w2v.wv")
+
 
 def make_aesthetic():
     sns.set(style='white', context='poster', font_scale=1.1)
@@ -124,6 +126,7 @@ def sentence_vector(sentence, model):
         return None
     return np.mean(word_vectors, axis=0)
 
+
 def calculate_similarity(sentence1, sentence2):
     try:
         # Remove labels
@@ -141,4 +144,3 @@ def calculate_similarity(sentence1, sentence2):
     except Exception as e:
         print("ERROR", sentence1, sentence2, e)
         return random.uniform(0.3, 0.7)
-
