@@ -150,6 +150,11 @@
             font-weight: bold;
         }
 
+        .btn-primary-dark {
+            background-color: #0d2347;
+            border-color: #0d2347;
+        }
+
 
         /* Add this CSS for the lead */
         .creative-section {
@@ -217,7 +222,7 @@
 <p class="lead mb-4">We'll show you 5 common items, and you'll come up with creative uses for each item.
     To spark your imagination, you'll see ideas from prior participants and even from AI (i.e: ChatGPT).
     You'll be asked to rank these ideas in order of creativity.
-    The ideas you write may be anonymously shown to future participants to spark <em> their </em> imagination.
+    The ideas you write may be anonymously shown to future participants to spark <em> their </em> imagination. The goal of the study is to better understand how AI and humans come up with ideas.
 </p>
 <h4 class="mb-4">What you will learn about yourself</h4>
 <ul class="lead mb-4">
@@ -228,7 +233,7 @@
 
 <hr>
 
-<h5> About you </h5>
+<h5> About you [OPTIONAL] </h5>
 <div class="form-group">
     <label for="ai-feeling">Would you say the increased use of artificial intelligence computer programs in daily life
         makes you feel...</label>
@@ -315,25 +320,28 @@
 
 <div class="form-group">
     <label for="age">Please enter your age:</label>
-    <input type="number" placeholder="Enter an age" class="form-control" id="age" name="age" onchange="storeAboutYouValues()">
+    <input type="number" placeholder="Enter an age" class="form-control" id="age" name="age"
+           onchange="storeAboutYouValues()">
 </div>
 
 <hr>
 <h5><br> Consent </br>  </h5>
-<p class="mb-4">By continuing, you indicate that you are at least 18 and agree to participate in the study. All of your answers are anonymous.
+<p class="mb-4">By continuing, you indicate that you are at least 18 and agree to participate in the study. All of your
+    answers are anonymous.
     We store no personally identifying information. If you do not consent, we will delete your
-    responses to the previous questions. Participation in this study is voluntary, meaning you can withdraw at any time. This study has been deemed exempt from ongoing oversight by the
+    responses to the previous questions. Participation in this study is voluntary, meaning you can withdraw at any time.
+    This study has been deemed exempt from ongoing oversight by the
     University of Michigan IRB for Health Sciences and Behavioral Sciences. For more information, contact
     jashkina@umich.edu.</p>
 
 <form action="/start-experiment" method="get">
     <input type="hidden" id="creativitySliderAIValue" name="creativitySliderAIValue">
     <input type="hidden" id="creativitySliderHumanValue" name="creativitySliderHumanValue">
-    <input type="hidden" id="aiFeelingValue" name="aiFeelingValue"> <!-- Kept this -->
-    <input type="hidden" id="countryValue" name="countryValue"> <!-- Kept this -->
-    <input type="hidden" id="ageValue" name="ageValue"> <!-- Kept this -->
+    <input type="hidden" id="aiFeelingValue" name="aiFeelingValue">
+    <input type="hidden" id="countryValue" name="countryValue">
+    <input type="hidden" id="ageValue" name="ageValue">
     <div class="form-group">
-        <button type="submit" class="btn btn-primary"> Click here to start!</button>
+        <button id="submit-button" type="submit" class="btn btn-primary"> Click here to start!</button>
     </div>
 </form>
 
@@ -383,6 +391,20 @@
         outputHuman.innerHTML = "I am more creative than " + this.value + "% of Humans";
         document.getElementById("creativitySliderHumanValue").value = this.value;
     }
+</script>
+
+
+<script>
+    document.querySelector('form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        var submitButton = document.querySelector('button[type="submit"]');
+
+        submitButton.textContent = "Loading...";
+        submitButton.classList.add('btn-primary-dark');
+        submitButton.disabled = true;
+
+        this.submit();
+    });
 </script>
 
 </body>
