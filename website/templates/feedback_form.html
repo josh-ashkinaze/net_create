@@ -65,42 +65,6 @@
             margin-bottom: 1rem;
         }
 
-            /* Define a new class for the primary buttons */
-        .btn-primary {
-            background-color: #E1DD8F; /* Change the color to green */
-            border: none;
-            color: black;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            margin: 4px 2px;
-            cursor: pointer;
-            transition-duration: 0.4s; /* Optional: adds a "smooth" transition effect when the button changes color */
-        }
-
-        .btn-experiment {
-            background-color: #DA4167;
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            margin: 4px 2px;
-            cursor: pointer;
-            transition-duration: 0.4s; /* Optional: adds a "smooth" transition effect when the button changes color */
-        }
-
-        .btn-experiment:hover {
-            background-color: #1F4287; /* Change the color to darker green */
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #F7C1BB; /* Change the color to darker green */
-            color: black;
-        }
     </style>
 </head>
 <body class="container py-4">
@@ -113,14 +77,6 @@
             <textarea class="form-control" id="experimentFeedback" name="experimentFeedback" rows="3"></textarea>
         </div>
         <button type="submit" class="btn">Submit Feedback</button>
-         <button class="btn btn-primary" onclick="window.location.href='https://createwithai.herokuapp.com'"><i
-            class="fas fa-flask"></i> Take Experiment
-    </button>
-
-
-    <button class="btn btn-primary" onclick="copyExperimentLink()"><i class="fas fa-link"></i> Copy Experiment Link
-    </button>
-
 
 
     </form>
