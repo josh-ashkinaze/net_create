@@ -329,6 +329,7 @@ def results(uuid):
     """Results page for a specific UUID"""
     from_uuid_str = request.args.get('from_uuid', default='True')
     from_uuid = from_uuid_str.lower() == 'true'
+    print(from_uuid)
     return render_template('thank_you.html', uuid=uuid, from_uuid=from_uuid)
 
 @app.route("/get-graphs/<uuid>")
