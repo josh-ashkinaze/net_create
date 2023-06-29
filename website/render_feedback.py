@@ -1,6 +1,7 @@
 import base64
 import io
 import random
+from functools import lru_cache
 
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
@@ -31,7 +32,7 @@ def make_aesthetic():
     plt.rcParams['axes.titlepad'] = 20
     plt.rcParams['axes.titlesize'] = 24
 
-
+@lru_cache(maxsize=128)
 def load_data(comparison, prefix="../"):
     if comparison == "human":
         return np.array(pd.read_csv(prefix + "data/scored_human_prior_responses.csv")['predicted'].tolist())
@@ -71,19 +72,16 @@ def plot_ai_human(conditions, scores):
     df = pd.DataFrame({'conditions': conditions, 'scores': scores})
     df['source'] = df['conditions'].apply(lambda x: "Human Only" if x == 'h' else 'AI + Human')
     means = df.groupby(by='source')['scores'].mean().reset_index()
-    no_ai = means.query("source=='Human Only'")['scores'].tolist()[0]
-    with_ai = means.query("source=='AI + Human'")['scores'].tolist()[0]
 
-    if with_ai >= no_ai:
-        adj = "more"
-    else:
-        adj = "less"
-    percent_diff = abs(int(((with_ai - no_ai) / (no_ai)) * 100))
+    # Vectorized operations
+    no_ai, with_ai = means.set_index('source').loc[['Human Only', 'AI + Human'], 'scores']
+    adj = "more" if with_ai >= no_ai else "less"
+    percent_diff = abs(int(((with_ai - no_ai) / no_ai) * 100))
     fig, ax = plt.subplots(figsize=(12, 8))
     plt.suptitle(
         f"Your responses were {percent_diff}% {adj} creative when\nexposed to AI ideas than when exposed\nto only human ideas.",
         ha='left', x=0.125, fontweight='bold', y=1.07, fontsize=26)
-    sns.barplot(data=means, x='source', y='scores', ci=False, palette=color_dict)
+    sns.barplot(data=means, x='source', y='scores', errorbar=('ci', False), palette=color_dict)
     ax.set_xlabel("Idea Exposure")
     ax.set_ylabel("Average Creativity (1-5)")
     buf2 = io.BytesIO()
