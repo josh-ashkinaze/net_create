@@ -222,7 +222,8 @@
 <p class="lead mb-4">We'll show you 5 common items, and you'll come up with creative uses for each item.
     To spark your imagination, you'll see ideas from prior participants and even from AI (i.e: ChatGPT).
     You'll be asked to rank these ideas in order of creativity.
-    The ideas you write may be anonymously shown to future participants to spark <em> their </em> imagination. The goal of the study is to better understand how AI and humans brainstorm. It will take 3-6 minutes.
+    The ideas you write may be anonymously shown to future participants to spark <em> their </em> imagination. The goal
+    of the study is to better understand how AI and humans brainstorm. It will take 3-6 minutes.
 </p>
 <h4 class="mb-4">What you will learn</h4>
 <ul class="lead mb-4">
@@ -233,20 +234,34 @@
 <p class="lead mb-4"> We will give you a shareable link with results at the end. </p>
 
 
-
 <hr>
 
-<h5> About you [OPTIONAL] </h5>
+{% if is_prolific %}
+    <h4> About You [ALL QUESTIONS REQUIRED] </h4>
+{% else %}
+    <h5> About you [OPTIONAL] </h5>
+{% endif %}
+
+{% if is_prolific %}
 <div class="form-group">
-    <label for="ai-feeling">Artificial intelligence computer programs are designed to learn tasks that humans
-typically do. Would you say the increased use of artificial intelligence computer programs in daily life
-        makes you feel...</label>
-    <select class="form-control" id="ai-feeling" name="ai-feeling" onchange="storeAboutYouValues()">
-        <option value="">---</option>
-        <option id="option-1" value="excited">More excited than concerned</option>
-        <option id="option-2" value="concerned">More concerned than excited</option>
-        <option value="neutral">Equally excited and concerned</option>
-    </select>
+    <label for="prolific_id">Please enter your prolific ID:</label>
+    <input type="text" placeholder="Enter Prolific ID" class="form-control" id="prolific_id" name="prolific_id"
+           onchange="storeAboutYouValues()" required>
+</div>
+    {% else %}
+
+{% endif %}
+
+
+<label for="ai-feeling">Artificial intelligence computer programs are designed to learn tasks that humans
+    typically do. Would you say the increased use of artificial intelligence computer programs in daily life
+    makes you feel...</label>
+<select class="form-control" id="ai-feeling" name="ai-feeling" onchange="storeAboutYouValues()">
+    <option value="">---</option>
+    <option id="option-1" value="excited">More excited than concerned</option>
+    <option id="option-2" value="concerned">More concerned than excited</option>
+    <option value="neutral">Equally excited and concerned</option>
+</select>
 </div>
 
 
@@ -328,11 +343,15 @@ typically do. Would you say the increased use of artificial intelligence compute
            onchange="storeAboutYouValues()">
 </div>
 
+
+
 <hr>
 <h5><br> Consent </br>  </h5>
-<p class="mb-4">By continuing, you indicate that you are at least 18 and agree to participate in the study. If you do not continue, we will delete your
-    responses to the previous questions.  All of your
-    answers are anonymous. We anticipate no risks of completing the study. Participation is voluntary, meaning you can withdraw at any time.
+<p class="mb-4">By continuing, you indicate that you are at least 18 and agree to participate in the study. If you do
+    not continue, we will delete your
+    responses to the previous questions. All of your
+    answers are anonymous. We anticipate no risks of completing the study. Participation is voluntary, meaning you can
+    withdraw at any time.
     This study has been deemed exempt from ongoing oversight by the
     University of Michigan IRB for Health Sciences and Behavioral Sciences. For more information, contact
     Joshua Ashkinaze (jashkina@umich.edu).</p>
