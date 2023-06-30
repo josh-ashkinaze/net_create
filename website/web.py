@@ -56,7 +56,7 @@ else:
 if is_local:
     is_test = True
 else:
-    is_test = bool(os.environ['IS_TEST'])
+    is_test = True if os.environ.get('IS_TEST') == "True" else False
 
 app.secret_key = flask_secret_key
 
@@ -100,7 +100,7 @@ def start_experiment():
     """
     Start the experiment.
 
-    1. Ccreate a UUID for participant ID
+    1. Create a UUID for participant ID
     2. Counterbalance conditions and counterbalance items.
     3. Save all this stuff to a Flask session object.
     4. Redirect to the first trial.
@@ -119,6 +119,7 @@ def start_experiment():
     age = request.args.get('ageValue')
 
     session['referer'] = request.headers.get('Referer')
+    session['request_args'] = request.query_string.decode()
     session['creativity_ai'] = int(creativity_ai) if creativity_ai != '' else None
     session['creativity_human'] = int(creativity_human) if creativity_human != '' else None
     session['age'] = int(age) if age != '' else None
@@ -131,7 +132,7 @@ def start_experiment():
     row = {"participant_id": session['participant_id'], "creativity_ai": session['creativity_ai'],
            "creativity_human": session['creativity_human'], "age": session['age'],
            "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 'ai_feeling': session['ai_feeling'],
-           'country': session['country'], 'is_test':is_test, 'referer':session['referer']}
+           'country': session['country'], 'is_test':is_test, 'referer':session['referer'], 'request_args':session['request_args']}
 
     print(session, is_local)
 
