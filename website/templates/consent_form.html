@@ -362,6 +362,8 @@
     <input type="hidden" id="aiFeelingValue" name="aiFeelingValue">
     <input type="hidden" id="countryValue" name="countryValue">
     <input type="hidden" id="ageValue" name="ageValue">
+    <input type="hidden" id="prolific_idValue" name="prolific_idValue">
+
     <div class="form-group">
         <button id="submit-button" type="submit" class="btn btn-primary"> Click here to start!</button>
     </div>
@@ -391,10 +393,12 @@
         const aiFeeling = document.getElementById('ai-feeling').value;
         const country = document.getElementById('country').value;
         const age = document.getElementById('age').value;
+        const prolific_id = document.getElementById('prolific_id').value;
 
         document.getElementById('aiFeelingValue').value = aiFeeling;
         document.getElementById('countryValue').value = country;
         document.getElementById('ageValue').value = age;
+        document.getElementById('prolific_idValue').value = prolific_id;
 
     }
 </script>
