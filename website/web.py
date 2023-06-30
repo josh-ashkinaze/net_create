@@ -51,6 +51,12 @@ if is_local:
     flask_secret_key = json.load(open(f"{file_prefix}secrets/flask_secret_key.json", "r"))['session_key']
 else:
     flask_secret_key = os.environ['FLASK_SECRET_KEY']
+
+if is_local:
+    is_test = True
+else:
+    is_test = bool(os.environ['IS_TEST'])
+
 app.secret_key = flask_secret_key
 
 # Connect to BQ
@@ -123,9 +129,9 @@ def start_experiment():
     row = {"participant_id": session['participant_id'], "creativity_ai": session['creativity_ai'],
            "creativity_human": session['creativity_human'], "age": session['age'],
            "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 'ai_feeling': session['ai_feeling'],
-           'country': session['country']}
+           'country': session['country'], 'is_test':is_test}
 
-    print(session)
+    print(session, is_local)
 
     errors = client.insert_rows_json(person_table, [row])
     if errors:
