@@ -92,6 +92,10 @@ AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
 @app.route("/")
 def consent_form():
     """Consent form"""
+    reset_session()
+    session['request_args'] = request.query_string.decode()
+    session['referer'] = request.headers.get('Referer')
+    session.modified = True
     return render_template('consent_form.html')
 
 
@@ -107,8 +111,6 @@ def start_experiment():
     """
 
     # Assign UUID to participant
-    if is_local:
-        reset_session()  # Add this line
     session['participant_id'] = str(uuid.uuid4())
     session['world'] = get_world()
 
@@ -118,8 +120,6 @@ def start_experiment():
     country = request.args.get('countryValue')
     age = request.args.get('ageValue')
 
-    session['referer'] = request.headers.get('Referer')
-    session['request_args'] = request.query_string.decode()
     session['creativity_ai'] = int(creativity_ai) if creativity_ai != '' else None
     session['creativity_human'] = int(creativity_human) if creativity_human != '' else None
     session['age'] = int(age) if age != '' else None
@@ -132,7 +132,7 @@ def start_experiment():
     row = {"participant_id": session['participant_id'], "creativity_ai": session['creativity_ai'],
            "creativity_human": session['creativity_human'], "age": session['age'],
            "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 'ai_feeling': session['ai_feeling'],
-           'country': session['country'], 'is_test':is_test, 'referer':session['referer'], 'request_args':session['request_args']}
+           'country': session['country'], 'is_test': is_test, 'request_args': session['request_args'], 'referer':session['referer']}
 
     print(session, is_local)
 
@@ -262,7 +262,7 @@ def render_trial(condition_no):
         row = {"item": item, "response_id": response_id, "participant_id": participant_id,
                "condition_order": condition_no, "response_text": response_text,
                "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), "condition": condition,
-               "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, 'is_test':is_test}
+               "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, 'is_test': is_test}
         errors = client.insert_rows_json(table, [row])
         if not errors:
             print("New rows have been added.")
@@ -391,7 +391,8 @@ def submit_feedback_experiment():
             uuid = None
 
         feedback_table = dataset.table("feedback")
-        rows_to_insert = [{"feedback": experiment_feedback, 'participant_id': None, 'dt': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}]
+        rows_to_insert = [{"feedback": experiment_feedback, 'participant_id': None,
+                           'dt': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}]
         errors = client.insert_rows_json(feedback_table, rows_to_insert)
         if errors:
             print(f"Encountered errors while inserting rows: {errors}")
