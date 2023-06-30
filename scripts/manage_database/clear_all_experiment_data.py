@@ -59,6 +59,6 @@ if __name__ == "__main__":
     )
 
     dataset_id = "net_expr"
-    table_ids = ["trials", "person", "responses"]
+    table_ids = ["trials", "person", "responses", 'feedback']
     clear_rows(credentials, dataset_id, table_ids, args.remove_seeds)
     logging.info(f"All rows cleared appropiately from {dataset_id}.{table_ids}")
