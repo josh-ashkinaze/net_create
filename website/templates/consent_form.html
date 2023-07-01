@@ -187,7 +187,7 @@
 <body class="container py-4">
 
 <div class="creative-section">
-    <h4 class="mb-4">How <span class="highlight">creative</span> are you?</h4>
+<h4 class="mb-4">{% if is_prolific %} [REQUIRED]{% endif %} How <span class="highlight">creative</span> are you?</h4>
     <p class="lead mb-4">Guess how creative you are <span class="highlight">compared to humans and AI</span>. By the end
         of the experiment, we'll show how your creativity compares to humans, to AI, and how well you can guess the
         creativity of other people's ideas!
@@ -236,15 +236,17 @@
 
 <hr>
 
+
 {% if is_prolific %}
     <h4> About You [ALL QUESTIONS REQUIRED] </h4>
 {% else %}
     <h5> About you [OPTIONAL] </h5>
 {% endif %}
 
+
 {% if is_prolific %}
 <div class="form-group">
-    <label for="prolific_id">Please enter your prolific ID:</label>
+    <label for="prolific_id">[REQUIRED] Please enter your prolific ID:</label>
     <input type="text" placeholder="Enter Prolific ID" class="form-control" id="prolific_id" name="prolific_id"
            onchange="storeAboutYouValues()" required>
 </div>
@@ -253,9 +255,12 @@
 {% endif %}
 
 
-<label for="ai-feeling">Artificial intelligence computer programs are designed to learn tasks that humans
+    <label for="ai-feeling">{% if is_prolific %} [REQUIRED]{% endif %} Artificial intelligence computer programs are designed to learn tasks that humans
     typically do. Would you say the increased use of artificial intelligence computer programs in daily life
     makes you feel...</label>
+
+
+
 <select class="form-control" id="ai-feeling" name="ai-feeling" onchange="storeAboutYouValues()">
     <option value="">---</option>
     <option id="option-1" value="excited">More excited than concerned</option>
@@ -266,7 +271,7 @@
 
 
 <div class="form-group">
-    <label for="country">What country are you from?</label>
+    <label for="country">{% if is_prolific %} [REQUIRED]{% endif %} What country are you from?</label>
     <select class="form-control" id="country" name="country" onchange="storeAboutYouValues()">
         <option value="">Select a country</option>
         <option value="Argentina">Argentina</option>
@@ -338,10 +343,11 @@
 </div>
 
 <div class="form-group">
-    <label for="age">Please enter your age:</label>
+    <label for="age">{% if is_prolific %} [REQUIRED]{% endif %} Please enter your age:</label>
     <input type="number" placeholder="Enter an age" class="form-control" id="age" name="age"
-           onchange="storeAboutYouValues()">
+           onchange="storeAboutYouValues()" {% if is_prolific %} required {% endif %}>
 </div>
+
 
 
 
@@ -422,7 +428,18 @@
 
 <script>
     document.querySelector('form').addEventListener('submit', function (event) {
-        event.preventDefault();
+        if ("{{ is_prolific }}" === "True") {
+            var fields = ['creativitySliderAIValue', 'creativitySliderHumanValue', 'aiFeelingValue', 'countryValue', 'ageValue', 'prolific_idValue'];
+            for (var i = 0; i < fields.length; i++) {
+                var field = document.getElementById(fields[i]).value;
+                if (!field) { // If field is empty
+                    event.preventDefault(); // Prevent form submission
+                    alert('You need to fill out all required fields. This includes the creativity questions at the top and the About You section.'); // Show alert message
+                    return;
+                }
+            }
+        }
+
         var submitButton = document.querySelector('button[type="submit"]');
 
         submitButton.textContent = "Loading...";
@@ -432,6 +449,7 @@
         this.submit();
     });
 </script>
+
 
 </body>
 </html>
