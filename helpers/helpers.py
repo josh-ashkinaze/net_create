@@ -139,3 +139,28 @@ def find_latest_file(directory, pattern):
     sorted_files = sorted(matching_files, key=os.path.getctime)
     latest_file = sorted_files[-1]
     return latest_file
+
+
+# Helper function to check and cast to appropriate type
+def value2none(my_val, how):
+    if my_val != '':
+        if how == 'number':
+            return int(my_val)
+        elif how == 'string':
+            return str(my_val)
+    else:
+        return None
+
+
+def insert_into_bigquery(client, table, data):
+    """Insert data into a BigQuery table."""
+    errors = client.insert_rows_json(table, data)
+    if errors:
+        print(f"Encountered errors while inserting rows: {errors}")
+        return errors
+    else:
+        print(f"New row has been added to {table.table_id}.")
+        return 1
+
+def do_sql_query(client, query):
+    return list(client.query(query).result())
