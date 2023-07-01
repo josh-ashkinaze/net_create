@@ -25,7 +25,7 @@ from flask import flash, Flask, render_template, request, redirect, url_for, ses
 from google.cloud import bigquery
 from google.oauth2 import service_account
 from scipy.stats import spearmanr
-from urllib.parse import urlencode
+from helpers.helpers import value2none, insert_into_bigquery, do_sql_query
 
 ############################################################################################################
 # SETUP GLOBAL VARIABLES
@@ -92,11 +92,14 @@ AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
 @app.route("/")
 def consent_form():
     """Consent form"""
-    reset_session()
-    session['request_args'] = request.query_string.decode()
-    session['referer'] = request.headers.get('Referer')
+    session['request_args'] = value2none(request.query_string.decode(), "string")
+    session['referer'] = value2none(request.headers.get('Referer'), "string")
+    if "from=prolific" in request.query_string.decode():
+        session['is_prolific'] = True
+    else:
+        session['is_prolific'] = False
     session.modified = True
-    return render_template('consent_form.html')
+    return render_template('consent_form.html', is_prolific=session['is_prolific'])
 
 
 @app.route("/start-experiment")
@@ -105,47 +108,46 @@ def start_experiment():
     Start the experiment.
 
     1. Create a UUID for participant ID
-    2. Counterbalance conditions and counterbalance items.
-    3. Save all this stuff to a Flask session object.
+    2. Get stuff particant submitted add to DB
+    3. Counterbalance conditions and counterbalance items.
     4. Redirect to the first trial.
     """
 
-    # Assign UUID to participant
+    # Assign UUID and world
     session['participant_id'] = str(uuid.uuid4())
     session['world'] = get_world()
 
+    # Randomize to condition
+    session['item_order'] = random.sample(ITEMS, len(ITEMS))
+    session['condition_order'] = random.sample(list(CONDITIONS.keys()), len(CONDITIONS))
+
+    # Init lists of responses
+    session['responses'] = []
+    session['response_ids'] = []
+    session.modified = True
+
+    # Get args and insert into db
     creativity_ai = request.args.get('creativitySliderAIValue')
     creativity_human = request.args.get('creativitySliderHumanValue')
     ai_feeling = request.args.get('aiFeelingValue')
     country = request.args.get('countryValue')
     age = request.args.get('ageValue')
-
-    session['creativity_ai'] = int(creativity_ai) if creativity_ai != '' else None
-    session['creativity_human'] = int(creativity_human) if creativity_human != '' else None
-    session['age'] = int(age) if age != '' else None
-    session['ai_feeling'] = ai_feeling
-    session['country'] = country
-    session.modified = True
-
-    # Add participant to the person table
+    prolific_id = request.args.get("prolific_idValue")
+    row = {'participant_id':session['participant_id'],
+           'dt': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+           'creativity_ai':value2none(creativity_ai, "number"),
+           'creativity_human':value2none(creativity_human, "number"),
+           'age':value2none(age, "number"),
+           'ai_feeling':value2none(ai_feeling, "string"),
+           'country':value2none(country, "string"),
+           'prolific_id':value2none(prolific_id, "string"),
+           'is_prolific':session['is_prolific'],
+           'request_args':value2none(session['request_args'], "string"),
+           'referer': value2none(session['referer'], "string"),
+           'is_test':is_test
+        }
     person_table = dataset.table("person")
-    row = {"participant_id": session['participant_id'], "creativity_ai": session['creativity_ai'],
-           "creativity_human": session['creativity_human'], "age": session['age'],
-           "dt": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), 'ai_feeling': session['ai_feeling'],
-           'country': session['country'], 'is_test': is_test, 'request_args': session['request_args'], 'referer':session['referer']}
-
-    print(session, is_local)
-
-    errors = client.insert_rows_json(person_table, [row])
-    if errors:
-        print("Encountered errors while inserting rows: {}".format(errors))
-    else:
-        print("New row has been added to person.")
-
-    session['item_order'] = random.sample(ITEMS, len(ITEMS))
-    session['condition_order'] = random.sample(list(CONDITIONS.keys()), len(CONDITIONS))
-    session['responses'] = []
-    session['response_ids'] = []
+    insert_into_bigquery(client, person_table, [row])
     return redirect(url_for('render_trial', condition_no=0, method="GET"))
 
 
@@ -157,7 +159,7 @@ def render_trial(condition_no):
     The idea is that in a session object (like a unique dictionary or each participant),
     we store the participant ID, the condition order, and the item order.
     Then, we keep calling this function with the next condition_no -- which indexes the participant's items and condition sequence --
-    until we've gone through all trials.
+    until we've gone through all trials. After trials, return thank you page.
 
     The logic is as follows:
 
@@ -180,12 +182,8 @@ def render_trial(condition_no):
     - Either another instance of render_trial (if not done) or the thank_you page (if done)
 
     """
-    # If the participant has completed all condition_nos, redirect to thank you page
     if condition_no > len(ITEMS) - 1:
         return redirect(url_for('results', uuid=session['participant_id']) + "?from_uuid=False")
-
-    else:
-        pass
 
     participant_id = session['participant_id']
     condition = session['condition_order'][condition_no]
@@ -195,50 +193,42 @@ def render_trial(condition_no):
     item = session['item_order'][condition_no]
     world = session['world']
 
-    # If the HTTP method is GET, render the render_trial template
     if request.method == "GET":
-        # Get the human ideas and their IDs
-        human_result = list(client.query(f"""
-                    SELECT response_text, response_id, response_date 
-                    FROM (
-                        SELECT response_text, response_id, MAX(response_date) as response_date 
-                        FROM `net_expr.trials` 
-                        WHERE item = '{item}' AND condition = '{condition}' AND world = {world} 
-                        GROUP BY response_text, response_id
-                    ) AS subquery
-                    ORDER BY response_date DESC
-                    LIMIT {n_human_ideas}
-                """).result())
-
+        human_query = f"""
+             SELECT response_text, response_id, response_date 
+             FROM (
+                 SELECT response_text, response_id, MAX(response_date) as response_date 
+                 FROM `net_expr.trials` 
+                 WHERE item = '{item}' AND condition = '{condition}' AND world = {world} AND is_test = False
+                 GROUP BY response_text, response_id
+             ) AS subquery
+             ORDER BY response_date DESC
+             LIMIT {n_human_ideas}
+         """
+        human_result = do_sql_query(client, human_query)
         human_rows = [row['response_text'] for row in human_result]
         human_ids = [row['response_id'] for row in human_result]
 
-        # Filter out the AI ideas that match the human ideas and get their IDs
         filtered_ai_rows = AI_IDEAS_DF[AI_IDEAS_DF['aut_item'] == item].query("response not in @human_rows")
         ai_sample = filtered_ai_rows.sample(n_ai_ideas)
         ai_rows = ai_sample['response'].tolist()
         ai_ids = ai_sample['response_id'].tolist()
 
-        # Add source labels if necessary
         if to_label:
-            human_rows = [row + ' <span style="color: #ffffff;">(Source: <strong>Human</strong>)</span>' for row in
+            human_rows = [f"{row} <span style='color: #ffffff;'>(Source: <strong>Human</strong>)</span>" for row in
                           human_rows]
-            ai_rows = [row + ' <span style="color: #ffffff;">(Source: <strong>A.I</strong>)</span>' for row in ai_rows]
-
-        # Concatenate the human and AI rows and their IDs
-        rows = human_rows + ai_rows
-        ids = human_ids + ai_ids
+            ai_rows = [f"{row} <span style='color: #ffffff;'>(Source: <strong>A.I</strong>)</span>" for row in ai_rows]
 
         # Combine the rows and their IDs, shuffle them, and then separate them again
-        rows_with_ids = list(zip(rows, ids))
+        rows_with_ids = list(zip(human_rows + ai_rows, human_ids + ai_ids))
         random.shuffle(rows_with_ids)
         rows, ids = zip(*rows_with_ids)
-        data = zip(rows, ids)
         init_array = ','.join(map(str, ids))
-        session['last_human_response'] = human_rows[-1]
-        session.modified = True  # Explicitly mark the session as modified
 
-        return render_template('render_trial.html', item=item, data=data, condition_no=condition_no,
+        session['last_human_response'] = human_rows[-1]
+        session.modified = True
+
+        return render_template('render_trial.html', item=item, data=zip(rows, ids), condition_no=condition_no,
                                label=SOURCE_LABEL if to_label else "", trial_no=condition_no + 1, init_array=init_array)
 
 
@@ -255,20 +245,12 @@ def render_trial(condition_no):
         session['responses'].append(response_text)
         session['response_ids'].append(response_id)
         session.modified = True  # Explicitly mark the session as modified
-        response_similarity = calculate_similarity(response_text, session['last_human_response'])
-        flash(f'Similarity Score: {response_similarity:.2f}')
-
         # Insert the participant's response into the BigQuery table
         row = {"item": item, "response_id": response_id, "participant_id": participant_id,
                "condition_order": condition_no, "response_text": response_text,
                "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), "condition": condition,
                "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, 'is_test': is_test}
-        errors = client.insert_rows_json(table, [row])
-        if not errors:
-            print("New rows have been added.")
-        else:
-            print("Encountered errors while inserting rows: {}".format(errors))
-
+        errors = insert_into_bigquery(client, table, [row])
         # Redirect to next condition_no
         return redirect(url_for('render_trial', condition_no=condition_no + 1, method="GET"))
 
@@ -314,6 +296,7 @@ def get_graphs():
     """Generate graphs and return them as JSON"""
     participant_responses = list(zip(session['item_order'], session['responses']))
     participant_conditions = session['condition_order']
+    print(participant_responses)
 
     # Get graphgs of responses
     human_graph, ai_graph, human_ai_graph, scores = make_graphs(participant_responses, participant_conditions,
@@ -322,11 +305,7 @@ def get_graphs():
     # Add scores to database
     response_table = dataset.table("responses")
     rows_to_insert = [{"response_id": session['response_ids'][i], "rating": scores[i]} for i in range(len(scores))]
-    errors = client.insert_rows_json(response_table, rows_to_insert)
-    if errors:
-        print(f"Encountered errors while inserting rows: {errors}")
-    else:
-        print("All rows have been added to responses.")
+    insert_into_bigquery(client, response_table, rows_to_insert)
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
 
 
@@ -338,7 +317,6 @@ def results(uuid):
     """Results page for a specific UUID"""
     from_uuid_str = request.args.get('from_uuid', default='True')
     from_uuid = from_uuid_str.lower() == 'true'
-    print(from_uuid)
     return render_template('thank_you.html', uuid=uuid, from_uuid=from_uuid)
 
 
@@ -360,7 +338,7 @@ def get_graphs_for_uuid(uuid):
     """
     query_job = client.query(query)
     results = list(query_job.result())  # Store the rows in a list
-
+    print(results)
     # Convert the result into lists
     ratings = [row.rating for row in results]
     conditions = [row.condition for row in results]
@@ -379,8 +357,7 @@ def feedback():
 @app.route('/submit-feedback-experiment', methods=['POST'])
 def submit_feedback_experiment():
     if request.method == 'POST':
-        experiment_feedback = request.form.get('experimentFeedback')
-        experiment_feedback = experiment_feedback if experiment_feedback != '' else None
+        experiment_feedback = value2none(request.form.get('experimentFeedback'), "string")
 
         # In the default case, the person came here after seeing resuls,
         # so we must have their UUID. But, let's say somebody shared resuls,
@@ -391,13 +368,9 @@ def submit_feedback_experiment():
             uuid = None
 
         feedback_table = dataset.table("feedback")
-        rows_to_insert = [{"feedback": experiment_feedback, 'participant_id': None,
+        rows_to_insert = [{"feedback": experiment_feedback, 'participant_id': uuid,
                            'dt': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}]
         errors = client.insert_rows_json(feedback_table, rows_to_insert)
-        if errors:
-            print(f"Encountered errors while inserting rows: {errors}")
-        else:
-            print("All rows have been added to feedback.")
         return jsonify({'success': True})
 
 
@@ -413,13 +386,12 @@ def get_world():
         FROM (
           SELECT condition, item, COUNT(*) as count
           FROM `net_expr.trials`
-          WHERE participant_id != "seed"
+          WHERE participant_id != "seed" and is_test = False
           GROUP BY condition, item
         )
     """
-    query_job = client.query(query)
-    results = query_job.result()
-    trials = list(results)[0]['min_count']
+    world_query = do_sql_query(client, query)
+    trials = world_query[0]['min_count']
     if not trials:
         trials = 0
     current_world = trials // N_PER_WORLD

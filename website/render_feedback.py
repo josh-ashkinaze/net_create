@@ -108,7 +108,7 @@ def make_graphs(participant_responses, conditions, file_prefix="../", participan
     fm.fontManager.addfont(font_path)
     plt.rcParams['font.family'] = 'Roboto'
     if not participant_scores:
-        participant_scores = my_utils.batch_score_responses(participant_responses)['originality'].tolist()
+        participant_scores = my_utils.score_aut_responses(participant_responses)['originality'].tolist()
     else:
         pass
     ai_graph = comparison_graph(participant_scores, "AI", file_prefix)
