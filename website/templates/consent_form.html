@@ -187,7 +187,7 @@
 <body class="container py-4">
 
 <div class="creative-section">
-<h4 class="mb-4">{% if is_prolific %} [REQUIRED]{% endif %} How <span class="highlight">creative</span> are you?</h4>
+<h4 class="mb-4">{% if is_prolific %} <strong> [REQUIRED] </strong> {% endif %} How <span class="highlight">creative</span> are you?</h4>
     <p class="lead mb-4">Guess how creative you are <span class="highlight">compared to humans and AI</span>. By the end
         of the experiment, we'll show how your creativity compares to humans, to AI, and how well you can guess the
         creativity of other people's ideas!
@@ -238,7 +238,7 @@
 
 
 {% if is_prolific %}
-    <h4> About You [ALL QUESTIONS REQUIRED] </h4>
+    <h4> <strong> [ALL QUESTIONS REQUIRED] </strong> About You  </h4>
 {% else %}
     <h5> About you [OPTIONAL] </h5>
 {% endif %}
@@ -246,7 +246,7 @@
 
 {% if is_prolific %}
 <div class="form-group">
-    <label for="prolific_id">[REQUIRED] Please enter your prolific ID:</label>
+    <label for="prolific_id"> <strong> [REQUIRED] </strong> Please enter your prolific ID:</label>
     <input type="text" placeholder="Enter Prolific ID" class="form-control" id="prolific_id" name="prolific_id"
            onchange="storeAboutYouValues()" required>
 </div>
@@ -255,7 +255,7 @@
 {% endif %}
 
 
-    <label for="ai-feeling">{% if is_prolific %} [REQUIRED]{% endif %} Artificial intelligence computer programs are designed to learn tasks that humans
+    <label for="ai-feeling">{% if is_prolific %} <strong> [REQUIRED] </strong> {% endif %} Artificial intelligence computer programs are designed to learn tasks that humans
     typically do. Would you say the increased use of artificial intelligence computer programs in daily life
     makes you feel...</label>
 
@@ -271,7 +271,7 @@
 
 
 <div class="form-group">
-    <label for="country">{% if is_prolific %} [REQUIRED]{% endif %} What country are you from?</label>
+    <label for="country">{% if is_prolific %} <strong> [REQUIRED] </strong>{% endif %} What country are you from?</label>
     <select class="form-control" id="country" name="country" onchange="storeAboutYouValues()">
         <option value="">Select a country</option>
         <option value="Argentina">Argentina</option>
@@ -343,7 +343,7 @@
 </div>
 
 <div class="form-group">
-    <label for="age">{% if is_prolific %} [REQUIRED]{% endif %} Please enter your age:</label>
+    <label for="age">{% if is_prolific %} <strong> [REQUIRED] </strong> {% endif %} Please enter your age:</label>
     <input type="number" placeholder="Enter an age" class="form-control" id="age" name="age"
            onchange="storeAboutYouValues()" {% if is_prolific %} required {% endif %}>
 </div>
