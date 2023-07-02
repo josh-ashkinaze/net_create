@@ -234,7 +234,7 @@ def render_trial(condition_no):
         session.modified = True
 
         return render_template('render_trial.html', item=item, data=zip(rows, ids), condition_no=condition_no,
-                               label=SOURCE_LABEL if to_label else "", trial_no=condition_no + 1, init_array=init_array)
+                               label=SOURCE_LABEL if to_label else "", trial_no=condition_no + 1, init_array=init_array, is_prolific=session['is_prolific'])
 
 
     # If the HTTP method is POST, insert the participant's response into the BigQuery table
