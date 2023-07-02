@@ -96,7 +96,7 @@ def consent_form():
     """Consent form"""
     session['request_args'] = value2none(request.query_string.decode(), "string")
     session['referer'] = value2none(request.headers.get('Referer'), "string")
-    if "from=prolific" in request.query_string.decode():
+    if request.query_string.decode() == "from=prolific":
         session['is_prolific'] = True
     else:
         session['is_prolific'] = False
