@@ -26,7 +26,7 @@ from flask import flash, Flask, render_template, request, redirect, url_for, ses
 from google.cloud import bigquery
 from google.oauth2 import service_account
 from scipy.stats import spearmanr
-from helpers.helpers import value2none, insert_into_bigquery, do_sql_query
+from helpers.helpers import value2none, insert_into_bigquery, do_sql_query, get_participant_data
 
 
 ############################################################################################################
@@ -367,16 +367,7 @@ def get_graphs_for_uuid(uuid):
     # Fetch the participant data from the database using the UUID
     # This is a simplified example; adjust this code to fit your actual database structure and API
 
-    query = f"""
-        SELECT responses.rating, trials.condition
-        FROM `net_expr.trials` AS trials
-        INNER JOIN `net_expr.responses` AS responses
-        ON trials.response_id = responses.response_id
-        WHERE trials.participant_id = '{uuid}'
-        ORDER BY trials.world DESC
-        LIMIT 5
-    """
-    results = do_sql_query(client, query)
+    results = get_participant_data(client, uuid)
     ratings = [row.rating for row in results]
     conditions = [row.condition for row in results]
 

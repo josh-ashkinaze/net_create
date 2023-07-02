@@ -164,3 +164,16 @@ def insert_into_bigquery(client, table, data):
 
 def do_sql_query(client, query):
     return list(client.query(query).result())
+
+
+def get_participant_data(client, uuid):
+    query = f"""
+        SELECT responses.rating, trials.condition
+        FROM `net_expr.trials` AS trials
+        INNER JOIN `net_expr.responses` AS responses
+        ON trials.response_id = responses.response_id
+        WHERE trials.participant_id = '{uuid}'
+        ORDER BY trials.world DESC
+        LIMIT 5
+    """
+    return do_sql_query(client, query)
