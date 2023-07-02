@@ -264,7 +264,11 @@
         }
         queryParams.append('how', 'share');
         const link = baseUrl + '?' + queryParams.toString();
-        window.location.href = link;
+                if (navigator.clipboard) {
+            navigator.clipboard.writeText(link).then(showSuccessMessage, () => copyToClipboardFallback(link));
+        } else {
+            copyToClipboardFallback(link);
+        }
     }
 
     function copyResultsLink() {
