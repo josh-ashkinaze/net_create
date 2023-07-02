@@ -12,7 +12,7 @@ Description: This is a Flask web application that runs a web experiment.
 # There is a control human-only condition, and then a 2x2 varying by
 # LLM exposure (few LLM ideas vs many LLM ideas) and transparency (say source labels or don't)
 """
-
+# FIX PROLIFIC PASS INO THANK YOU ON TRIAL 5
 import json
 import os
 import random
@@ -186,7 +186,7 @@ def render_trial(condition_no):
 
     """
     if condition_no > len(ITEMS) - 1:
-        return redirect(url_for('results', uuid=session['participant_id']) + "?from_uuid=False", is_prolific=session['is_prolific'])
+        return redirect(url_for('results', uuid=session['participant_id']) + "?from_uuid=False?is_prolific={}".format(session['is_prolific']))
 
     participant_id = session['participant_id']
     condition = session['condition_order'][condition_no]
@@ -322,10 +322,12 @@ def results(uuid):
     """Results page for a specific UUID"""
     from_uuid_str = request.args.get('from_uuid', default='True')
     from_uuid = from_uuid_str.lower() == 'true'
+    is_prolific_str = request.args.get('is_prolific', default='False')
+    is_prolific= is_prolific_str.lower() == 'true'
     return render_template('thank_you.html',
                            uuid=uuid,
                            from_uuid=from_uuid,
-                           request_args=session['request_args'], is_prolific=session['is_prolific'])
+                           request_args=session['request_args'], is_prolific=is_prolific)
 
 
 @app.route("/get-graphs/<uuid>")
