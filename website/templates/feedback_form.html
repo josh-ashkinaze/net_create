@@ -70,74 +70,68 @@
 <body class="container py-4">
 
 <div class="form-section">
-    <h2>Experiment Feedback</h2>
+    <h2>Thoughts And Feedback</h2>
     <form id="feedbackForm1" action="/submit-feedback-experiment" method="post">
         <div class="form-group">
-            <label for="experimentFeedback">Do you have any feedback about the experiment?</label>
-            <textarea class="form-control" id="experimentFeedback" name="experimentFeedback" rows="3"></textarea>
+            <label for="aiThoughts">Do you have any thoughts on the role of creativity, or creative ideas, in a world with so much AI-generated content?
+                <p> <em> Your response may be quoted, anonymously, in a research paper. </em> </p></label>
+            <textarea class="form-control" id="aiThoughts" placeholder="Leave blank if no thoughts" name="aiThoughts" rows="3"></textarea>
         </div>
-        <button type="submit" class="btn">Submit Feedback</button>
-
-
+        <div class="form-group">
+            <label for="experimentFeedback">Do you have any feedback about the experiment?</label>
+            <textarea placeholder="Leave blank if no feedback" class="form-control" id="experimentFeedback" name="experimentFeedback" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn">Submit</button>
     </form>
 </div>
 
 
-<hr>
-<h2>Other fun studies to check out on Lab In The Wild! </h2>
-<ul>
-    <li><a href="https://www.labinthewild.org/studies/personality/">What’s your personality?</a></li>
-    <li><a href="https://friends.labinthewild.org/friends/">How do you make online connections?</a></li>
-    <li><a href="https://www.labinthewild.org/studies/wikipedia/">What percentage of Wikipedia do you know?</a></li>
-    <li><a href="https://aliens.labinthewild.org/aliens/">Do you make assumptions about people without knowing it?</a>
-    </li>
-</ul>
+
+{#<hr>#}
+{#<h2>Other fun studies to check out on Lab In The Wild! </h2>#}
+{#<ul>#}
+{#    <li><a href="https://www.labinthewild.org/studies/personality/">What’s your personality?</a></li>#}
+{#    <li><a href="https://friends.labinthewild.org/friends/">How do you make online connections?</a></li>#}
+{#    <li><a href="https://www.labinthewild.org/studies/wikipedia/">What percentage of Wikipedia do you know?</a></li>#}
+{#    <li><a href="https://aliens.labinthewild.org/aliens/">Do you make assumptions about people without knowing it?</a>#}
+{#    </li>#}
+{#</ul>#}
 
 <script>
-    function submitForm(formId) {
-        document.getElementById(formId).submit();
-        var formButton = document.getElementById(formId).querySelector('button');
-        formButton.innerText = "Submitted";
-        formButton.disabled = true;
-    }
-</script>
+$(document).ready(function () {
+    $("#feedbackForm1").on('submit', function (event) {
+        event.preventDefault();
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#feedbackForm1").on('submit', function (event) {
-            event.preventDefault();
+        var formData = $(this).serialize();
 
-            var formData = $(this).serialize();
-
-            $.ajax({
-                type: 'POST',
-                url: '/submit-feedback-experiment',
-                data: formData,
-                success: function () {
-                    swal({
-                        title: "Success!",
-                        text: "Thank you for your feedback",
-                        icon: "success",
-                        button: {
-                            text: "OK",
-                            closeModal: true,
-                        },
-                    });
-                    var formButton = $('#feedbackForm1 button');
-                    formButton.text("Submitted");
-                    formButton.addClass("submitted");
-                    formButton.prop("disabled", true);
-                },
-                error: function () {
-                    swal("Oops!", "Something went wrong. Please try again.", "error");
-                }
-            });
+        $.ajax({
+            type: 'POST',
+            url: '/submit-feedback-experiment',
+            data: formData,
+            success: function () {
+                swal({
+                    title: "Success!",
+                    text: "Thank you for your feedback",
+                    icon: "success",
+                    button: {
+                        text: "OK",
+                        closeModal: true,
+                    },
+                });
+                var formButton = $('#feedbackForm1 button');
+                formButton.text("Submitted");
+                formButton.addClass("submitted");
+                formButton.prop("disabled", true);
+            },
+            error: function () {
+                swal("Oops!", "Something went wrong. Please try again.", "error");
+            }
         });
     });
+});
 </script>
+
+
+
 </body>
 </html>

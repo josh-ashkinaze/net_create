@@ -395,20 +395,24 @@ def feedback():
 def submit_feedback_experiment():
     if request.method == 'POST':
         experiment_feedback = value2none(request.form.get('experimentFeedback'), "string")
+        ai_thoughts = value2none(request.form.get('aiThoughts'), "string")  # get the 'aiThoughts' field
 
-        # In the default case, the person came here after seeing resuls,
-        # so we must have their UUID. But, let's say somebody shared resuls,
+        # In the default case, the person came here after seeing results,
+        # so we must have their UUID. But, let's say somebody shared results,
         # then random person decided to leave feedback -- we'd have no UUID.
         try:
             uuid = session['participant_id']
         except:
-            uuid = None
+            uuid = str(uuid.uuid4())
 
         feedback_table = dataset.table("feedback")
-        rows_to_insert = [{"feedback": experiment_feedback, 'participant_id': uuid,
-                           'dt': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}]
-        errors = client.insert_rows_json(feedback_table, rows_to_insert)
+        rows_to_insert = [{"feedback": experiment_feedback,
+                           'participant_id': uuid,
+                           'dt': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+                           'ai_thoughts': ai_thoughts}]  # include 'ai_thoughts' in the row data
+        errors = insert_into_bigquery(client, feedback_table, rows_to_insert)
         return jsonify({'success': True})
+
 
 
 

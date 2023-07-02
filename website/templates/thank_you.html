@@ -102,6 +102,25 @@
         }
 
 
+        .btn-secondary-link {
+            background-color: #E1DD8F; /* Change the color to green */
+            border: none;
+            color: black;
+            padding: 10px 18px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition-duration: 0.4s; /* Optional: adds a "smooth" transition effect when the button changes color */
+        }
+
+        .btn-secondary-link:hover {
+            background-color: #F7C1BB; /* Change the color to darker green */
+            color: black;
+        }
+
+
     </style>
 </head>
 <body class="container py-4">
@@ -125,10 +144,10 @@
 
     <button class="btn btn-primary" onclick="copyExperimentLink()"><i class="fas fa-link"></i> Copy Experiment Link
     </button>
-
     <button class="btn btn-primary" onclick="window.location.href='/feedback'">
-        <i class="fas fa-comment"></i> Leave feedback
+        <i class="fas fa-comment"></i> Share Thoughts or Feedback
     </button>
+
 
     <div class="social-share-buttons">
         <a href="#" id="share-twitter" class="btn btn-secondary" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
