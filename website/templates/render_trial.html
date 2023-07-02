@@ -158,11 +158,11 @@
     <strong>{{ item }}</strong>.</h3>
 
 <h4> Task </h4>
-<p>For this task, submit a creative use for {% if item != 'pants' %}a {% endif %}
-    <strong>{{ item }}</strong>. But before submitting your idea, here are some ideas for inspiration. </p>
+<p>For this task, you will submit a creative use for {% if item != 'pants' %}a {% endif %}
+    <strong>{{ item }}</strong>. But before submitting your idea, here are some ideas for inspiration. Rank them by creativity. </p>
 
 
-<h4> Previous Ideas </h4>
+<h4> Rank Previous Ideas </h4>
 {% if label %}
     <h5 class='ai-generated'>
         {{ label }}
@@ -197,7 +197,7 @@
     {% endfor %}
 </ul>
 
-<h4> Your Idea </h4>
+<h4> Submit Your Idea </h4>
 
 <p>
 
