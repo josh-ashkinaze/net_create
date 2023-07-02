@@ -196,10 +196,11 @@ def render_trial(condition_no):
     item = session['item_order'][condition_no]
 
     if request.method == "GET":
+        # COUNT(*)+1 because we want to make sure we don't go over N_PER_WORLD.
         human_query = f"""
             WITH current_world AS (
     SELECT 
-        FLOOR(COUNT(*) / {N_PER_WORLD}) as world_value
+        FLOOR(COUNT(*)+1 / {N_PER_WORLD}) as world_value 
     FROM 
         `net_expr.trials`
     WHERE 
