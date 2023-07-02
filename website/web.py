@@ -379,7 +379,6 @@ def submit_feedback_experiment():
         return jsonify({'success': True})
 
 
-@app.route("/get-world")
 def get_world():
     """
     Get the current world number.
@@ -400,9 +399,9 @@ def get_world():
     trials = world_query[0]['min_count']
     if not trials:
         trials = 0
-    current_world = trials // N_PER_WORLD
+    return trials // N_PER_WORLD
 
-    return jsonify(current_world=current_world)
+
 
 
 if __name__ == '__main__':
