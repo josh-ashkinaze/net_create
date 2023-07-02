@@ -100,6 +100,7 @@ def consent_form():
         session['is_prolific'] = True
     else:
         session['is_prolific'] = False
+    print(value2none(request.query_string.decode(), "string"))
     session.modified = True
     return render_template('consent_form.html', is_prolific=session['is_prolific'])
 
@@ -378,12 +379,13 @@ def submit_feedback_experiment():
         return jsonify({'success': True})
 
 
+@app.route("/get-world")
 def get_world():
-    """Get the current world number.
+    """
+    Get the current world number.
 
-    The reason why I get the minimum number of trials for each condition/item combination is that participants may
-    have only completed half of the experiment, so there is not necessarily going to be an equal number of trials for
-    everything.
+    Returns:
+    - JSON response containing the 'current_world' value.
     """
     query = """
         SELECT MIN(count) as min_count
@@ -399,7 +401,8 @@ def get_world():
     if not trials:
         trials = 0
     current_world = trials // N_PER_WORLD
-    return current_world
+
+    return jsonify(current_world=current_world)
 
 
 if __name__ == '__main__':
