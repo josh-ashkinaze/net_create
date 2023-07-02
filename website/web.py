@@ -202,7 +202,7 @@ def render_trial(condition_no):
     SELECT 
         FLOOR(COUNT(*)+1 / {N_PER_WORLD}) as world_value 
     FROM 
-        `net_expr.trials`
+        `net_expr.trials_partitioned_clustered2`
     WHERE 
         is_test IS FALSE
         AND participant_id != 'seed'
@@ -221,7 +221,7 @@ FROM (
         world, 
         response_date
     FROM 
-        `net_expr.trials`
+        `net_expr.trials_partitioned_clustered2`
     WHERE 
         item = '{item}' 
         AND condition = '{condition}' 
@@ -369,7 +369,7 @@ def get_graphs_for_uuid(uuid):
 
     query = f"""
         SELECT responses.rating, trials.condition
-        FROM `net_expr.trials` AS trials
+        FROM `net_expr.trials_partitioned_clustered2` AS trials
         INNER JOIN `net_expr.responses` AS responses
         ON trials.response_id = responses.response_id
         WHERE trials.participant_id = '{uuid}'
