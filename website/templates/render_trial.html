@@ -201,11 +201,11 @@
 
 <p>
 
-Your turn! What is a creative use for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>? The goal is to come up with a creative idea, which is an idea that
-strikes people as clever, unusual, interesting, uncommon, humorous, innovative, or different. List a creative use
-for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>.
+    Your turn! What is a creative use for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>? The goal is
+    to come up with a creative idea, which is an idea that
+    strikes people as clever, unusual, interesting, uncommon, humorous, innovative, or different. List a creative use
+    for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>.
 </p>
-
 
 
 <div id="dialog-confirm" title="Confirm Submission" style="display: none;">
@@ -238,61 +238,65 @@ for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>.
 
 
 <script>
-    // When the DOM is fully loaded, execute the code inside this function
-    $(document).ready(function () {
-        // Initialize the Sortable library on the sortable list
-        var sortable = new Sortable(document.querySelector('.sortable-list'), {
-            animation: 150,
-            chosenClass: "sortable-chosen",
-            dragClass: "sortable-drag",
-            onSort: function (evt) {
-                updateRIdArray();
-            }
-        });
+    var isProlific = {{ is_prolific|tojson|safe }}// this will be a JavaScript boolean
 
-        function updateRIdArray() {
-            var rIdArray = [];
-            var listItems = document.querySelectorAll('.sortable-list li');
-            listItems.forEach(function (item, index) {
-                rIdArray.push(item.dataset.rId);
-                item.querySelector('.rank').textContent = (index + 1) + ') ';
+        // When the DOM is fully loaded, execute the code inside this function
+        $(document).ready(function () {
+            // Initialize the Sortable library on the sortable list
+            var sortable = new Sortable(document.querySelector('.sortable-list'), {
+                animation: 150,
+                chosenClass: "sortable-chosen",
+                dragClass: "sortable-drag",
+                onSort: function (evt) {
+                    updateRIdArray();
+                }
             });
-            document.querySelector('input[name="ranked_array"]').value = rIdArray.join(',');
-        }
 
-        updateRIdArray();
-
-        document.querySelector('form').addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            var response = document.querySelector('input[name="participant_response"]').value;
-            var initArray = $('input[name="init_array"]').val();
-            var rankedArray = $('input[name="ranked_array"]').val();
-
-            // In old logic we forced people to rank
-            console.log("initArray:", initArray);
-            console.log("rankedArray:", rankedArray);
-            if (initArray === rankedArray) {
-                Swal.fire({
-                    title: "You didn't re-rank ideas!",
-                    text: "Hey, you didn't make any changes to the idea rankings. Do you want to continue or go back and re-rank ideas? Rank ideas by dragging them.",
-                    icon: 'info',
-                    showCancelButton: true,
-                    confirmButtonColor: '#1F4287',
-                    cancelButtonColor: '#B33F62',
-                    confirmButtonText: 'Continue',
-                    cancelButtonText: 'Go back'
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        formSubmission(response, rankedArray);
-                    }
+            function updateRIdArray() {
+                var rIdArray = [];
+                var listItems = document.querySelectorAll('.sortable-list li');
+                listItems.forEach(function (item, index) {
+                    rIdArray.push(item.dataset.rId);
+                    item.querySelector('.rank').textContent = (index + 1) + ') ';
                 });
-            } else {
-                formSubmission(response, rankedArray);
+                document.querySelector('input[name="ranked_array"]').value = rIdArray.join(',');
             }
+
+            updateRIdArray();
+
+            document.querySelector('form').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                var response = document.querySelector('input[name="participant_response"]').value;
+                var initArray = $('input[name="init_array"]').val();
+                var rankedArray = $('input[name="ranked_array"]').val();
+
+                // In old logic we forced people to rank
+                console.log("initArray:", initArray);
+                console.log("rankedArray:", rankedArray);
+                if (initArray === rankedArray) {
+                    Swal.fire({
+                        title: "You didn't re-rank ideas!",
+                        text: isProlific ? "Hey, you didn't make any changes to the idea rankings. Rank ideas by dragging them."
+                            : "Hey, you didn't make any changes to the idea rankings. Do you want to continue or go back and re-rank ideas? Rank ideas by dragging them.",
+                        icon: 'info',
+                        showCancelButton: true,
+                        confirmButtonColor: '#1F4287',
+                        cancelButtonColor: '#B33F62',
+                        confirmButtonText: 'Continue',
+                        cancelButtonText: 'Go back',
+                        showConfirmButton: isProlific ? false : true,
+
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            formSubmission(response, rankedArray);
+                        }
+                    });
+                } else {
+                    formSubmission(response, rankedArray);
+                }
+            });
         });
-    });
 
     function formSubmission(response, rankedArray) {
         var submitButton = document.querySelector('button[type="submit"]');
