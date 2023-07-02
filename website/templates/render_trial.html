@@ -158,7 +158,7 @@
     <strong>{{ item }}</strong>.</h3>
 
 <h4> Task </h4>
-<p>For this task, submit an original and creative use for {% if item != 'pants' %}a {% endif %}
+<p>For this task, submit a creative use for {% if item != 'pants' %}a {% endif %}
     <strong>{{ item }}</strong>. But before submitting your idea, here are some ideas for inspiration. </p>
 
 
@@ -198,10 +198,14 @@
 </ul>
 
 <h4> Your Idea </h4>
-<p> Now it's your turn! Write down an original and creative use for {% if item != 'pants' %}a {% endif %}
-    <strong>{{ item }}</strong>. Certainly there are common, unoriginal ways to use {% if item != 'pants' %}
-        a {% endif %}<strong>{{ item }}</strong>.
-    But for this task, write down the most unusual, creative, and uncommon use you can think of.</p>
+
+<p>
+
+Your turn! What is a creative use for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>? The goal is to come up with a creative idea, which is an idea that
+strikes people as clever, unusual, interesting, uncommon, humorous, innovative, or different. List a creative use
+for {% if item != 'pants' %}a {% endif %}<strong>{{ item }}</strong>.
+</p>
+
 
 
 <div id="dialog-confirm" title="Confirm Submission" style="display: none;">
