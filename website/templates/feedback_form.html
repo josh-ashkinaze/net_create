@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/X5rGs+Fwz8OeARRWWuYw5GjycpHHUW6Bz/il6b"
-            crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.0/dist/sweetalert2.all.min.js"
-            integrity="sha384-ALaaKDsEaul6t5Lj6E2pA6D5fF/5kSEKVJmw1vChc1YX2Jr3LzC+eZf3b9/0Kf6e"
-            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="Feedback"/>
@@ -108,36 +104,39 @@
 
 <script>
     $(document).ready(function () {
-        $("#feedbackForm1").on('submit', function (event) {
-            event.preventDefault();
+    $("#feedbackForm1").on('submit', function (event) {
+        event.preventDefault();
 
-            var formData = $(this).serialize();
+        var formData = $(this).serialize();
 
-            $.ajax({
-                type: 'POST',
-                url: '/submit-feedback-experiment',
-                data: formData,
-                success: function () {
-                    swal({
-                        title: "Success!",
-                        text: "Thank you for your feedback",
-                        icon: "success",
-                        button: {
-                            text: "OK",
-                            closeModal: true,
-                        },
-                    });
-                    var formButton = $('#feedbackForm1 button');
-                    formButton.text("Submitted");
-                    formButton.addClass("submitted");
-                    formButton.prop("disabled", true);
+        $.ajax({
+            type: 'POST',
+            url: '/submit-feedback-experiment',
+            data: formData,
+            dataType: 'json',  // specify expected response type
+        })
+        .done(function() {
+            swal({
+                title: "Submitted!",
+                text: "Thank you for your feedback",
+                icon: "success",
+                button: {
+                    text: "OK",
+                    closeModal: true,
                 },
-                error: function () {
-                    swal("Oops!", "Something went wrong. Please try again.", "error");
-                }
             });
+            var formButton = $('#feedbackForm1 button');
+            formButton.text("Submitted");
+            formButton.addClass("submitted");
+            formButton.prop("disabled", true);
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            swal("Oops!", "Something went wrong. Please try again.", "error");
+            console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
         });
     });
+});
+
 </script>
 
 
