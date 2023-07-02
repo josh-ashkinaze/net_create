@@ -62,7 +62,8 @@ def seed_database():
                     "condition": row["condition"],
                     "world": world,
                     "init_array": [],
-                    "ranked_array": []
+                    "ranked_array": [],
+                    "is_test":False
                 }
                 logging.info(f"Attempting to insert row: {bq_row}")
 
@@ -82,7 +83,7 @@ def seed_database():
                         logging.info("Will retry because of exception {}".format(error_msg))
                         raise e
 
-            # Increment the response_date by 1 minute
+            # Increment the response_date by a bit
             response_date += timedelta(minutes=0.01)
     logging.info("Finished seeding human responses")
 
