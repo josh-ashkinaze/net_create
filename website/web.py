@@ -118,7 +118,6 @@ def start_experiment():
 
     # Assign UUID and world
     session['participant_id'] = str(uuid.uuid4())
-    session['world'] = get_world()
 
     # Randomize to condition
     session['item_order'] = random.sample(ITEMS, len(ITEMS))
@@ -195,25 +194,55 @@ def render_trial(condition_no):
     n_human_ideas = CONDITIONS[condition]['n_human']
     n_ai_ideas = CONDITIONS[condition]['n_ai']
     item = session['item_order'][condition_no]
-    world = session['world']
 
     if request.method == "GET":
         human_query = f"""
-             SELECT response_text, response_id, response_date 
-             FROM (
-                 SELECT response_text, response_id, MAX(response_date) as response_date 
-                 FROM `net_expr.trials` 
-                 WHERE item = '{item}' AND condition = '{condition}' AND world = {world} AND is_test = False
-                 GROUP BY response_text, response_id
-             ) AS subquery
-             ORDER BY response_date DESC
-             LIMIT {n_human_ideas}
+            WITH current_world AS (
+    SELECT 
+        FLOOR(COUNT(*) / {N_PER_WORLD}) as world_value
+    FROM 
+        `net_expr.trials`
+    WHERE 
+        is_test IS FALSE
+        AND participant_id != 'seed'
+        AND item = '{item}'
+        AND condition = '{condition}'
+)
+
+SELECT 
+    response_text, 
+    response_id, 
+    current_world.world_value as world
+FROM (
+    SELECT 
+        response_text, 
+        response_id, 
+        world, 
+        response_date
+    FROM 
+        `net_expr.trials`
+    WHERE 
+        item = '{item}' 
+        AND condition = '{condition}' 
+        AND is_test = False 
+) AS subquery
+JOIN
+    current_world
+ON 
+    subquery.world = current_world.world_value
+ORDER BY 
+    subquery.response_date DESC
+LIMIT 
+    {n_human_ideas}
+
          """
         print(human_query)
         human_result = do_sql_query(client, human_query)
         print(human_result)
         human_rows = [row['response_text'] for row in human_result]
         human_ids = [row['response_id'] for row in human_result]
+        session['world'] = human_result[0]['world']
+        session.modified = True
 
         filtered_ai_rows = AI_IDEAS_DF[AI_IDEAS_DF['aut_item'] == item].query("response not in @human_rows")
         ai_sample = filtered_ai_rows.sample(n_ai_ideas)
@@ -245,7 +274,6 @@ def render_trial(condition_no):
         # Retrieve the participant's response
         init_array = request.form.get('init_array', '').split(',')
         ranked_array = request.form.get('ranked_array', '').split(',')
-        print("Init array and ranked array", init_array, ranked_array)
         response_text = request.form.get('participant_response')
         response_id = str(uuid.uuid4())
         session['responses'].append(response_text)
@@ -381,28 +409,6 @@ def submit_feedback_experiment():
         errors = client.insert_rows_json(feedback_table, rows_to_insert)
         return jsonify({'success': True})
 
-
-def get_world():
-    """
-    Get the current world number.
-
-    Returns:
-    - JSON response containing the 'current_world' value.
-    """
-    query = """
-        SELECT MIN(count) as min_count
-        FROM (
-          SELECT condition, item, COUNT(*) as count
-          FROM `net_expr.trials`
-          WHERE participant_id != "seed" and is_test = False
-          GROUP BY condition, item
-        )
-    """
-    world_query = do_sql_query(client, query)
-    trials = world_query[0]['min_count']
-    if not trials:
-        trials = 0
-    return trials // N_PER_WORLD
 
 
 
