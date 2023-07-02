@@ -357,7 +357,7 @@ def results(uuid):
     return render_template('thank_you.html',
                            uuid=uuid,
                            from_uuid=from_uuid,
-                           request_args=session['request_args'], is_prolific=is_prolific)
+                           request_args=value2none(request.query_string.decode(), "string"), is_prolific=is_prolific)
 
 
 @app.route("/get-graphs/<uuid>")
