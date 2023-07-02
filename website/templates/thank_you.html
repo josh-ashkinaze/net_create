@@ -236,43 +236,35 @@
         });
     }
 
- function redirectToExperimentLink() {
-    const requestArgs = '{{ request_args }}';
-    const baseUrl = 'https://createwithai.herokuapp.com/';
-
-    let queryParams = new URLSearchParams();
-
-    if (requestArgs && requestArgs !== 'None') {
-        const parsedArgs = new URLSearchParams(requestArgs);
-        parsedArgs.forEach((value, key) => {
-            queryParams.append(key, value);
-        });
+    function redirectToExperimentLink() {
+        const requestArgs = '{{ request_args }}';
+        const baseUrl = 'https://createwithai.herokuapp.com/';
+        let queryParams = new URLSearchParams();
+        if (requestArgs && requestArgs !== 'None') {
+            const parsedArgs = new URLSearchParams(requestArgs);
+            parsedArgs.forEach((value, key) => {
+                queryParams.append(key, value);
+            });
+        }
+        queryParams.append('how', 'results');
+        const link = baseUrl + '?' + queryParams.toString();
+        window.location.href = link;
     }
-
-    queryParams.append('how', 'results');
-
-    const link = baseUrl + '?' + queryParams.toString();
-
-    // Redirect to the generated link
-    window.location.href = link;
-}
 
 
     function copyExperimentLink() {
         const requestArgs = '{{ request_args }}';
-        let link = 'https://createwithai.herokuapp.com/?';
+        const baseUrl = 'https://createwithai.herokuapp.com/';
+        let queryParams = new URLSearchParams();
         if (requestArgs && requestArgs !== 'None') {
-            link += requestArgs.split('&').map(param => {
-                const [key, value] = param.split('=');
-                return encodeURIComponent(key) + '=' + encodeURIComponent(value);
-            }).join('&') + '&';
+            const parsedArgs = new URLSearchParams(requestArgs);
+            parsedArgs.forEach((value, key) => {
+                queryParams.append(key, value);
+            });
         }
-        link += encodeURIComponent('how') + '=' + encodeURIComponent('share');
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(link).then(showSuccessMessage, () => copyToClipboardFallback(link));
-        } else {
-            copyToClipboardFallback(link);
-        }
+        queryParams.append('how', 'share');
+        const link = baseUrl + '?' + queryParams.toString();
+        window.location.href = link;
     }
 
     function copyResultsLink() {
