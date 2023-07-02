@@ -187,7 +187,7 @@ def render_trial(condition_no):
 
     """
     if condition_no > len(ITEMS) - 1:
-        return redirect(url_for('results', uuid=session['participant_id']) + "?from_uuid=False?is_prolific={}".format(session['is_prolific']))
+        return redirect(url_for('results', uuid=session['participant_id']) + f"?from_uuid=False&is_prolific={session['is_prolific']}")
 
     participant_id = session['participant_id']
     condition = session['condition_order'][condition_no]
@@ -324,7 +324,7 @@ def results(uuid):
     from_uuid_str = request.args.get('from_uuid', default='True')
     from_uuid = from_uuid_str.lower() == 'true'
     is_prolific_str = request.args.get('is_prolific', default='False')
-    is_prolific= is_prolific_str.lower() == 'true'
+    is_prolific = is_prolific_str.lower() == 'true'
     return render_template('thank_you.html',
                            uuid=uuid,
                            from_uuid=from_uuid,
@@ -347,10 +347,7 @@ def get_graphs_for_uuid(uuid):
         ORDER BY trials.world DESC
         LIMIT 5
     """
-    query_job = client.query(query)
-    results = list(query_job.result())  # Store the rows in a list
-    print(results)
-    # Convert the result into lists
+    results = do_sql_query(client, query)
     ratings = [row.rating for row in results]
     conditions = [row.condition for row in results]
 
