@@ -105,16 +105,21 @@
     </style>
 </head>
 <body class="container py-4">
-<h1 class="mb-4">Thank you for participating!</h1>
-
+<h1 class="mb-4">
+  Thank you for participating!
+ {% if is_prolific %}
+    Your confirmation code is w2zx89.
+  {% endif %}
+</h1>
 
 <h5> To view results again, make sure to copy or share your unique results link. </h5>
 
 <!-- Wrap buttons in a div container -->
 <div class="buttons-container">
-    <button class="btn btn-experiment" onclick="window.location.href='https://createwithai.herokuapp.com'"><i
-            class="fas fa-flask"></i> Take Experiment
-    </button>
+
+  <button class="btn btn-experiment" onclick="redirectToExperimentLink();">
+    <i class="fas fa-flask"></i> Take Experiment
+</button>
     <button class="btn btn-primary" onclick="copyResultsLink()"><i class="fas fa-chart-bar"></i> Copy Results Link
     </button>
 
@@ -230,15 +235,29 @@
         });
     }
 
-    function copyExperimentLink() {
-        const link = 'https://createwithai.herokuapp.com/';
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(link).then(showSuccessMessage, () => copyToClipboardFallback(link));
-        } else {
-            copyToClipboardFallback(link);
-        }
+    function redirectToExperimentLink() {
+    const requestArgs = '{{ request_args }}';
+    let link = 'https://createwithai.herokuapp.com/?';
+    if (requestArgs && requestArgs !== 'None') {
+        link += 'from=' + encodeURIComponent(requestArgs) + '&';
     }
+    link += 'how=results';
 
+    // Redirect to the generated link
+    window.location.href = link;
+}
+
+   function copyExperimentLink() {
+    const requestArgs = '{{ request_args }}';
+    let link = 'https://createwithai.herokuapp.com/?';
+    if (requestArgs && requestArgs !== 'None') {
+        link += 'from=' + encodeURIComponent(requestArgs) + '&';
+    }
+    link += 'how=share';
+
+    navigator.clipboard.writeText(link)
+        .then(showSuccessMessage, () => copyToClipboardFallback(link));
+}
     function copyResultsLink() {
         const uuid = document.getElementById('uuid').value;
         const link = `https://createwithai.herokuapp.com/results/${uuid}`;
