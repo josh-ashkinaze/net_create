@@ -106,10 +106,10 @@
 </head>
 <body class="container py-4">
 <h1 class="mb-4">
-  Thank you for participating!
- {% if is_prolific %}
-    Your confirmation code is w2zx89.
-  {% endif %}
+    Thank you for participating!
+    {% if is_prolific %}
+        Your confirmation code is w2zx89.
+    {% endif %}
 </h1>
 
 <h5> To view results again, make sure to copy or share your unique results link. </h5>
@@ -117,9 +117,9 @@
 <!-- Wrap buttons in a div container -->
 <div class="buttons-container">
 
-  <button class="btn btn-experiment" onclick="redirectToExperimentLink();">
-    <i class="fas fa-flask"></i> Take Experiment
-</button>
+    <button class="btn btn-experiment" onclick="redirectToExperimentLink();">
+        <i class="fas fa-flask"></i> Take Experiment
+    </button>
     <button class="btn btn-primary" onclick="copyResultsLink()"><i class="fas fa-chart-bar"></i> Copy Results Link
     </button>
 
@@ -127,7 +127,8 @@
     </button>
 
     <button class="btn btn-primary" onclick="window.location.href='/feedback'">
-        <i class="fas fa-comment"></i> Leave feedback </button>
+        <i class="fas fa-comment"></i> Leave feedback
+    </button>
 
     <div class="social-share-buttons">
         <a href="#" id="share-twitter" class="btn btn-secondary" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
@@ -235,29 +236,40 @@
         });
     }
 
-    function redirectToExperimentLink() {
+   function redirectToExperimentLink() {
     const requestArgs = '{{ request_args }}';
     let link = 'https://createwithai.herokuapp.com/?';
+
     if (requestArgs && requestArgs !== 'None') {
-        link += 'from=' + encodeURIComponent(requestArgs) + '&';
+        link += requestArgs.split('&').map(param => {
+            const [key, value] = param.split('=');
+            return encodeURIComponent(key) + '=' + encodeURIComponent(value);
+        }).join('&') + '&';
     }
-    link += 'how=results';
+
+    link += encodeURIComponent('how') + '=' + encodeURIComponent('results');
 
     // Redirect to the generated link
     window.location.href = link;
 }
 
-   function copyExperimentLink() {
-    const requestArgs = '{{ request_args }}';
-    let link = 'https://createwithai.herokuapp.com/?';
-    if (requestArgs && requestArgs !== 'None') {
-        link += 'from=' + encodeURIComponent(requestArgs) + '&';
+    function copyExperimentLink() {
+        const requestArgs = '{{ request_args }}';
+        let link = 'https://createwithai.herokuapp.com/?';
+        if (requestArgs && requestArgs !== 'None') {
+            link += requestArgs.split('&').map(param => {
+                const [key, value] = param.split('=');
+                return encodeURIComponent(key) + '=' + encodeURIComponent(value);
+            }).join('&') + '&';
+        }
+        link += encodeURIComponent('how') + '=' + encodeURIComponent('share');
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(link).then(showSuccessMessage, () => copyToClipboardFallback(link));
+        } else {
+            copyToClipboardFallback(link);
+        }
     }
-    link += 'how=share';
 
-    navigator.clipboard.writeText(link)
-        .then(showSuccessMessage, () => copyToClipboardFallback(link));
-}
     function copyResultsLink() {
         const uuid = document.getElementById('uuid').value;
         const link = `https://createwithai.herokuapp.com/results/${uuid}`;
