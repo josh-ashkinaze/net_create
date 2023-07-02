@@ -30,7 +30,7 @@ from helpers.helpers import value2none, insert_into_bigquery, do_sql_query
 
 
 ############################################################################################################
-# Enviorment variables
+# Environment variables
 ############################################################################################################
 if 'DYNO' in os.environ:
     is_local = False
