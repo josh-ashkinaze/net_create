@@ -97,13 +97,12 @@
         }
 
         .btn-primary:hover {
-            background-color: #F7C1BB; /* Change the color to darker green */
+            background-color: #E1DD8F; /* Change the color to darker green */
             color: black;
         }
 
-
         .btn-secondary-link {
-            background-color: #E1DD8F; /* Change the color to green */
+            background-color: #F7C1BB; /* Change the color to green */
             border: none;
             color: black;
             padding: 10px 18px;
@@ -131,7 +130,7 @@
     {% endif %}
 </h1>
 
-<h5> To view results again, make sure to copy or share your unique results link. </h5>
+<h5> To view results again, make sure to copy or share the link given below. </h5>
 
 <!-- Wrap buttons in a div container -->
 <div class="buttons-container">
@@ -144,8 +143,11 @@
 
     <button class="btn btn-primary" onclick="copyExperimentLink()"><i class="fas fa-link"></i> Copy Experiment Link
     </button>
-    <button class="btn btn-primary" onclick="window.location.href='/feedback'">
-        <i class="fas fa-comment"></i> Share Thoughts or Feedback
+   <button class="btn btn-secondary-link" onclick="window.location.href='/feedback'">
+        <i class="fas fa-comment"></i> Share Thoughts on AI and Creativity
+    </button>
+       <button class="btn btn-secondary-link" onclick="window.location.href='/feedback'">
+        <i class="fas fa-sticky-note"></i> Leave Feedback about Experiment
     </button>
 
 
