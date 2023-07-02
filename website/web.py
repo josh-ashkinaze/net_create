@@ -18,6 +18,7 @@ import os
 import random
 import uuid
 from datetime import datetime
+from functools import lru_cache
 
 import numpy as np
 import pandas as pd
@@ -27,16 +28,10 @@ from google.oauth2 import service_account
 from scipy.stats import spearmanr
 from helpers.helpers import value2none, insert_into_bigquery, do_sql_query
 
+
 ############################################################################################################
-# SETUP GLOBAL VARIABLES
+# Enviorment variables
 ############################################################################################################
-
-# Figure out if we're running locally or on Heroku. This can matter for file paths.
-
-# Note: Depends on which root you want to run from for whether file_prefix should differ.
-# The updaed way I run locally is: `cd net_create  FLASK_APP=website/web.py flask run`
-# I switched to this method because this better matches how Heroku runs the app
-
 if 'DYNO' in os.environ:
     is_local = False
     file_prefix = ""
@@ -52,13 +47,12 @@ if is_local:
     flask_secret_key = json.load(open(f"{file_prefix}secrets/flask_secret_key.json", "r"))['session_key']
 else:
     flask_secret_key = os.environ['FLASK_SECRET_KEY']
+app.secret_key = flask_secret_key
 
 if is_local:
     is_test = True
 else:
     is_test = True if os.environ.get('IS_TEST') == "True" else False
-
-app.secret_key = flask_secret_key
 
 # Connect to BQ
 if not is_local:
@@ -69,6 +63,12 @@ else:
     credentials = service_account.Credentials.from_service_account_file(key_path,
                                                                         scopes=[
                                                                             "https://www.googleapis.com/auth/cloud-platform"], )
+############################################################################################################
+############################################################################################################
+
+############################################################################################################
+# Parameters
+############################################################################################################
 client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 dataset = client.dataset("net_expr")
 table = dataset.table("trials")
@@ -79,12 +79,14 @@ SOURCE_LABEL = "For this object, we also asked AI to come up with ideas! "
 CONDITIONS = {'h': {'n_human': 6, 'n_ai': 0, 'label': False}, 'f_l': {'n_human': 4, 'n_ai': 2, 'label': True},
               'f_u': {'n_human': 4, 'n_ai': 2, 'label': False}, 'm_l': {'n_human': 2, 'n_ai': 4, 'label': True},
               'm_u': {'n_human': 2, 'n_ai': 4, 'label': False}, }
+
 ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
+
+
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
-
-
 ############################################################################################################
 ############################################################################################################
+
 
 
 # START THE EXPERIMENT
@@ -205,7 +207,9 @@ def render_trial(condition_no):
              ORDER BY response_date DESC
              LIMIT {n_human_ideas}
          """
+        print(human_query)
         human_result = do_sql_query(client, human_query)
+        print(human_result)
         human_rows = [row['response_text'] for row in human_result]
         human_ids = [row['response_id'] for row in human_result]
 
