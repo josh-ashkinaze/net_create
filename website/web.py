@@ -202,7 +202,7 @@ def render_trial(condition_no):
              SELECT response_text, response_id, response_date 
              FROM (
                  SELECT response_text, response_id, MAX(response_date) as response_date 
-                 FROM `net_expr.trials` 
+                 FROM `net_expr.trials_partitioned_clustered2` 
                  WHERE item = '{item}' AND condition = '{condition}' AND world = {world} AND is_test = False
                  GROUP BY response_text, response_id
              ) AS subquery
@@ -340,7 +340,7 @@ def get_graphs_for_uuid(uuid):
 
     query = f"""
         SELECT responses.rating, trials.condition
-        FROM `net_expr.trials` AS trials
+        FROM `net_expr.trials_partitioned_clustered2` AS trials
         INNER JOIN `net_expr.responses` AS responses
         ON trials.response_id = responses.response_id
         WHERE trials.participant_id = '{uuid}'
@@ -393,7 +393,7 @@ def get_world():
         SELECT MIN(count) as min_count
         FROM (
           SELECT condition, item, COUNT(*) as count
-          FROM `net_expr.trials`
+          FROM `net_expr.trials_partitioned_clustered2`
           WHERE participant_id != "seed" and is_test = False
           GROUP BY condition, item
         )
