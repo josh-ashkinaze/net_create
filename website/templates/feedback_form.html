@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/X5rGs+Fwz8OeARRWWuYw5GjycpHHUW6Bz/il6b"
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.0/dist/sweetalert2.all.min.js"
+            integrity="sha384-ALaaKDsEaul6t5Lj6E2pA6D5fF/5kSEKVJmw1vChc1YX2Jr3LzC+eZf3b9/0Kf6e"
+            crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="Feedback"/>
@@ -73,18 +80,20 @@
     <h2>Thoughts And Feedback</h2>
     <form id="feedbackForm1" action="/submit-feedback-experiment" method="post">
         <div class="form-group">
-            <label for="aiThoughts">Do you have any thoughts on the role of creativity, or creative ideas, in a world with so much AI-generated content?
-                <p> <em> Your response may be quoted, anonymously, in a research paper. </em> </p></label>
-            <textarea class="form-control" id="aiThoughts" placeholder="Leave blank if no thoughts" name="aiThoughts" rows="3"></textarea>
+            <label for="aiThoughts">Do you have any thoughts on the role of creativity, or creative ideas, in a world
+                with so much AI-generated content?
+                <p><em> Your response may be quoted, anonymously, in a research paper. </em></p></label>
+            <textarea class="form-control" id="aiThoughts" placeholder="Leave blank if no thoughts" name="aiThoughts"
+                      rows="3"></textarea>
         </div>
         <div class="form-group">
             <label for="experimentFeedback">Do you have any feedback about the experiment?</label>
-            <textarea placeholder="Leave blank if no feedback" class="form-control" id="experimentFeedback" name="experimentFeedback" rows="3"></textarea>
+            <textarea placeholder="Leave blank if no feedback" class="form-control" id="experimentFeedback"
+                      name="experimentFeedback" rows="3"></textarea>
         </div>
         <button type="submit" class="btn">Submit</button>
     </form>
 </div>
-
 
 
 {#<hr>#}
@@ -98,39 +107,38 @@
 {#</ul>#}
 
 <script>
-$(document).ready(function () {
-    $("#feedbackForm1").on('submit', function (event) {
-        event.preventDefault();
+    $(document).ready(function () {
+        $("#feedbackForm1").on('submit', function (event) {
+            event.preventDefault();
 
-        var formData = $(this).serialize();
+            var formData = $(this).serialize();
 
-        $.ajax({
-            type: 'POST',
-            url: '/submit-feedback-experiment',
-            data: formData,
-            success: function () {
-                swal({
-                    title: "Success!",
-                    text: "Thank you for your feedback",
-                    icon: "success",
-                    button: {
-                        text: "OK",
-                        closeModal: true,
-                    },
-                });
-                var formButton = $('#feedbackForm1 button');
-                formButton.text("Submitted");
-                formButton.addClass("submitted");
-                formButton.prop("disabled", true);
-            },
-            error: function () {
-                swal("Oops!", "Something went wrong. Please try again.", "error");
-            }
+            $.ajax({
+                type: 'POST',
+                url: '/submit-feedback-experiment',
+                data: formData,
+                success: function () {
+                    swal({
+                        title: "Success!",
+                        text: "Thank you for your feedback",
+                        icon: "success",
+                        button: {
+                            text: "OK",
+                            closeModal: true,
+                        },
+                    });
+                    var formButton = $('#feedbackForm1 button');
+                    formButton.text("Submitted");
+                    formButton.addClass("submitted");
+                    formButton.prop("disabled", true);
+                },
+                error: function () {
+                    swal("Oops!", "Something went wrong. Please try again.", "error");
+                }
+            });
         });
     });
-});
 </script>
-
 
 
 </body>
