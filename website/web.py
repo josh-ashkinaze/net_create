@@ -186,7 +186,7 @@ def render_trial(condition_no):
 
     """
     if condition_no > len(ITEMS) - 1:
-        return redirect(url_for('results', uuid=session['participant_id']) + "?from_uuid=False")
+        return redirect(url_for('results', uuid=session['participant_id']) + "?from_uuid=False", is_prolific=session['is_prolific'])
 
     participant_id = session['participant_id']
     condition = session['condition_order'][condition_no]
@@ -322,7 +322,10 @@ def results(uuid):
     """Results page for a specific UUID"""
     from_uuid_str = request.args.get('from_uuid', default='True')
     from_uuid = from_uuid_str.lower() == 'true'
-    return render_template('thank_you.html', uuid=uuid, from_uuid=from_uuid)
+    return render_template('thank_you.html',
+                           uuid=uuid,
+                           from_uuid=from_uuid,
+                           request_args=session['request_args'], is_prolific=session['is_prolific'])
 
 
 @app.route("/get-graphs/<uuid>")
