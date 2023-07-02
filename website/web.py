@@ -149,6 +149,7 @@ def start_experiment():
            'referer': value2none(session['referer'], "string"),
            'is_test':is_test
         }
+    print(row)
     person_table = dataset.table("person")
     insert_into_bigquery(client, person_table, [row])
     return redirect(url_for('render_trial', condition_no=0, method="GET"))
