@@ -237,7 +237,7 @@ LIMIT
     {n_human_ideas}
 
          """
-        print(human_query)
+        #print(human_query)
         human_result = do_sql_query(client, human_query)
         print(human_result)
         human_rows = [row['response_text'] for row in human_result]
@@ -276,6 +276,7 @@ LIMIT
         init_array = request.form.get('init_array', '').split(',')
         ranked_array = request.form.get('ranked_array', '').split(',')
         response_text = request.form.get('participant_response')
+        duration = value2none(request.form.get('duration'), "float")
         response_id = str(uuid.uuid4())
         session['responses'].append(response_text)
         session['response_ids'].append(response_id)
@@ -284,11 +285,25 @@ LIMIT
         row = {"item": item, "response_id": response_id, "participant_id": participant_id,
                "condition_order": condition_no, "response_text": response_text,
                "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), "condition": condition,
-               "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, 'is_test': is_test}
+               "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, 'is_test': is_test,
+               "duration":duration}
+        print(row)
         errors = insert_into_bigquery(client, table, [row])
         # Redirect to next condition_no
         return redirect(url_for('render_trial', condition_no=condition_no + 1, method="GET"))
 
+
+@app.route('/get-duration', methods=['POST'])
+def get_duration():
+    duration = request.form.get('duration')
+    try:
+        if not duration:
+            return None
+        else:
+            return str(np.round(duration, 4))
+    except Exception as e:
+        print(e)
+        return str(-1)
 
 @app.route('/calculate_similarity', methods=['POST'])
 def calculate_similarity_route():
@@ -405,7 +420,14 @@ def submit_feedback_experiment():
         return jsonify({'success': True})
 
 
+@app.route('/record_duration_route', methods=['POST'])
+def record_duration_route():
+    duration = request.form.get('duration')
 
+    # Process the duration as needed
+    # For example, you can save it to the database, etc.
+    print("DURATION", duration)
+    return jsonify({"message": "Duration recorded successfully", "duration": duration})
 
 
 

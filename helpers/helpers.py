@@ -143,12 +143,18 @@ def find_latest_file(directory, pattern):
 
 # Helper function to check and cast to appropriate type
 def value2none(my_val, how):
-    if my_val != '':
-        if how == 'number':
-            return int(my_val)
-        elif how == 'string':
-            return str(my_val)
-    else:
+    try:
+        if my_val != '':
+            if how == 'number':
+                return int(my_val)
+            elif how == 'string':
+                return str(my_val)
+            elif how == 'float':
+                return float(my_val)
+        else:
+            return None
+    except Exception as e:
+        print("There was an error converting value to type: {}".format(e))
         return None
 
 
