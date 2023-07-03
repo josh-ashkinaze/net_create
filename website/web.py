@@ -12,13 +12,11 @@ Description: This is a Flask web application that runs a web experiment.
 # There is a control human-only condition, and then a 2x2 varying by
 # LLM exposure (few LLM ideas vs many LLM ideas) and transparency (say source labels or don't)
 """
-# FIX PROLIFIC PASS INO THANK YOU ON TRIAL 5
 import json
 import os
 import random
 import uuid
 from datetime import datetime
-from functools import lru_cache
 
 import numpy as np
 import pandas as pd
@@ -26,8 +24,7 @@ from flask import flash, Flask, render_template, request, redirect, url_for, ses
 from google.cloud import bigquery
 from google.oauth2 import service_account
 from scipy.stats import spearmanr
-from helpers.helpers import value2none, insert_into_bigquery, do_sql_query, get_participant_data
-
+from helpers.helpers import catch_if_none, insert_into_bigquery, do_sql_query, get_participant_data
 
 ############################################################################################################
 # Environment variables
@@ -81,12 +78,9 @@ CONDITIONS = {'h': {'n_human': 6, 'n_ai': 0, 'label': False}, 'f_l': {'n_human':
               'm_u': {'n_human': 2, 'n_ai': 4, 'label': False}, }
 
 ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
-
-
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
 ############################################################################################################
 ############################################################################################################
-
 
 
 # START THE EXPERIMENT
@@ -94,13 +88,13 @@ AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
 @app.route("/")
 def consent_form():
     """Consent form"""
-    session['request_args'] = value2none(request.query_string.decode(), "string")
-    session['referer'] = value2none(request.headers.get('Referer'), "string")
+    session['request_args'] = catch_if_none(request.query_string.decode(), "string")
+    session['referer'] = catch_if_none(request.headers.get('Referer'), "string")
     if request.query_string.decode() == "from=prolific":
         session['is_prolific'] = True
     else:
         session['is_prolific'] = False
-    print(value2none(request.query_string.decode(), "string"))
+    print(catch_if_none(request.query_string.decode(), "string"))
     session.modified = True
     return render_template('consent_form.html', is_prolific=session['is_prolific'])
 
@@ -135,19 +129,19 @@ def start_experiment():
     country = request.args.get('countryValue')
     age = request.args.get('ageValue')
     prolific_id = request.args.get("prolific_idValue")
-    row = {'participant_id':session['participant_id'],
+    row = {'participant_id': session['participant_id'],
            'dt': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
-           'creativity_ai':value2none(creativity_ai, "number"),
-           'creativity_human':value2none(creativity_human, "number"),
-           'age':value2none(age, "number"),
-           'ai_feeling':value2none(ai_feeling, "string"),
-           'country':value2none(country, "string"),
-           'prolific_id':value2none(prolific_id, "string"),
-           'is_prolific':session['is_prolific'],
-           'request_args':value2none(session['request_args'], "string"),
-           'referer': value2none(session['referer'], "string"),
-           'is_test':is_test
-        }
+           'creativity_ai': catch_if_none(creativity_ai, "number"),
+           'creativity_human': catch_if_none(creativity_human, "number"),
+           'age': catch_if_none(age, "number"),
+           'ai_feeling': catch_if_none(ai_feeling, "string"),
+           'country': catch_if_none(country, "string"),
+           'prolific_id': catch_if_none(prolific_id, "string"),
+           'is_prolific': session['is_prolific'],
+           'request_args': catch_if_none(session['request_args'], "string"),
+           'referer': catch_if_none(session['referer'], "string"),
+           'is_test': is_test
+           }
     print(row)
     person_table = dataset.table("person")
     insert_into_bigquery(client, person_table, [row])
@@ -237,7 +231,7 @@ LIMIT
     {n_human_ideas}
 
          """
-        #print(human_query)
+        # print(human_query)
         human_result = do_sql_query(client, human_query)
         print(human_result)
         human_rows = [row['response_text'] for row in human_result]
@@ -265,7 +259,8 @@ LIMIT
         session.modified = True
 
         return render_template('render_trial.html', item=item, data=zip(rows, ids), condition_no=condition_no,
-                               label=SOURCE_LABEL if to_label else "", trial_no=condition_no + 1, init_array=init_array, is_prolific=session['is_prolific'])
+                               label=SOURCE_LABEL if to_label else "", trial_no=condition_no + 1, init_array=init_array,
+                               is_prolific=session['is_prolific'])
 
 
     # If the HTTP method is POST, insert the participant's response into the BigQuery table
@@ -276,7 +271,7 @@ LIMIT
         init_array = request.form.get('init_array', '').split(',')
         ranked_array = request.form.get('ranked_array', '').split(',')
         response_text = request.form.get('participant_response')
-        duration = value2none(request.form.get('duration'), "float")
+        duration = catch_if_none(request.form.get('duration'), "float")
         response_id = str(uuid.uuid4())
         session['responses'].append(response_text)
         session['response_ids'].append(response_id)
@@ -286,7 +281,7 @@ LIMIT
                "condition_order": condition_no, "response_text": response_text,
                "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), "condition": condition,
                "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, 'is_test': is_test,
-               "duration":duration}
+               "duration": duration}
         print(row)
         errors = insert_into_bigquery(client, table, [row])
         # Redirect to next condition_no
@@ -304,6 +299,7 @@ def get_duration():
     except Exception as e:
         print(e)
         return str(-1)
+
 
 @app.route('/calculate_similarity', methods=['POST'])
 def calculate_similarity_route():
@@ -372,7 +368,8 @@ def results(uuid):
     return render_template('thank_you.html',
                            uuid=uuid,
                            from_uuid=from_uuid,
-                           request_args=request.query_string.decode().replace("from_uuid=False&", ""), is_prolific=is_prolific)
+                           request_args=request.query_string.decode().replace("from_uuid=False&", ""),
+                           is_prolific=is_prolific)
 
 
 @app.route("/get-graphs/<uuid>")
@@ -400,8 +397,8 @@ def feedback():
 @app.route('/submit-feedback-experiment', methods=['POST'])
 def submit_feedback_experiment():
     if request.method == 'POST':
-        experiment_feedback = value2none(request.form.get('experimentFeedback'), "string")
-        ai_thoughts = value2none(request.form.get('aiThoughts'), "string")  # get the 'aiThoughts' field
+        experiment_feedback = catch_if_none(request.form.get('experimentFeedback'), "string")
+        ai_thoughts = catch_if_none(request.form.get('aiThoughts'), "string")  # get the 'aiThoughts' field
 
         # In the default case, the person came here after seeing results,
         # so we must have their UUID. But, let's say somebody shared results,
@@ -428,7 +425,6 @@ def record_duration_route():
     # For example, you can save it to the database, etc.
     print("DURATION", duration)
     return jsonify({"message": "Duration recorded successfully", "duration": duration})
-
 
 
 if __name__ == '__main__':
