@@ -13,6 +13,50 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
+
+    <script>
+        function loadTikTokPixel() {
+            {% if not is_prolific and not from_uuid %}
+                (function (w, d, t) {
+                    w.TiktokAnalyticsObject = t;
+                    var ttq = w[t] = w[t] || [];
+                    ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"];
+                    ttq.setAndDefer = function (t, e) {
+                        t[e] = function () {
+                            t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
+                        }
+                    };
+                    for (var i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]);
+                    ttq.instance = function (t) {
+                        for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++) ttq.setAndDefer(e, ttq.methods[n]);
+                        return e
+                    };
+                    ttq.load = function (e, n) {
+                        var i = "https://analytics.tiktok.com/i18n/pixel/events.js";
+                        ttq._i = ttq._i || {};
+                        ttq._i[e] = [];
+                        ttq._i[e]._u = i;
+                        ttq._t = ttq._t || {};
+                        ttq._t[e] = +new Date;
+                        ttq._o = ttq._o || {};
+                        ttq._o[e] = n || {};
+                        n = document.createElement("script");
+                        n.type = "text/javascript";
+                        n.async = !0;
+                        n.src = i + "?sdkid=" + e + "&lib=" + t;
+                        e = document.getElementsByTagName("script")[0];
+                        e.parentNode.insertBefore(n, e)
+                    };
+                    ttq.load('CIHJRE3C77UDF7B2NCO0');
+                    ttq.page();
+                })(window, document, 'ttq');
+            {% endif %}
+        }
+
+        loadTikTokPixel();
+    </script>
+
+
     <style>
         body {
             min-height: 100vh;
@@ -130,7 +174,8 @@
     {% endif %}
 </h1>
 
-<h5> To view results again, click the "Copy Results Link" or use the share buttons to post results to social media. </h5>
+<h5> To view results again, click the "Copy Results Link" or use the share buttons to post results to social
+    media. </h5>
 
 <!-- Wrap buttons in a div container -->
 <div class="buttons-container">
@@ -143,10 +188,10 @@
 
     <button class="btn btn-primary" onclick="copyExperimentLink()"><i class="fas fa-link"></i> Copy Experiment Link
     </button>
-   <button class="btn btn-secondary-link" onclick="window.location.href='/feedback'">
+    <button class="btn btn-secondary-link" onclick="window.location.href='/feedback'">
         <i class="fas fa-comment"></i> Share Thoughts on AI and Creativity
     </button>
-       <button class="btn btn-secondary-link" onclick="window.location.href='/feedback'">
+    <button class="btn btn-secondary-link" onclick="window.location.href='/feedback'">
         <i class="fas fa-sticky-note"></i> Leave Feedback about Experiment
     </button>
 
@@ -285,7 +330,7 @@
         }
         queryParams.append('how', 'share');
         const link = baseUrl + '?' + queryParams.toString();
-                if (navigator.clipboard) {
+        if (navigator.clipboard) {
             navigator.clipboard.writeText(link).then(showSuccessMessage, () => copyToClipboardFallback(link));
         } else {
             copyToClipboardFallback(link);
