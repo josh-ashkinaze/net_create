@@ -1,91 +1,91 @@
 aut_item,condition,response,target,response_id
-tire,h,spin something,2.5,human_seed0
-tire,h,chip it up and use for the floor of a playground,2.7,human_seed1
-tire,h,wheelbarrow,2.0,human_seed2
-tire,h,game,2.5,human_seed3
-tire,h,exercising tool,2.8,human_seed4
-tire,h,"use for an obstacle course, exercise",2.7,human_seed5
-tire,f_l,bumper for a dock or side of a boat,2.8,human_seed6
-tire,f_l,bounce on it,2.8,human_seed7
-tire,f_l,kids play area,2.7,human_seed8
-tire,f_l,ride in,1.8,human_seed9
-tire,f_u,bounce,2.8,human_seed10
-tire,f_u,obstacle course,2.8,human_seed11
-tire,f_u,flip for exercising,2.8,human_seed12
-tire,f_u,decorate,2.8,human_seed13
-tire,m_l,agility drills,2.8,human_seed14
-tire,m_l,recycling,1.7,human_seed15
-tire,m_u,as a play toy,2.3,human_seed16
-tire,m_u,play ground,2.2,human_seed17
-pants,h,cut and turn into shorts,2.3,human_seed18
-pants,h,fly,2.2,human_seed19
-pants,h,stuffed with other clothes,2.8,human_seed20
-pants,h,something to light a fire with,2.5,human_seed21
-pants,h,use them as a makeshift rope to tie something up,2.8,human_seed22
-pants,h,stuff for a scarecrow,2.3,human_seed23
-pants,f_l,decorate the legs,2.0,human_seed24
-pants,f_l,wash them,1.8,human_seed25
-pants,f_l,to make rags from when old,2.2,human_seed26
-pants,f_l,protection,1.7,human_seed27
-pants,f_u,bandages,2.5,human_seed28
-pants,f_u,make scarecrow outfit,2.2,human_seed29
-pants,f_u,motivation,2.2,human_seed30
-pants,f_u,paint in them to protect clean pants,2.0,human_seed31
-pants,m_l,climb,2.0,human_seed32
-pants,m_l,to use as a pattern to sew more pants,2.5,human_seed33
-pants,m_u,dust rag,2.2,human_seed34
-pants,m_u,bandana,2.7,human_seed35
-shoe,h,throwing weapon,2.8,human_seed36
-shoe,h,donate,1.7,human_seed37
-shoe,h,warning,2.2,human_seed38
-shoe,h,hit something,2.7,human_seed39
-shoe,h,draw on it,2.5,human_seed40
-shoe,h,paint for decoration,2.8,human_seed41
-shoe,f_l,draw large letters on sandy beach,2.7,human_seed42
-shoe,f_l,as a doorstopper,2.7,human_seed43
-shoe,f_l,put different shoe on,1.9,human_seed44
-shoe,f_l,throwing at something,2.2,human_seed45
-shoe,f_u,hang over power line,2.2,human_seed46
-shoe,f_u,tie around power lines,2.2,human_seed47
-shoe,f_u,projectile,2.7,human_seed48
-shoe,f_u,place on a shelf,2.3,human_seed49
-shoe,m_l,slap someone,2.7,human_seed50
-shoe,m_l,to throw at someone,2.5,human_seed51
-shoe,m_u,dog toy,2.8,human_seed52
-shoe,m_u,A shoe could be a container for anything that can fit in it.,2.3,human_seed53
-table,h,a stool,2.0,human_seed54
-table,h,paint on,2.5,human_seed55
-table,h,bench,2.5,human_seed56
-table,h,it can be used as a sitting chair,2.5,human_seed57
-table,h,to keep books,2.3,human_seed58
-table,h,as a workout board,2.8,human_seed59
-table,f_l,building,2.5,human_seed60
-table,f_l,reach lightbulb,2.8,human_seed61
-table,f_l,to sell for money,2.5,human_seed62
-table,f_l,for painting,2.5,human_seed63
-table,f_u,used for arranging books,2.2,human_seed64
-table,f_u,to put a lamp,1.8,human_seed65
-table,f_u,folding laundry,2.0,human_seed66
-table,f_u,tv tray,1.8,human_seed67
-table,m_l,operation,2.3,human_seed68
-table,m_l,as a present,2.5,human_seed69
-table,m_u,puzzle board,2.0,human_seed70
-table,m_u,use the table top as a art piece,2.7,human_seed71
-bottle,h,you could bottle flip the bottle.,2.1,human_seed72
-bottle,h,water plants,2.5,human_seed73
-bottle,h,mouthwash container,1.8,human_seed74
-bottle,h,flipping it into the trash,1.9,human_seed75
-bottle,h,put in cabinet as decoration,2.5,human_seed76
-bottle,h,science experiment,2.8,human_seed77
-bottle,f_l,window,2.5,human_seed78
-bottle,f_l,spit cup,2.7,human_seed79
-bottle,f_l,breath it,2.4,human_seed80
-bottle,f_l,contain salt/pepper,2.3,human_seed81
-bottle,f_u,put dish washing liquid on it,1.8,human_seed82
-bottle,f_u,you can craft stuff with it,2.4,human_seed83
-bottle,f_u,spitoon,2.3,human_seed84
-bottle,f_u,to put holes in it,2.4,human_seed85
-bottle,m_l,cut it in half,1.9,human_seed86
-bottle,m_l,a drawing pad!,2.7,human_seed87
-bottle,m_u,artwork,2.7,human_seed88
-bottle,m_u,use it as a club,2.5,human_seed89
+tire,h,spin on a stick,2.2,human_seed0
+tire,h,melt to make shoes,3.5,human_seed1
+tire,h,burn it to send a smoke signal,2.7,human_seed2
+tire,h,weight,2.8,human_seed3
+tire,h,used in two wheeler,1.3,human_seed4
+tire,h,yard border,3.3,human_seed5
+tire,f_l,stairs,3.8,human_seed6
+tire,f_l,shoe soles,3.2,human_seed7
+tire,f_l,to make toy cars,1.8,human_seed8
+tire,f_l,to make them plant vases,3.5,human_seed9
+tire,f_u,for cars,1.0,human_seed10
+tire,f_u,recycle and use different items,2.0,human_seed11
+tire,f_u,turn into swing,2.3,human_seed12
+tire,f_u,a dog bed,3.7,human_seed13
+tire,m_l,rubber,1.0,human_seed14
+tire,m_l,a weapon,3.2,human_seed15
+tire,m_u,make a community garden,3.2,human_seed16
+tire,m_u,a planter,3.3,human_seed17
+pants,h,napkins,2.3,human_seed18
+pants,h,wearing as bottom,1.2,human_seed19
+pants,h,tie around your head for sunshade,3.0,human_seed20
+pants,h,tug of war rope,3.5,human_seed21
+pants,h,computer case,4.0,human_seed22
+pants,h,hammock,4.5,human_seed23
+pants,f_l,cut apart to use for sewing projects,2.3,human_seed24
+pants,f_l,rag,2.2,human_seed25
+pants,f_l,cut and make jewelry,3.8,human_seed26
+pants,f_l,tie around your waist for a belt,3.5,human_seed27
+pants,f_u,embellish or decorate,2.5,human_seed28
+pants,f_u,to cover private parts,1.0,human_seed29
+pants,f_u,makeshift flag,4.0,human_seed30
+pants,f_u,cat bed,4.0,human_seed31
+pants,m_l,roll it up to be a makeshift pillow,3.5,human_seed32
+pants,m_l,make a pillow,3.3,human_seed33
+pants,m_u,towell,2.5,human_seed34
+pants,m_u,facemask,3.0,human_seed35
+shoe,h,take apart and reuse pieces in a multi media art piece,3.3,human_seed36
+shoe,h,mittens,2.7,human_seed37
+shoe,h,to dress,1.3,human_seed38
+shoe,h,using it as a cup,3.4,human_seed39
+shoe,h,stomp,1.5,human_seed40
+shoe,h,dog chew toy,3.0,human_seed41
+shoe,f_l,take out laces for rope,3.0,human_seed42
+shoe,f_l,used as foot wear,1.0,human_seed43
+shoe,f_l,as a pot,3.3,human_seed44
+shoe,f_l,throwing weapon,2.8,human_seed45
+shoe,f_u,art piec,3.0,human_seed46
+shoe,f_u,a shoe is worn to keep the sole warm,1.2,human_seed47
+shoe,f_u,decoration,2.5,human_seed48
+shoe,f_u,to throw at someone,2.5,human_seed49
+shoe,m_l,so that a door does not close,2.8,human_seed50
+shoe,m_l,hang in a tree as a decoration,3.3,human_seed51
+shoe,m_u,deodorizer,2.2,human_seed52
+shoe,m_u,walk,1.0,human_seed53
+table,h,toy car racetrack,3.0,human_seed54
+table,h,platform,2.0,human_seed55
+table,h,use as a shield,3.8,human_seed56
+table,h,stand on it,2.8,human_seed57
+table,h,to store things on top of it,1.5,human_seed58
+table,h,hide under during emergency,3.5,human_seed59
+table,f_l,as a barrier,3.2,human_seed60
+table,f_l,putting objects,1.3,human_seed61
+table,f_l,floating platform on water,4.5,human_seed62
+table,f_l,storing stuff on,1.7,human_seed63
+table,f_u,useful during family or individual meals,1.0,human_seed64
+table,f_u,decor,2.0,human_seed65
+table,f_u,set up buffet on,1.5,human_seed66
+table,f_u,cover on the head,2.8,human_seed67
+table,m_l,hold important papers,1.5,human_seed68
+table,m_l,slide down a hill,4.3,human_seed69
+table,m_u,to jump over,3.5,human_seed70
+table,m_u,playing a game,1.8,human_seed71
+bottle,h,cut it into half and use it for a speaker.,3.3,human_seed72
+bottle,h,make a fountain,3.6,human_seed73
+bottle,h,use the bottle for a game that you have to manage to throw a toothpick into that bottle and if you win you get something,3.3,human_seed74
+bottle,h,glass,1.3,human_seed75
+bottle,h,to cut it to where you can put a phone in it and trick someone,3.6,human_seed76
+bottle,h,do a water bottle flip,2.1,human_seed77
+bottle,f_l,cut the top off and use it as a flowerpot.,3.0,human_seed78
+bottle,f_l,to use as a mystical tool,4.0,human_seed79
+bottle,f_l,bird feeder,3.0,human_seed80
+bottle,f_l,use it to keep stuff,2.7,human_seed81
+bottle,f_u,By making music with the bottle,3.0,human_seed82
+bottle,f_u,break it and use as a weapon,3.2,human_seed83
+bottle,f_u,to use for an art project,2.8,human_seed84
+bottle,f_u,"fill with water, turn upside down in soil for a plant waterer",3.5,human_seed85
+bottle,m_l,you could use a bunch of bottles to make a giant one! like use 300 water bottles and make the shape of a water bottle!,3.6,human_seed86
+bottle,m_l,to make it a spaceship with wheels,3.3,human_seed87
+bottle,m_u,as a shovel,4.3,human_seed88
+bottle,m_u,can draw on it and keep in showcase,2.5,human_seed89
