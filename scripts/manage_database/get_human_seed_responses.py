@@ -27,10 +27,15 @@ def main():
     # Read in the data
     df = pd.read_csv("../../data/prior_responses.csv")
 
-    # Get Q2-Q3 responses
-    df['creativity_quartile'] = pd.qcut(df['target'], 4, labels=False)
-    df['creativity_quartile'] = df['creativity_quartile'] + 1
-    df = df[df['creativity_quartile'].isin([2,3])]
+
+    # NOTE: In old version, only got Q2 and Q3 of originality.
+    # But since human ideas are already scoring lower than AI,
+    # don't want to bias the condition.
+
+    # # Get Q2-Q3 responses
+    # df['creativity_quartile'] = pd.qcut(df['target'], 4, labels=False)
+    # df['creativity_quartile'] = df['creativity_quartile'] + 1
+    # df = df[df['creativity_quartile'].isin([2,3])]
 
     # Filter for my items
     my_items = pd.read_csv("../../data/chosen_aut_items.csv")['aut_item'].tolist()
@@ -45,7 +50,7 @@ def main():
 
         for condition, n_items in n_items_per_condition.items():
             # Sample n_items from prompt_df for each condition
-            sampled_df = prompt_df.sample(n_items, random_state=417)
+            sampled_df = prompt_df.sample(n_items, random_state=414)
 
             # Remove sampled rows from prompt_df
             prompt_df = prompt_df.drop(sampled_df.index)
