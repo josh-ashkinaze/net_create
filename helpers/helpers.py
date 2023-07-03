@@ -142,7 +142,7 @@ def find_latest_file(directory, pattern):
 
 
 # Helper function to check and cast to appropriate type
-def value2none(my_val, how):
+def catch_if_none(my_val, how):
     try:
         if my_val != '':
             if how == 'number':
