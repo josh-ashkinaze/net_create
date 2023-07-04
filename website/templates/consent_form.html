@@ -7,25 +7,55 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
-            <!-- Reddit Pixel -->
-        <script>
-            !function (w, d) {
-                if (!w.rdt) {
-                    var p = w.rdt = function () {
-                        p.sendEvent ? p.sendEvent.apply(p, arguments) : p.callQueue.push(arguments)
-                    };
-                    p.callQueue = [];
-                    var t = d.createElement("script");
-                    t.src = "https://www.redditstatic.com/ads/pixel.js", t.async = !0;
-                    var s = d.getElementsByTagName("script")[0];
-                    s.parentNode.insertBefore(t, s)
-                }
-            }(window, document);
-            rdt('init', 't2_erxejw4zk', {"optOut": false, "useDecimalCurrencyValues": true});
-            rdt('track', 'PageVisit');
-        </script>
-        <!-- DO NOT MODIFY UNLESS TO REPLACE A USER IDENTIFIER -->
-        <!-- End Reddit Pixel -->
+    <!-- Reddit Pixel -->
+    <script>
+        !function (w, d) {
+            if (!w.rdt) {
+                var p = w.rdt = function () {
+                    p.sendEvent ? p.sendEvent.apply(p, arguments) : p.callQueue.push(arguments)
+                };
+                p.callQueue = [];
+                var t = d.createElement("script");
+                t.src = "https://www.redditstatic.com/ads/pixel.js", t.async = !0;
+                var s = d.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(t, s)
+            }
+        }(window, document);
+        rdt('init', 't2_erxejw4zk', {"optOut": false, "useDecimalCurrencyValues": true});
+        rdt('track', 'PageVisit');
+    </script>
+    <!-- DO NOT MODIFY UNLESS TO REPLACE A USER IDENTIFIER -->
+    <!-- End Reddit Pixel -->
+
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '294643549684918');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1"
+             src="https://www.facebook.com/tr?id=294643549684918&ev=PageView
+&noscript=1"/>
+    </noscript>
+    <!-- End Facebook Pixel Code -->
     <style>
         @keyframes movingGradient {
             0% {
@@ -206,7 +236,8 @@
 <body class="container py-4">
 
 <div class="creative-section">
-<h4 class="mb-4">{% if is_prolific %} <strong> [REQUIRED] </strong> {% endif %} How <span class="highlight">creative</span> are you?</h4>
+    <h4 class="mb-4">{% if is_prolific %} <strong> [REQUIRED] </strong> {% endif %} How <span
+            class="highlight">creative</span> are you?</h4>
     <p class="lead mb-4">Guess how creative you are <span class="highlight">compared to humans and AI</span>. By the end
         of the experiment, we'll show how your creativity compares to humans, to AI, and how well you can guess the
         creativity of other people's ideas!
@@ -257,27 +288,27 @@
 
 
 {% if is_prolific %}
-    <h4> <strong> [ALL QUESTIONS REQUIRED] </strong> About You  </h4>
+    <h4><strong> [ALL QUESTIONS REQUIRED] </strong> About You </h4>
 {% else %}
     <h5> About you [OPTIONAL BUT HELPFUL] </h5>
 {% endif %}
 
 
 {% if is_prolific %}
-<div class="form-group">
-    <label for="prolific_id"> <strong> [REQUIRED] </strong> Please enter your prolific ID:</label>
-    <input type="text" placeholder="Enter Prolific ID" class="form-control" id="prolific_id" name="prolific_id"
-           onchange="storeAboutYouValues()" required>
-</div>
-    {% else %}
+    <div class="form-group">
+        <label for="prolific_id"> <strong> [REQUIRED] </strong> Please enter your prolific ID:</label>
+        <input type="text" placeholder="Enter Prolific ID" class="form-control" id="prolific_id" name="prolific_id"
+               onchange="storeAboutYouValues()" required>
+    </div>
+{% else %}
 
 {% endif %}
 
 
-    <label for="ai-feeling">{% if is_prolific %} <strong> [REQUIRED] </strong> {% endif %} Artificial intelligence computer programs are designed to learn tasks that humans
+<label for="ai-feeling">{% if is_prolific %} <strong> [REQUIRED] </strong> {% endif %} Artificial intelligence computer
+    programs are designed to learn tasks that humans
     typically do. Would you say the increased use of artificial intelligence computer programs in daily life
     makes you feel...</label>
-
 
 
 <select class="form-control" id="ai-feeling" name="ai-feeling" onchange="storeAboutYouValues()">
@@ -290,7 +321,8 @@
 
 
 <div class="form-group">
-    <label for="country">{% if is_prolific %} <strong> [REQUIRED] </strong>{% endif %} What country are you from?</label>
+    <label for="country">{% if is_prolific %} <strong> [REQUIRED] </strong>{% endif %} What country are you
+        from?</label>
     <select class="form-control" id="country" name="country" onchange="storeAboutYouValues()">
         <option value="">Select a country</option>
         <option value="Argentina">Argentina</option>
@@ -366,8 +398,6 @@
     <input type="number" placeholder="Enter an age" class="form-control" id="age" name="age"
            onchange="storeAboutYouValues()" {% if is_prolific %} required {% endif %}>
 </div>
-
-
 
 
 <hr>
