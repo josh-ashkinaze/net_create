@@ -90,15 +90,18 @@ def consent_form():
     """Consent form"""
     session['request_args'] = catch_if_none(request.query_string.decode(), "string")
     session['referer'] = catch_if_none(request.headers.get('Referer'), "string")
+
     if request.query_string.decode() == "from=prolific":
         session['is_prolific'] = True
     else:
         session['is_prolific'] = False
+
     if is_local or os.environ.get('IS_TEST') == "True" or catch_if_none(request.headers.get('Referer'), "string")=='https://dashboard.heroku.com/':
         session['test'] = True
     else:
         session['test'] = False
     session.modified = True
+
     return render_template('consent_form.html', is_prolific=session['is_prolific'])
 
 
@@ -143,7 +146,7 @@ def start_experiment():
            'is_prolific': session['is_prolific'],
            'request_args': catch_if_none(session['request_args'], "string"),
            'referer': catch_if_none(session['referer'], "string"),
-           'is_test': is_test
+           'is_test': session['test']
            }
     print(row)
     person_table = dataset.table("person")
@@ -283,7 +286,7 @@ LIMIT
         row = {"item": item, "response_id": response_id, "participant_id": participant_id,
                "condition_order": condition_no, "response_text": response_text,
                "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), "condition": condition,
-               "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, 'is_test': is_test,
+               "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, 'is_test': session['test'],
                "duration": duration}
         print(row)
         errors = insert_into_bigquery(client, table, [row])
