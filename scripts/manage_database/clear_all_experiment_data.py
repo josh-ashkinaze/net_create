@@ -13,6 +13,7 @@ handler = logging.FileHandler(f'{os.path.basename(__file__)}.log')
 handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S'))
 root_logger.addHandler(handler)
 
+
 @retry(retry=retry_if_exception_type(BadRequest),
        stop=stop_after_attempt(50),
        wait=wait_exponential(multiplier=5, min=1, max=5400),
@@ -20,6 +21,7 @@ root_logger.addHandler(handler)
 def execute_query(client, clear_query):
     query_job = client.query(clear_query)
     query_job.result()
+
 
 def clear_rows(credentials, dataset_id, table_ids, remove_seeds):
     client = bigquery.Client(credentials=credentials, project=credentials.project_id)
@@ -40,7 +42,9 @@ def clear_rows(credentials, dataset_id, table_ids, remove_seeds):
             WHERE TRUE
             """
         execute_query(client, clear_query)
-        logging.info(f"All rows cleared from {dataset_id}.{table_id}, except those where participant_id contains 'seed' for 'trials' table (if remove_seeds is False)")
+        logging.info(
+            f"All rows cleared from {dataset_id}.{table_id}, except those where participant_id contains 'seed' for 'trials' table (if remove_seeds is False)")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Clear rows from Google BigQuery tables.')
@@ -61,4 +65,4 @@ if __name__ == "__main__":
     dataset_id = "net_expr"
     table_ids = ["trials", "person", "responses", 'feedback']
     clear_rows(credentials, dataset_id, table_ids, args.remove_seeds)
-    logging.info(f"All rows cleared appropiately from {dataset_id}.{table_ids}")
+    logging.info(f"All rows cleared appropriately from {dataset_id}.{table_ids}")

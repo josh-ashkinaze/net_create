@@ -50,7 +50,7 @@ def main():
 
         for condition, n_items in n_items_per_condition.items():
             # Sample n_items from prompt_df for each condition
-            sampled_df = prompt_df.sample(n_items, random_state=414)
+            sampled_df = prompt_df.sample(n_items, random_state=39)
 
             # Remove sampled rows from prompt_df
             prompt_df = prompt_df.drop(sampled_df.index)
