@@ -71,7 +71,7 @@ dataset = client.dataset("net_expr")
 table = dataset.table("trials")
 
 # EXPERIMENT PARAMETERS
-N_PER_WORLD = 20
+N_PER_WORLD = 25
 SOURCE_LABEL = "For this object, we also asked AI to come up with ideas! "
 CONDITIONS = {'h': {'n_human': 6, 'n_ai': 0, 'label': False}, 'f_l': {'n_human': 4, 'n_ai': 2, 'label': True},
               'f_u': {'n_human': 4, 'n_ai': 2, 'label': False}, 'm_l': {'n_human': 2, 'n_ai': 4, 'label': True},
@@ -94,7 +94,10 @@ def consent_form():
         session['is_prolific'] = True
     else:
         session['is_prolific'] = False
-    print(catch_if_none(request.query_string.decode(), "string"))
+    if is_local or os.environ.get('IS_TEST') == "True" or catch_if_none(request.headers.get('Referer'), "string")=='https://dashboard.heroku.com/':
+        session['test'] = True
+    else:
+        session['test'] = False
     session.modified = True
     return render_template('consent_form.html', is_prolific=session['is_prolific'])
 
