@@ -45,9 +45,9 @@ def main():
     df['english_n'] = df['english_n'].apply(convert_to_integers)
     df['n'] = df['n'].apply(convert_to_integers)
     df['english_prop'] = df['english_n'] / df['n']
-    large_english = df.query("english_prop > 0.50").sort_values(by=['english_n'], ascending=False).head(20)
+    large_english = df.query("english_prop > 0.75").sort_values(by=['english_n'], ascending=False).head(15)
     logging.info(large_english[['english_n', 'english_prop', 'country']].to_string())
-    logging.info(sorted(large_english['country'].tolist()))
+    logging.info("\n" + str(sorted(large_english['country'].tolist())))
 
 
 if __name__ == "__main__":
