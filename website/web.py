@@ -200,7 +200,7 @@ def render_trial(condition_no):
         human_query = f"""
             WITH current_world AS (
     SELECT 
-        FLOOR(COUNT(*)+1 / {N_PER_WORLD}) as world_value 
+        FLOOR((COUNT(*)+1 )/ {N_PER_WORLD}) as world_value 
     FROM 
         `net_expr.trials`
     WHERE 
