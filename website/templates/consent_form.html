@@ -476,6 +476,12 @@
     document.getElementById('aiFeelingValue').value = document.getElementById('ai-feeling').value;
     document.getElementById('countryValue').value = document.getElementById('country').value;
     document.getElementById('ageValue').value = document.getElementById('age').value;
+    var age = parseInt(document.getElementById('age').value);
+    if (age < 18) {
+      alert("You have to be at least 18");
+      event.preventDefault()
+      return;
+    }
 
     if ("{{ is_prolific }}" === "True") {
         var fields = ['creativitySliderAIValue', 'creativitySliderHumanValue', 'aiFeelingValue', 'countryValue', 'ageValue', 'prolific_idValue'];
