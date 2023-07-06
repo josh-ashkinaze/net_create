@@ -290,7 +290,7 @@
 {% if is_prolific %}
     <h4><strong> [ALL QUESTIONS REQUIRED] </strong> About You </h4>
 {% else %}
-    <h5> About you [OPTIONAL BUT HELPFUL] </h5>
+    <h4> About you [OPTIONAL] </h4>
 {% endif %}
 
 
@@ -309,13 +309,18 @@
     makes you feel...</label>
 
 <div class="form-group">
-    <select class="form-control" id="ai-feeling" name="ai-feeling" onchange="storeAboutYouValues()" {% if is_prolific %} required {% endif %}>
+    <select class="form-control" id="ai-feeling" name="ai-feeling" {% if is_prolific %} required {% endif %}>
         <option value="">---</option>
         <option id="option-1" value="excited">More excited than concerned</option>
         <option id="option-2" value="concerned">More concerned than excited</option>
         <option value="neutral">Equally excited and concerned</option>
+        <option value="other">Other</option>
     </select>
 </div>
+
+
+
+
 
 <div class="form-group">
     <label for="country">{% if is_prolific %} <strong> [REQUIRED] </strong>{% endif %} What country are you from?</label>
@@ -390,9 +395,22 @@
 </div>
 
 <div class="form-group">
-    <label for="age">{% if is_prolific %} <strong> [REQUIRED] </strong> {% endif %} Please enter your age:</label>
+    <label for="age">{% if is_prolific %} <strong> [REQUIRED] </strong> {% endif %} What is your age?</label>
     <input type="number" placeholder="Enter an age" class="form-control" id="age" name="age"
            onchange="storeAboutYouValues()" {% if is_prolific %} required {% endif %}>
+</div>
+
+<div class="form-group">
+    <label for="gender">{% if is_prolific %} <strong> [REQUIRED] </strong>{% endif %} What is your gender?</label>
+    <select class="form-control" id="gender" name="gender" onchange="storeAboutYouValues()" {% if is_prolific %} required {% endif %}>
+        <option value="">---</option>
+        <option value="woman">woman</option>
+        <option value="man">man</option>
+        <option value="non-binary">non-binary</option>
+        <option value="prefer_not_disclose">prefer not to disclose</option>
+        <option value="prefer_self_describe">prefer to self-describe</option>
+    </select>
+    <input type="text" id="gender-describe" name="gender-describe" class="form-control" onchange="storeAboutYouValues()" placeholder="If 'prefer to self-describe', please specify:">
 </div>
 
 
@@ -413,6 +431,8 @@
     <input type="hidden" id="countryValue" name="countryValue">
     <input type="hidden" id="ageValue" name="ageValue">
     <input type="hidden" id="prolific_idValue" name="prolific_idValue">
+    <input type="hidden" id="genderValue" name="genderValue">
+    <input type="hidden" id="gender-describeValue" name="gender-describeValue">
 
     <div class="form-group">
         <button id="submit-button" type="submit" class="btn btn-primary"> Click here to start!</button>
@@ -449,6 +469,9 @@
         document.getElementById('countryValue').value = country;
         document.getElementById('ageValue').value = age;
         document.getElementById('prolific_idValue').value = prolific_id;
+        document.getElementById('genderValue').value = gender;
+        document.getElementById('gender-describeValue').value = gender_describe;
+
 
     }
 </script>
@@ -476,6 +499,9 @@
     document.getElementById('aiFeelingValue').value = document.getElementById('ai-feeling').value;
     document.getElementById('countryValue').value = document.getElementById('country').value;
     document.getElementById('ageValue').value = document.getElementById('age').value;
+    document.getElementById('genderValue').value = document.getElementById('gender').value;
+    document.getElementById('gender-describeValue').value = document.getElementById('gender-describe').value;
+
     var age = parseInt(document.getElementById('age').value);
     if (age < 18) {
       alert("You have to be at least 18");
@@ -484,7 +510,7 @@
     }
 
     if ("{{ is_prolific }}" === "True") {
-        var fields = ['creativitySliderAIValue', 'creativitySliderHumanValue', 'aiFeelingValue', 'countryValue', 'ageValue', 'prolific_idValue'];
+        var fields = ['creativitySliderAIValue', 'creativitySliderHumanValue', 'aiFeelingValue', 'countryValue', 'ageValue', 'prolific_idValue', 'genderValue'];
         for (var i = 0; i < fields.length; i++) {
             var field = document.getElementById(fields[i]).value;
             if (!field) { // If field is empty

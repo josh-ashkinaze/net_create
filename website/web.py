@@ -134,6 +134,8 @@ def start_experiment():
     ai_feeling = request.args.get('aiFeelingValue')
     country = request.args.get('countryValue')
     age = request.args.get('ageValue')
+    gender = request.args.get('genderValue')
+    gender_describe = request.args.get('gender-describeValue')
     prolific_id = request.args.get("prolific_idValue")
     row = {'participant_id': session['participant_id'],
            'dt': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
@@ -146,6 +148,8 @@ def start_experiment():
            'is_prolific': session['is_prolific'],
            'request_args': catch_if_none(session['request_args'], "string"),
            'referer': catch_if_none(session['referer'], "string"),
+           'gender':catch_if_none(gender, "string"),
+           'gender_describe': catch_if_none(gender_describe, "string"),
            'is_test': session['test']
            }
     print(row)
