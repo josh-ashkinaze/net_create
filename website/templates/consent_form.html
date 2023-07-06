@@ -7,55 +7,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
-    <!-- Reddit Pixel -->
-    <script>
-        !function (w, d) {
-            if (!w.rdt) {
-                var p = w.rdt = function () {
-                    p.sendEvent ? p.sendEvent.apply(p, arguments) : p.callQueue.push(arguments)
-                };
-                p.callQueue = [];
-                var t = d.createElement("script");
-                t.src = "https://www.redditstatic.com/ads/pixel.js", t.async = !0;
-                var s = d.getElementsByTagName("script")[0];
-                s.parentNode.insertBefore(t, s)
-            }
-        }(window, document);
-        rdt('init', 't2_erxejw4zk', {"optOut": false, "useDecimalCurrencyValues": true});
-        rdt('track', 'PageVisit');
-    </script>
-    <!-- DO NOT MODIFY UNLESS TO REPLACE A USER IDENTIFIER -->
-    <!-- End Reddit Pixel -->
-
-    <!-- Facebook Pixel Code -->
-    <script>
-        !function (f, b, e, v, n, t, s) {
-            if (f.fbq) return;
-            n = f.fbq = function () {
-                n.callMethod ?
-                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n;
-            n.push = n;
-            n.loaded = !0;
-            n.version = '2.0';
-            n.queue = [];
-            t = b.createElement(e);
-            t.async = !0;
-            t.src = v;
-            s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '294643549684918');
-        fbq('track', 'PageView');
-    </script>
-    <noscript>
-        <img height="1" width="1"
-             src="https://www.facebook.com/tr?id=294643549684918&ev=PageView
-&noscript=1"/>
-    </noscript>
-    <!-- End Facebook Pixel Code -->
     <style>
         @keyframes movingGradient {
             0% {
@@ -236,9 +187,9 @@
 <body class="container py-4">
 
 <div class="creative-section">
-    <h4 class="mb-4"> How
+    <h4 class="mb-4"><span class="highlight">[REQUIRED]</span>
+        How
         <span class="highlight">creative</span> are you?
-         <span class="highlight">[REQUIRED]</span>
     </h4>
     <p class="lead mb-4">Guess how creative you are <span class="highlight">compared to humans and AI</span>. By the end
         of the experiment, we'll show how your creativity compares to humans, to AI, and how well you can guess the
@@ -322,8 +273,7 @@
 
 
 <div class="form-group">
-    <label for="country"> {% if is_prolific %}   <strong> [REQUIRED] </strong> {% else %}  [HELPFUL BUT
-        OPTIONAL] {% endif %} What country are you from?</label>
+    <label for="country"> {% if is_prolific %}   <strong> [REQUIRED] </strong> {% else %}  [Optional but helpful] {% endif %} What country are you from?</label>
     <select class="form-control" id="country" name="country" onchange="storeAboutYouValues()" {% if is_prolific %}
             required {% endif %}>
         <option value="">Select a country</option>
@@ -396,13 +346,13 @@
 </div>
 
 <div class="form-group">
-    <label for="age">{% if is_prolific %} <strong> [REQUIRED] </strong> {% endif %} What is your age?</label>
+    <label for="age"> {% if is_prolific %}   <strong> [REQUIRED] </strong> {% else %}  [Optional but helpful] {% endif %} What is your age?</label>
     <input type="number" placeholder="Enter an age" class="form-control" id="age" name="age"
            onchange="storeAboutYouValues()" {% if is_prolific %} required {% endif %}>
 </div>
 
 <div class="form-group">
-    <label for="gender">{% if is_prolific %} <strong> [REQUIRED] </strong>{% endif %} What is your gender?</label>
+    <label for="gender"> {% if is_prolific %}   <strong> [REQUIRED] </strong> {% else %}  [Optional but helpful] {% endif %} What is your gender?</label>
     <select class="form-control" id="gender" name="gender" onchange="storeAboutYouValues()" {% if is_prolific %}
             required {% endif %}>
         <option value="">---</option>
@@ -514,15 +464,20 @@
 
         if ("{{ is_prolific }}" === "True") {
             var fields = ['creativitySliderAIValue', 'creativitySliderHumanValue', 'aiFeelingValue', 'countryValue', 'ageValue', 'prolific_idValue', 'genderValue'];
-            for (var i = 0; i < fields.length; i++) {
-                var field = document.getElementById(fields[i]).value;
-                if (!field) { // If field is empty
-                    event.preventDefault(); // Prevent form submission
-                    alert('You need to fill out all required fields. This includes the creativity questions at the top and the About You section.'); // Show alert message
-                    return;
-                }
+            var alertMessage = 'You need to fill out all required fields. This includes the creativity questions at the top and the About You section.';
+        } else {
+            var fields = ['aiFeelingValue', 'creativitySliderHumanValue', 'creativitySliderAIValue'];
+            var alertMessage = 'You need to fill out the sliders at the top and the first question in the About You section.';
+        }
+        for (var i = 0; i < fields.length; i++) {
+            var field = document.getElementById(fields[i]).value;
+            if (!field) { // If field is empty
+                event.preventDefault(); // Prevent form submission
+                alert(alertMessage); // Show alert message
+                return;
             }
         }
+
 
         var submitButton = document.querySelector('button[type="submit"]');
 
