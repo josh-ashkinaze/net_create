@@ -24,7 +24,7 @@ from flask import flash, Flask, render_template, request, redirect, url_for, ses
 from google.cloud import bigquery
 from google.oauth2 import service_account
 from scipy.stats import spearmanr
-from helpers.helpers import catch_if_none, insert_into_bigquery, do_sql_query, get_participant_data
+from helpers.helpers import catch_if_none, insert_into_bigquery, do_sql_query, get_participant_data, sequential_randomization
 
 ############################################################################################################
 # Environment variables
@@ -119,8 +119,10 @@ def start_experiment():
     session['participant_id'] = str(uuid.uuid4())
 
     # Randomize to condition
-    session['item_order'] = random.sample(ITEMS, len(ITEMS))
-    session['condition_order'] = random.sample(list(CONDITIONS.keys()), len(CONDITIONS))
+    items, conditions = sequential_randomization(client)
+    print(items, conditions)
+    session['item_order'] = items
+    session['condition_order'] = conditions
 
     # Init lists of responses
     session['responses'] = []
@@ -242,7 +244,6 @@ LIMIT
          """
         # print(human_query)
         human_result = do_sql_query(client, human_query)
-        print(human_result)
         human_rows = [row['response_text'] for row in human_result]
         human_ids = [row['response_id'] for row in human_result]
         session['world'] = human_result[0]['world']
@@ -306,7 +307,7 @@ def get_duration():
         else:
             return str(np.round(duration, 4))
     except Exception as e:
-        print(e)
+        print("Error getting duration", e)
         return str(-1)
 
 
@@ -335,7 +336,7 @@ def calculate_rank_similarity_route():
         rank_similarity = (-1 * rank_similarity + 1) / 2  # -1 bc first idea is most creative
         return str(int(rank_similarity * 100))
     except Exception as e:
-        print("Error:", e)
+        print("Error doing rank similarity:", e)
         random_value = random.uniform(0.3, 0.7)
         return str(int(random_value * 100))
 
