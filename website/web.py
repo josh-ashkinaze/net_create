@@ -96,11 +96,10 @@ def consent_form():
     else:
         session['is_prolific'] = False
 
-    if is_local or os.environ.get('IS_TEST') == "True" or catch_if_none(request.headers.get('Referer'), "string")=='https://dashboard.heroku.com/':
+    if is_local or os.environ.get('IS_TEST') == "True" or request.query_string.decode()=="how=test" or catch_if_none(request.headers.get('Referer'), "string")=='https://dashboard.heroku.com/':
         session['test'] = True
     else:
         session['test'] = False
-    session.modified = True
 
     return render_template('consent_form.html', is_prolific=session['is_prolific'])
 
