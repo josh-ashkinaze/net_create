@@ -101,7 +101,7 @@ def consent_form():
         session['test'] = True
     else:
         session['test'] = False
-
+    session.modified = True
     return render_template('consent_form.html', is_prolific=session['is_prolific'])
 
 
@@ -119,9 +119,10 @@ def start_experiment():
     # Assign UUID and world
     session['participant_id'] = str(uuid.uuid4())
 
-
-    session['item_order'], session['condition_order'] = get_lowest_sum_subset(client)
-
+    item_order, condition_order = get_lowest_sum_subset(client)
+    session['item_order'] = item_order
+    session['condition_order'] = condition_order
+    session.modified = True
     # Init lists of responses
     session['responses'] = []
     session['response_ids'] = []
