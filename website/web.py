@@ -12,6 +12,7 @@ Description: This is a Flask web application that runs a web experiment.
 # There is a control human-only condition, and then a 2x2 varying by
 # LLM exposure (few LLM ideas vs many LLM ideas) and transparency (say source labels or don't)
 """
+import itertools
 import json
 import os
 import random
@@ -118,9 +119,8 @@ def start_experiment():
     # Assign UUID and world
     session['participant_id'] = str(uuid.uuid4())
 
-    # Randomize to condition
-    session['item_order'] = random.sample(ITEMS, len(ITEMS))
-    session['condition_order'] = random.sample(list(CONDITIONS.keys()), len(CONDITIONS))
+
+    session['item_order'], session['condition_order'] = get_lowest_sum_subset(client)
 
     # Init lists of responses
     session['responses'] = []
@@ -434,6 +434,60 @@ def record_duration_route():
     # For example, you can save it to the database, etc.
     print("DURATION", duration)
     return jsonify({"message": "Duration recorded successfully", "duration": duration})
+
+
+
+def get_lowest_sum_subset(client):
+    # Execute the SQL query to get the unique `item` and `condition` pairs along with their counts.
+    query = f"""
+        SELECT
+            item,
+            condition,
+            COUNT(*) as count
+        FROM
+            `net_expr.trials`
+        WHERE
+            NOT is_test
+        GROUP BY
+            item, condition
+    """
+    query_job = client.query(query)
+    result = query_job.result()
+
+    # Convert the BigQuery result to a Pandas DataFrame.
+    data = []
+    for row in result:
+        data.append({"item": row["item"], "condition": row["condition"], "count": row["count"]})
+    df = pd.DataFrame(data)
+
+    # Get all possible orderings of items and conditions.
+    unique_items = df["item"].unique()
+    unique_conditions = df["condition"].unique()
+
+    # Create a dictionary to store the counts for each (item, condition) pair.
+    count_dict = {(row["item"], row["condition"]): int(row["count"]) for _, row in df.iterrows()}
+
+    item_permutations = list(itertools.permutations(unique_items, len(unique_items)))
+    condition_permutations = list(itertools.permutations(unique_conditions, len(unique_conditions)))
+
+    # Take the product of item and condition permutations.
+    item_condition_permutations = list(itertools.product(item_permutations, condition_permutations))
+
+    min_sum = float("inf")
+    lowest_sum_subset = None
+
+    for item_perm, condition_perm in item_condition_permutations:
+        subset = list(zip(item_perm, condition_perm))
+        total_sum = sum(count_dict[item_condition] for item_condition in subset)
+
+        if total_sum < min_sum:
+            min_sum = total_sum
+            lowest_sum_subset = subset
+
+    items = [x[0] for x in lowest_sum_subset]
+    conditions = [x[1] for x in lowest_sum_subset]
+    return items, conditions
+
 
 
 if __name__ == '__main__':
