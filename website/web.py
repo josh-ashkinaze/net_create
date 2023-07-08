@@ -80,6 +80,8 @@ CONDITIONS = {'h': {'n_human': 6, 'n_ai': 0, 'label': False}, 'f_l': {'n_human':
 
 ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
+PROFANE_WORDS = set(w.lower() for w in pd.read_csv(file_prefix + "website/resources/profane_words.txt", header=None)[0].tolist())
+
 ############################################################################################################
 ############################################################################################################
 
@@ -232,7 +234,7 @@ FROM (
         item = '{item}' 
         AND condition = '{condition}' 
         AND is_test = False 
-        AND is_troll is not TRUE
+        AND is_profane is not TRUE
 ) AS subquery
 JOIN
     current_world
@@ -294,7 +296,7 @@ LIMIT
                "condition_order": condition_no, "response_text": response_text,
                "response_date": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), "condition": condition,
                "world": session['world'], "init_array": init_array, "ranked_array": ranked_array, 'is_test': session['test'],
-               "duration": duration}
+               "duration": duration, 'is_profane':contains_profanity(response_text, PROFANE_WORDS)}
         print(row)
         errors = insert_into_bigquery(client, table, [row])
         # Redirect to next condition_no
@@ -493,6 +495,13 @@ def get_lowest_sum_subset(client):
     return items, conditions
 
 
+def contains_profanity(input_string, prof_words_set):
+    input_string = input_string.lower()
+    words = input_string.split()
+    for word in words:
+        if word in prof_words_set:
+            return True
+    return False
 
 if __name__ == '__main__':
     if is_local:
