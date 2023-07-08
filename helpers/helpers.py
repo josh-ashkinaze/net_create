@@ -183,30 +183,3 @@ def get_participant_data(client, uuid):
         LIMIT 5
     """
     return do_sql_query(client, query)
-
-
-def sequential_randomization(client):
-    # Define SQL query
-    query = """
-        SELECT 
-            item, 
-            condition, 
-            COUNT(*) as count
-        FROM 
-            `net_expr.trials`
-        WHERE 
-            participant_id != 'seed' 
-            AND is_test = False 
-        GROUP BY 
-            item, 
-            condition
-        ORDER BY 
-            count ASC
-        LIMIT 5
-    """
-
-    # Execute the SQL query and get the results
-    results = do_sql_query(client, query)
-    items = [result['item'] for result in results]
-    conditions = [result['condition'] for result in results]
-    return items, conditions
