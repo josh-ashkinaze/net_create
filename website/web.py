@@ -232,6 +232,7 @@ FROM (
         item = '{item}' 
         AND condition = '{condition}' 
         AND is_test = False 
+        AND is_troll is not TRUE
 ) AS subquery
 JOIN
     current_world
