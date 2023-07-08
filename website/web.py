@@ -122,6 +122,8 @@ def start_experiment():
     item_order, condition_order = get_lowest_sum_subset(client)
     session['item_order'] = item_order
     session['condition_order'] = condition_order
+    print("After randomization, item order is: ", item_order)
+    print("After randomization, condition order is: ", condition_order)
     session.modified = True
     # Init lists of responses
     session['responses'] = []
