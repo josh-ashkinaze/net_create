@@ -109,7 +109,7 @@ def consent_form():
     else:
         session['test'] = False
     session.modified = True
-    if request.query_string.decode() == "from=writing":
+    if request.query_string.decode() == "from=writingprompts":
         return render_template('expr_done.html')
     if not is_closed:
         return render_template('consent_form.html', is_prolific=session['is_prolific'])
