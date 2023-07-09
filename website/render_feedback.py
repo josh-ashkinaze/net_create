@@ -2,7 +2,6 @@ import base64
 import io
 import random
 from functools import lru_cache
-
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,10 +11,64 @@ from gensim.models import Word2Vec as w2v
 from gensim.utils import simple_preprocess as preprocess
 from scipy.spatial.distance import cosine as cosine_distance
 from scipy.stats import percentileofscore
-
-from helpers import helpers as my_utils
+import requests
+from tenacity import retry, wait_fixed, stop_after_delay, RetryError, before_sleep_log
 
 model = w2v.load("data/filtered_w2v.wv")
+
+
+
+class RateLimitError(Exception):
+    pass
+
+class OpenScoringError(Exception):
+    def __init__(self, status_code, message):
+        self.status_code = status_code
+        self.message = message
+
+@retry(wait=wait_fixed(6) + wait_fixed(30), stop=stop_after_delay(300), reraise=True)
+def request_scores(response_tupples):
+    base_url = "https://openscoring.du.edu/llm"
+    model = "gpt-davinci-paper_alpha"
+    input_type = "csv"
+    elab_method = "none"
+
+    input_params = []
+
+    for prompt, answer in response_tupples:
+        input_params.append(f"{prompt},{answer}")
+
+    input_str = "&".join([f"input={x}" for x in input_params])
+
+    url = f"{base_url}?model={model}&{input_str}&input_type={input_type}&elab_method={elab_method}"
+
+    response = requests.get(url, headers={'accept': 'application/json'})
+
+    if response.status_code == 200:
+        return response
+    elif response.status_code == 429:  # Assuming 429 is the rate limit error code
+        raise RateLimitError("Rate limit error")
+    else:
+        raise OpenScoringError(response.status_code, response.text)
+
+def score_aut_responses(response_tupples, logger=None):
+    try:
+        response = request_scores(response_tupples)
+
+        data = response.json()
+        scores = data["scores"]
+
+        result = pd.DataFrame(scores, columns=["prompt", "response", "originality"])
+        return result
+    except RetryError:
+        print("Failed to get scores after the specified retries")
+        return None
+    except OpenScoringError as e:
+        print(f"Open scoring API returned error {e.status_code}: {e.message}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error: {str(e)}")
+        return None
 
 
 def make_aesthetic():
@@ -108,7 +161,7 @@ def make_graphs(participant_responses, conditions, file_prefix="../", participan
     fm.fontManager.addfont(font_path)
     plt.rcParams['font.family'] = 'Roboto'
     if not participant_scores:
-        participant_scores = my_utils.score_aut_responses(participant_responses)['originality'].tolist()
+        participant_scores = score_aut_responses(participant_responses)['originality'].tolist()
     else:
         pass
     ai_graph = comparison_graph(participant_scores, "AI", file_prefix)
