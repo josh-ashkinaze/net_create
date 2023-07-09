@@ -52,6 +52,11 @@ if is_local:
 else:
     is_test = True if os.environ.get('IS_TEST') == "True" else False
 
+if os.environ.get('CLOSED') == "True":
+    is_closed = True
+else:
+    is_closed = False
+
 # Connect to BQ
 if not is_local:
     json_key = json.loads(os.environ['GOOGLE_CREDS'])
@@ -104,7 +109,10 @@ def consent_form():
     else:
         session['test'] = False
     session.modified = True
-    return render_template('expr_done.html', is_prolific=session['is_prolific'])
+    if not is_closed:
+        return render_template('consent_form.html', is_prolific=session['is_prolific'])
+    else:
+        render_template('expr_done.html', is_prolific=session['is_prolific'])
 
 
 @app.route("/start-experiment")
