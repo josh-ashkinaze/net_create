@@ -80,7 +80,7 @@ CONDITIONS = {'h': {'n_human': 6, 'n_ai': 0, 'label': False}, 'f_l': {'n_human':
 
 ITEMS = pd.read_csv(file_prefix + "data/chosen_aut_items.csv")['aut_item'].unique().tolist()
 AI_IDEAS_DF = pd.read_csv(file_prefix + "data/ai_responses.csv")
-PROFANE_WORDS = set(w.lower() for w in pd.read_csv(file_prefix + "website/resources/profane_words.txt", header=None)[0].tolist())
+PROFANE_WORDS = set(w.lower() for w in pd.read_csv(file_prefix + "helpers/profane_words.txt", header=None)[0].tolist())
 
 ############################################################################################################
 ############################################################################################################
