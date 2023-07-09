@@ -112,7 +112,7 @@ def consent_form():
     if not is_closed:
         return render_template('consent_form.html', is_prolific=session['is_prolific'])
     else:
-        render_template('expr_done.html', is_prolific=session['is_prolific'])
+        render_template('expr_done.html')
 
 
 @app.route("/start-experiment")
