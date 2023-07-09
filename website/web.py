@@ -104,7 +104,7 @@ def consent_form():
     else:
         session['test'] = False
     session.modified = True
-    return render_template('consent_form.html', is_prolific=session['is_prolific'])
+    return render_template('expr_done.html', is_prolific=session['is_prolific'])
 
 
 @app.route("/start-experiment")
