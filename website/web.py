@@ -172,6 +172,9 @@ def start_experiment():
 
 @app.route("/render_trial/<int:condition_no>", methods=['GET', 'POST'])
 def render_trial(condition_no):
+    if is_closed:
+        return render_template('expr_done.html', is_prolific=session['is_prolific'])
+
     """
     Recursively handles the render_trial route for a particular condition_no.
 
