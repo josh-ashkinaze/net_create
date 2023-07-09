@@ -111,11 +111,12 @@ def consent_form():
     session.modified = True
     if request.query_string.decode() == "from=reddit&sub=writingprompts":
         return render_template('expr_done.html')
-    if not is_closed:
-        return render_template('consent_form.html', is_prolific=session['is_prolific'])
-    elif is_closed:
-        print("Closed response")
+    elif request.query_string.decode() == "":
         return render_template('expr_done.html')
+    elif is_closed:
+        return render_template('expr_done.html')
+    else:
+        return render_template('consent_form.html', is_prolific=session['is_prolific'])
 
 
 @app.route("/start-experiment")
