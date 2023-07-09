@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consent Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <style>
+        @keyframes movingGradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        body {
+            background: #1F4287;
+            background-size: 150% 150%;
+            animation: movingGradient 5s ease infinite;
+            /*background-image: linear-gradient(to top right, #E5BEED, #FFD23F);*/
+            color: #fff;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin-top: 2rem;
+        }
+
+        h4 {
+            color: #fff;
+            font-weight: bold;
+            margin-top: 1rem;
+            border-bottom: 3px solid #1F4287;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .container {
+            max-width: 800px;
+        }
+
+        /* Add this CSS for the button animation */
+        /* Add this CSS for the button animation */
+        .btn-primary {
+            background-color: #1f4286;
+            border-color: #1f4286;
+            border-radius: 25px;
+            font-size: 1.5rem;
+            padding: 1.5rem 3rem;
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+            z-index: 1;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+
+        /* Add this CSS for the slider */
+        /* Updated Slider styles */
+        .slider {
+            width: 100%;
+            appearance: none;
+            height: 15px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #DA4167, #1f4286); /* Matching color gradient */
+            outline: none;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #212529;
+            cursor: pointer;
+            border: 2px solid #1F4287; /* Border color matching the site theme */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.25); /* Shadow for 3D effect */
+            transition: all 0.3s ease; /* Transition for smooth effect */
+        }
+
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #212529;
+            cursor: pointer;
+            border: 2px solid #1F4287; /* Border color matching the site theme */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.25); /* Shadow for 3D effect */
+            transition: all 0.3s ease; /* Transition for smooth effect */
+        }
+
+        .slider-group {
+            border: 1px solid black; /* Add black border */
+            background-color: transparent; /* Make background transparent */
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            opacity: 100%;
+            justify-content: space-around;
+        }
+
+
+        .slider-title {
+            text-align: left; /* change the text alignment to left */
+            margin-bottom: 0.5rem;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 10px; /* add a margin to the right of the icon */
+        }
+
+        .slider-group > div {
+            width: 90%; /* set the width of the slider container to 90% */
+            margin: auto; /* center the slider container */
+        }
+
+        .slider-value {
+            margin-left: 10px;
+            color: #DA4167; /* Updated color to red */
+            font-weight: bold;
+        }
+
+        .btn-primary-dark {
+            background-color: #0d2347;
+            border-color: #0d2347;
+        }
+
+
+        /* Add this CSS for the lead */
+        .creative-section {
+            background-color: #F5F5F5;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: left;
+        }
+
+        .creative-section h4 {
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 1.25em;
+            font-size: 2em;
+        }
+
+        .creative-section .highlight {
+            color: #DA4167;
+        }
+
+        .creative-section p {
+            color: #333;
+            font-size: 1.125em;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+    </style>
+</head>
+<body class="container py-4">
+
+
+
+<h4> Thanks for your interest, but the the experiment is closed. </h4>
+<p class="lead mb-4"> We may be back soon!
+</p>
+
+
+
+
+
+
+
+
+</body>
+</html>
