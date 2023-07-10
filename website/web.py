@@ -474,8 +474,6 @@ def get_lowest_sum_subset(client):
     """
     query_job = client.query(query)
     result = query_job.result()
-
-    # Convert the BigQuery result to a Pandas DataFrame.
     data = []
     for row in result:
         data.append({"item": row["item"], "condition": row["condition"], "count": row["count"]})
@@ -483,27 +481,23 @@ def get_lowest_sum_subset(client):
 
     # Get all possible orderings of items and conditions.
     unique_items = df["item"].unique()
+    random.shuffle(unique_items)
     unique_conditions = df["condition"].unique()
 
     # Create a dictionary to store the counts for each (item, condition) pair.
     count_dict = {(row["item"], row["condition"]): int(row["count"]) for _, row in df.iterrows()}
 
-    item_permutations = list(itertools.permutations(unique_items, len(unique_items)))
-    condition_permutations = list(itertools.permutations(unique_conditions, len(unique_conditions)))
-
-    # Take the product of item and condition permutations.
-    item_condition_permutations = list(itertools.product(item_permutations, condition_permutations))
-
     min_sum = float("inf")
     lowest_sum_subset = None
 
-    for item_perm, condition_perm in item_condition_permutations:
-        subset = list(zip(item_perm, condition_perm))
-        total_sum = sum(count_dict[item_condition] for item_condition in subset)
+    for item_perm in itertools.permutations(unique_items, len(unique_items)):
+        for condition_perm in itertools.permutations(unique_conditions, len(unique_conditions)):
+            subset = list(zip(item_perm, condition_perm))
+            total_sum = sum(count_dict[item_condition] for item_condition in subset)
 
-        if total_sum < min_sum:
-            min_sum = total_sum
-            lowest_sum_subset = subset
+            if total_sum < min_sum:
+                min_sum = total_sum
+                lowest_sum_subset = subset
 
     items = [x[0] for x in lowest_sum_subset]
     conditions = [x[1] for x in lowest_sum_subset]
