@@ -26,7 +26,7 @@ class OpenScoringError(Exception):
         self.status_code = status_code
         self.message = message
 
-@retry(wait=wait_fixed(6) + wait_fixed(30), stop=stop_after_delay(120), reraise=True)
+@retry(wait=wait_fixed(6) + wait_fixed(30), stop=stop_after_delay(160), reraise=True)
 def request_scores(response_tupples):
     base_url = "https://openscoring.du.edu/llm"
     model = "gpt-davinci-paper_alpha"
