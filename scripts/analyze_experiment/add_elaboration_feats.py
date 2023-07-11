@@ -13,6 +13,8 @@ from joblib import Parallel, delayed
 import logging
 import os
 import sys
+import requests
+import bz2
 
 LOG_FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO, format=LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S', filemode='w')
@@ -36,6 +38,22 @@ sys.stdout = sl
 stderr_logger = logging.getLogger('STDERR')
 sl = StreamToLogger(stderr_logger, logging.ERROR)
 sys.stderr = sl
+
+def get_tfidf_file():
+  url = 'https://www.ideals.illinois.edu/items/91826/bitstreams/285420/object?dl=1'
+  save_dir = '../..data/'
+  os.makedirs(save_dir, exist_ok=True)
+  csv_path = os.path.join(save_dir, 'tfidf_weights.csv')
+  if not os.path.exists(csv_path):
+      response = requests.get(url)
+      bz2_path = os.path.join(save_dir, 'classP-idf.csv.bz2')
+      with open(bz2_path, 'wb') as f:
+          f.write(response.content)
+      with bz2.BZ2File(bz2_path, 'rb') as f_in, open(csv_path, 'wb') as f_out:
+          f_out.write(f_in.read())
+      os.remove(bz2_path)
+  else:
+      print(f'File {csv_path} already exists.')
 
 def make_stopwords():
     # https://raw.githubusercontent.com/explosion/spaCy/a741de7cf658ce9a90d7afe67c88face8fb658ad/spacy/lang/en/stop_words.py
@@ -137,8 +155,8 @@ def process_sentence(tfidf, sentence, stopwords):
 
 if __name__ == "__main__":
 
-    # These are from:
-    # https://www.ideals.illinois.edu/items/91826
+
+    get_tfidf_file()
     tfidf = pd.read_csv("../../data/idf_weights.csv")
     stop_words = make_stopwords()
     df = pd.read_csv("../../data/expr_data.csv")
