@@ -39,21 +39,52 @@ stderr_logger = logging.getLogger('STDERR')
 sl = StreamToLogger(stderr_logger, logging.ERROR)
 sys.stderr = sl
 
+
 def get_tfidf_file():
-  url = 'https://www.ideals.illinois.edu/items/91826/bitstreams/285420/object?dl=1'
-  save_dir = '../..data/'
-  os.makedirs(save_dir, exist_ok=True)
-  csv_path = os.path.join(save_dir, 'tfidf_weights.csv')
-  if not os.path.exists(csv_path):
-      response = requests.get(url)
-      bz2_path = os.path.join(save_dir, 'classP-idf.csv.bz2')
-      with open(bz2_path, 'wb') as f:
-          f.write(response.content)
-      with bz2.BZ2File(bz2_path, 'rb') as f_in, open(csv_path, 'wb') as f_out:
-          f_out.write(f_in.read())
-      os.remove(bz2_path)
-  else:
-      print(f'File {csv_path} already exists.')
+    url = 'https://www.ideals.illinois.edu/items/91826/bitstreams/285420/object?dl=1'
+    fn = '../../data/experiment_data/tfidf_weights.csv'
+
+    # Check if the file exists
+    if not os.path.exists(fn):
+        # Download the file
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            print(f"Error occurred while downloading file: {e}")
+            return
+
+        # Create directories if they don't exist
+        try:
+            os.makedirs(os.path.dirname(fn), exist_ok=True)
+        except Exception as e:
+            print(f"Error occurred while creating directories: {e}")
+            return
+
+        bz2_path = fn + '.bz2'
+        try:
+            with open(bz2_path, 'wb') as f:
+                f.write(response.content)
+        except Exception as e:
+            print(f"Error occurred while writing bz2 file: {e}")
+            return
+
+        # Decompress the file
+        try:
+            with bz2.BZ2File(bz2_path, 'rb') as f_in, open(fn, 'wb') as f_out:
+                f_out.write(f_in.read())
+        except Exception as e:
+            print(f"Error occurred while decompressing bz2 file: {e}")
+            return
+
+        # Remove the compressed file
+        try:
+            os.remove(bz2_path)
+        except Exception as e:
+            print(f"Error occurred while removing bz2 file: {e}")
+            return
+    else:
+        print(f'File {fn} already exists.')
 
 def make_stopwords():
     # https://raw.githubusercontent.com/explosion/spaCy/a741de7cf658ce9a90d7afe67c88face8fb658ad/spacy/lang/en/stop_words.py
@@ -157,9 +188,9 @@ if __name__ == "__main__":
 
 
     get_tfidf_file()
-    tfidf = pd.read_csv("../../data/idf_weights.csv")
+    tfidf = pd.read_csv("../../data/experiment_data/tfidf_weights.csv")
     stop_words = make_stopwords()
-    df = pd.read_csv("../../data/expr_data.csv")
+    df = pd.read_csv("../../data/experiment_data/expr_data.csv")
     df = df.dropna(subset=['response_text'])
 
     # Process each sentence in parallel
@@ -168,6 +199,7 @@ if __name__ == "__main__":
 
     # Unpack results into two new columns
     df['elab_ibf'], df['elab_ipf'], df['elab_sw'] = zip(*results)
-    elab_df = df[['response_id', 'elab_idf', 'elab_sw']]
-    elab_df.to_csv("../../data/expr_data_elab.csv")
+    df['elab_wc'] = df['response_text'].apply(lambda x: len(x.split()))
+    elab_df = df[['response_id', 'elab_ibf', 'elab_ipf', 'elab_sw', 'elab_wc']]
+    elab_df.to_csv("../../data/experiment_data/expr_data_elab.csv")
 

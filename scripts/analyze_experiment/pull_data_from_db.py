@@ -21,7 +21,8 @@ FULL OUTER JOIN `net_expr.person` AS p
     full_join_df = query_job.to_dataframe()
     columns_to_drop = ['response_id_1', 'participant_id_1', 'dt', 'dt_1', 'graded_date', 'is_test']
     df_cleaned = full_join_df.drop(columns=columns_to_drop)
-    df_cleaned.to_csv("../../data/expr_data.csv")
+    df_cleaned = df_cleaned.sample(50)
+    df_cleaned.to_csv("../../data/experiment_data/expr_data.csv")
 
 if __name__ == "__main__":
     main()
