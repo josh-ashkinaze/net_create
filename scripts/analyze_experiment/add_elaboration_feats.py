@@ -192,14 +192,16 @@ if __name__ == "__main__":
     stop_words = make_stopwords()
     df = pd.read_csv("../../data/experiment_data/expr_data.csv")
     df = df.dropna(subset=['response_text'])
+    logging.info(f"Total rows in data: {len(df)}")
 
     # Process each sentence in parallel
     results = Parallel(n_jobs=-1, verbose=10)(
         delayed(process_sentence)(tfidf, sentence, stop_words) for sentence in df['response_text'])
-
+    logging.info("Got results")
     # Unpack results into two new columns
     df['elab_ibf'], df['elab_ipf'], df['elab_sw'] = zip(*results)
     df['elab_wc'] = df['response_text'].apply(lambda x: len(x.split()))
     elab_df = df[['response_id', 'elab_ibf', 'elab_ipf', 'elab_sw', 'elab_wc']]
     elab_df.to_csv("../../data/experiment_data/expr_data_elab.csv")
+    logging.info("Saved results")
 
