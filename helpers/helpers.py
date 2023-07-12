@@ -172,7 +172,7 @@ def do_sql_query(client, query):
     return list(client.query(query).result())
 
 
-def get_participant_data(client, uuid):
+def get_participant_data(client, uuid, responses_table, trials_table):
     query = f"""
         SELECT responses.rating, trials.condition
         FROM `net_expr.trials` AS trials

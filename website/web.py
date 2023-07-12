@@ -101,8 +101,17 @@ def consent_form():
 
     if request.query_string.decode() == "from=prolific":
         session['is_prolific'] = True
+        session['trials_table'] = "`net_expr.trials_prolific`"
+        session['people_table'] = "`net_expr.person_prolific`"
+        session['feedback_table'] = "`net_expr.feedback_prolific`"
+        session['responses_table'] = "`net_expr.responses_prolific`"
+
     else:
         session['is_prolific'] = False
+        session['trials_table'] = "`net_expr.trials`"
+        session['people_table'] = "`net_expr.person`"
+        session['feedback_table'] = "`net_expr.feedback`"
+        session['responses_table'] = "`net_expr.responses`"
 
     if is_local or os.environ.get('IS_TEST') == "True" or request.query_string.decode()=="how=test" or catch_if_none(request.headers.get('Referer'), "string")=='https://dashboard.heroku.com/':
         session['test'] = True
@@ -110,8 +119,6 @@ def consent_form():
         session['test'] = False
     session.modified = True
     if request.query_string.decode() == "from=reddit&sub=writingprompts":
-        return render_template('expr_done.html')
-    elif request.query_string.decode() == "" and catch_if_none(request.headers.get('Referer'), "string") != "https://dashboard.heroku.com/":
         return render_template('expr_done.html')
     elif is_closed:
         return render_template('expr_done.html')
@@ -219,49 +226,49 @@ def render_trial(condition_no):
     item = session['item_order'][condition_no]
 
     if request.method == "GET":
-        # COUNT(*)+1 because we want to make sure we don't go over N_PER_WORLD.
         human_query = f"""
             WITH current_world AS (
-    SELECT 
-        FLOOR((COUNT(*)+1 )/ {N_PER_WORLD}) as world_value 
-    FROM 
-        `net_expr.trials`
-    WHERE 
-        is_test IS FALSE
-        AND participant_id != 'seed'
-        AND item = '{item}'
-        AND condition = '{condition}'
-)
+                SELECT 
+                    response_id,
+FLOOR(((ROW_NUMBER() OVER(PARTITION BY item, condition ORDER BY response_date) + 1) - 1) / {N_PER_WORLD}) as world_value                FROM 
+                    {session['trials_table']}
+                WHERE 
+                    is_test IS FALSE
+                    AND participant_id != 'seed'
+                    AND item = '{item}'
+                    AND condition = '{condition}'
+            )
 
-SELECT 
-    response_text, 
-    response_id, 
-    current_world.world_value as world
-FROM (
-    SELECT 
-        response_text, 
-        response_id, 
-        world, 
-        response_date
-    FROM 
-        `net_expr.trials`
-    WHERE 
-        item = '{item}' 
-        AND condition = '{condition}' 
-        AND is_test = False 
-        AND is_profane is not TRUE
-) AS subquery
-JOIN
-    current_world
-ON 
-    subquery.world = current_world.world_value
-ORDER BY 
-    subquery.response_date DESC
-LIMIT 
-    {n_human_ideas}
-
-         """
-        # print(human_query)
+            SELECT 
+                subquery.response_text, 
+                subquery.response_id,
+                subquery.response_date,
+                current_world.world_value as world
+            FROM (
+                SELECT 
+                    response_text, 
+                    response_id, 
+                    response_date
+                FROM 
+                    {session['trials_table']}
+                WHERE 
+                    item = '{item}' 
+                    AND condition = '{condition}' 
+                    AND is_test = False 
+                    AND is_profane is not TRUE
+            ) AS subquery
+            JOIN
+                current_world
+            ON 
+                subquery.response_id = current_world.response_id
+            WHERE 
+                current_world.world_value = (SELECT MAX(world_value) FROM current_world)
+            ORDER BY 
+                subquery.response_date DESC
+            LIMIT 
+                {n_human_ideas}
+        """
+        print(human_query)
         human_result = do_sql_query(client, human_query)
         print(human_result)
         human_rows = [row['response_text'] for row in human_result]
@@ -346,7 +353,7 @@ def calculate_rank_similarity_route():
         ranked_array_str = ",".join([f'"{item}"' for item in ranked_array])
         query = f"""
                 SELECT response_id, IFNULL(rating, 2.5) as rating
-                FROM `net_expr.responses`
+                FROM {session['response_table']}
                 WHERE response_id IN UNNEST([{ranked_array_str}])
                 """
         query_job = client.query(query)
@@ -379,7 +386,7 @@ def get_graphs():
                                                                 file_prefix)
 
     # Add scores to database
-    response_table = dataset.table("responses")
+    response_table = dataset.table(session['responses_table'].strip('`').split('.')[1])
     rows_to_insert = [{"response_id": session['response_ids'][i], "rating": scores[i]} for i in range(len(scores))]
     insert_into_bigquery(client, response_table, rows_to_insert)
     return json.dumps({'human_graph': human_graph, 'ai_graph': ai_graph, 'human_ai_graph': human_ai_graph})
@@ -409,7 +416,7 @@ def get_graphs_for_uuid(uuid):
     # Fetch the participant data from the database using the UUID
     # This is a simplified example; adjust this code to fit your actual database structure and API
 
-    results = get_participant_data(client, uuid)
+    results = get_participant_data(client, uuid, session['responses_table'], session['trials_table'])
     ratings = [row.rating for row in results]
     conditions = [row.condition for row in results]
 
@@ -466,7 +473,7 @@ def get_lowest_sum_subset(client):
             condition,
             COUNT(*) as count
         FROM
-            `net_expr.trials`
+            {session['trials_table']}
         WHERE
             NOT is_test
         GROUP BY
