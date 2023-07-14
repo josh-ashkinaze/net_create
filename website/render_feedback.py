@@ -187,11 +187,11 @@ def calculate_similarity(sentence1, sentence2):
         sentence2_vector = sentence_vector(sentence2, model)
         if sentence1_vector is None or sentence2_vector is None:
             print("Get a NONE", sentence1, sentence2)
-            return random.uniform(0.2, 0.5)
+            return random.uniform(0.1, 0.6)
 
         similarity = 1 - cosine_distance(sentence1_vector, sentence2_vector)
         print("Similarity loaded successfully")
         return similarity
     except Exception as e:
         print("ERROR", sentence1, sentence2, e)
-        return random.uniform(0.2, 0.5)
+        return random.uniform(0.1, 0.6)
