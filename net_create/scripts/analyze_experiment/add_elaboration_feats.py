@@ -51,5 +51,6 @@ if __name__ == "__main__":
         delayed(process_text)(tfidf_filtered, [token.text for token in doc if token.is_alpha], STOP_WORDS) for doc in
         all_docs)
 
+
     df['elab_ibf'], df['elab_ipf'], df['elab_not_sw'], df['elab_n_tokens'] = zip(*results)
     df.to_csv("../../data/experiment_data/data_clean_with_elab.csv", index=False)
