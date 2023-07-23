@@ -21,7 +21,19 @@ def main():
     logging.info("Started getting embeddings")
     df = pd.read_csv('../../data/experiment_data/expr_data.csv')
     df = df.dropna(subset=['response_text'])
-    model = SentenceTransformer('all-MiniLM-L6-v2')
+    df = df[['response_id', 'response_text']]
+
+    ai_ideas = pd.read_csv('../../data/ai_responses.csv')
+    ai_ideas = ai_ideas[['response_id', 'response']]
+    ai_ideas.columns = ['response_id', 'response_text']
+
+    human_seeds = pd.read_csv('../../data/seed_human_responses.csv')
+    human_seeds = human_seeds[['response_id', 'response']]
+    human_seeds.columns = ['response_id', 'response_text']
+
+    df = pd.concat([df, ai_ideas, human_seeds])
+
+    model = SentenceTransformer('all-mpnet-base-v2')
     sentences = df['response_text'].tolist()
     embeddings = model.encode(sentences)
     cosine_scores = util.cos_sim(embeddings, embeddings)
