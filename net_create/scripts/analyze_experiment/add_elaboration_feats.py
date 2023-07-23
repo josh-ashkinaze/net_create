@@ -1,7 +1,3 @@
-
-
-
-
 import pandas as pd
 import numpy as np
 import spacy
@@ -27,12 +23,13 @@ def get_tfidf_file():
         os.remove(bz2_path)
 
 def process_text(tfidf_filtered, tokens, stopwords):
+    n_tokens = len(tokens)
     non_stopword_count = sum(1 for token in tokens if token not in stopwords)
     idf_scores_ibf = tfidf_filtered[tfidf_filtered['token'].isin(tokens)]['IBF'].values
     sum_ibf = np.sum(idf_scores_ibf)
     idf_scores_ipf = tfidf_filtered[tfidf_filtered['token'].isin(tokens)]['IPF'].values
     sum_ipf = np.sum(idf_scores_ipf)
-    return sum_ibf, sum_ipf, non_stopword_count
+    return sum_ibf, sum_ipf, non_stopword_count, n_tokens
 
 
 if __name__ == "__main__":
@@ -54,7 +51,5 @@ if __name__ == "__main__":
         delayed(process_text)(tfidf_filtered, [token.text for token in doc if token.is_alpha], STOP_WORDS) for doc in
         all_docs)
 
-    df['elab_ibf'], df['elab_ipf'], df['elab_sw'] = zip(*results)
-    df['elab_wc'] = df['response_text'].apply(lambda x: len(x.split()))
-    elab_df = df[['response_id', 'elab_ibf', 'elab_ipf', 'elab_sw', 'elab_wc']]
-    elab_df.to_csv("../../data/experiment_data/expr_data_elab.csv")
+    df['elab_ibf'], df['elab_ipf'], df['elab_not_sw'], df['elab_n_tokens'] = zip(*results)
+    df.to_csv("../../data/experiment_data/data_clean_with_elab.csv", index=False)
