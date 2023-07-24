@@ -2,3 +2,10 @@ secrets/
 *.log
 /secrets/google_creds.json
 /secrets/openai_creds.json
+/data/prompt_experiments/length_n1500_2023-05-18__19.10.52.jsonl
+/data/ai_responses.csv
+/data/chosen_aut_items.csv
+/data/organisciak_gpt_performance.csv
+/data/prior_responses.csv
+/data/prior_responses_useful.csv
+/data/scored_prior_responses.csv
