@@ -111,6 +111,8 @@ def consent_form():
     session.modified = True
     if request.query_string.decode() == "from=reddit&sub=writingprompts":
         return render_template('expr_done.html')
+    elif request.query_string.decode() == "from=reddit&sub=internet":
+        return render_template('expr_done.html')
     elif request.query_string.decode() == "" and catch_if_none(request.headers.get('Referer'), "string") != "https://dashboard.heroku.com/":
         return render_template('expr_done.html')
     elif is_closed:
