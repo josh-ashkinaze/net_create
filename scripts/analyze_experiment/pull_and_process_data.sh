@@ -10,7 +10,7 @@ papermill get_data.ipynb get_data.ipynb
 echo "Adding elaboration features" | tee -a $LOGFILE
 python3 add_elaboration_feats.py >> $LOGFILE 2>&1
 
-#echo "Adding embedding features" | tee -a $LOGFILE
-#python3 add_embedding_feats.py >> $LOGFILE 2>&1
+echo "Adding diversity analysis" | tee -a $LOGFILE
+papermill diversity_metrics.ipynb diversity_metrics.ipynb
 
 echo "Done" | tee -a $LOGFILE
