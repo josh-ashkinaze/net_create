@@ -48,7 +48,7 @@ def perm_test(df, num_permutations):
             count += 1
 
     # Calculate p-value
-    p_value = count / num_permutations
+    p_value = (count+1) / (num_permutations+1)
 
     return p_value
 
