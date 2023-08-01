@@ -6,6 +6,8 @@ import pickle
 import argparse
 import logging
 
+
+
 class RateLimitError(Exception):
     pass
 
@@ -41,11 +43,37 @@ def score_aut_responses(response_tupples):
     else:
         return None
 
-def batch_response_tupples(response_tupples, n):
-    for i in range(0, len(response_tupples), n):
-        yield response_tupples[i:i + n]
 
-def main(debug=True):
+def fetch_missed_scores():
+    scores_fn = "../../data/experiment_data/experiment_aut_scores.csv"
+    attempts = 0
+    while True or attempts < 50:
+        attempts += 1
+        logging.info(f"Attempt {attempts}")
+        scores_df = pd.read_csv(scores_fn)
+        response_ids_in_scores = set(scores_df['response_id'])
+        expr_data = pd.read_csv("../../data/experiment_data/data_clean_with_elab.csv")
+        experiment_response_ids = set(expr_data['response_id'])
+        missing_response_ids = experiment_response_ids - response_ids_in_scores
+        if missing_response_ids:
+            logging.info(f"Number of missing items to score: {len(missing_response_ids)}")
+            item_responses_tupples = [(row['item'], row['response_text'], row['response_id']) for _, row in expr_data.iterrows() if row['response_id'] in missing_response_ids]
+            for batch in batch_response_tupples(item_responses_tupples, 5):
+                score = score_aut_responses(batch)
+                if score is not None:
+                    scores_df = pd.concat([scores_df, score], ignore_index=True)
+            scores_df.to_csv(scores_fn, index=False)
+            logging.info(f"Number of total items scored: {len(scores_df)}")
+            logging.info("Total number of responses in experiment data: {}".format(len(expr_data)))
+            response2score = {row['response_id']: row['originality'] for _, row in scores_df.iterrows()}
+            with open("../../data/experiment_data/response2score.pkl", 'wb') as f:
+                pickle.dump(response2score, f)
+        else:
+            logging.info("No missing response IDs detected.")
+            break
+    logging.info("Ending")
+
+def get_scores(debug=True):
     print("Starting")
     LOG_FORMAT = '%(asctime)s %(levelname)s: %(message)s'
     logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO, format=LOG_FORMAT,
@@ -79,8 +107,19 @@ def main(debug=True):
         with open("../../data/experiment_data/response2score.pkl", 'wb') as f:
             pickle.dump(response2score, f)
 
+def batch_response_tupples(response_tupples, n):
+    for i in range(0, len(response_tupples), n):
+        yield response_tupples[i:i + n]
+
 if __name__ == "__main__":
+    LOG_FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+    logging.basicConfig(filename=f'{os.path.basename(__file__)}.log', level=logging.INFO, format=LOG_FORMAT,
+                        datefmt='%Y-%m-%d %H:%M:%S', filemode='w')
     parser = argparse.ArgumentParser()
     parser.add_argument("--d", action="store_true")
+    parser.add_argument("--fetch", action="store_true")
     args = parser.parse_args()
-    main(debug=args.d)
+    if args.fetch:
+        fetch_missed_scores()
+    else:
+        get_scores(debug=args.d)
