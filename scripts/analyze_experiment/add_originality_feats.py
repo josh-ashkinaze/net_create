@@ -22,16 +22,23 @@ def score_aut_responses(response_tuples):
     input_type = "csv"
     elab_method = "none"
 
-    input_params = []
+    input_data = []
     for prompt, answer, participant_id in response_tuples:
-        # Wrap prompt and answer in double quotes to handle commas
-        input_params.append(quote(f'"{prompt}","{answer}",{participant_id}'))
+        prompt = prompt.replace('"', "'")
+        answer = answer.replace('"', "'")
+        input_data.append(f'"{prompt}","{answer}",{participant_id}')
 
-    input_str = "&".join([f"input={x}" for x in input_params])
+    csv_data = '\n'.join(input_data)
 
-    url = f"{base_url}?model={model}&{input_str}&input_type={input_type}&elab_method={elab_method}"
+    data = {
+        'model': model,
+        'input': csv_data,
+        'input_type': input_type,
+        'elab_method': elab_method
+    }
 
-    response = requests.post(url, headers={'accept': 'application/json'})
+    # Send the POST request
+    response = requests.post(base_url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
 
     if response.status_code == 200:
         data = response.json()
@@ -44,6 +51,7 @@ def score_aut_responses(response_tuples):
         raise RateLimitError("Rate limit error")
     else:
         return None
+
 
 
 def fetch_missed_scores():
