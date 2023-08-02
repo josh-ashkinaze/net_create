@@ -87,28 +87,27 @@ def get_scores(debug=True):
     else:
         scores_fn = "../../data/experiment_data/experiment_aut_scores.csv"
 
-    if (not os.path.exists(scores_fn)) or (debug):
-        expr_data = pd.read_csv("../../data/experiment_data/data_clean_with_elab.csv")
-        if debug: expr_data = expr_data.head(10)
-        item_responses_tupples = [(row['item'], row['response_text'], row['response_id']) for _, row in expr_data.iterrows()]
-        logging.info(expr_data.head(5))
-        logging.info(f"Number of items to score: {len(item_responses_tupples)}")
+    expr_data = pd.read_csv("../../data/experiment_data/data_clean_with_elab.csv")
+    if debug: expr_data = expr_data.head(10)
+    item_responses_tupples = [(row['item'], row['response_text'], row['response_id']) for _, row in expr_data.iterrows()]
+    logging.info(expr_data.head(5))
+    logging.info(f"Number of items to score: {len(item_responses_tupples)}")
 
-        scores = []
-        counter = 0
-        for batch in batch_response_tupples(item_responses_tupples, 5):
-            logging.info("Scoring batch {} of {}".format(counter, len(item_responses_tupples) // 5))
-            score = score_aut_responses(batch)
-            scores.append(score)
-            counter += 1
-        scores = pd.concat(scores, ignore_index=True)
-        scores.to_csv(scores_fn, index=False)
+    scores = []
+    counter = 0
+    for batch in batch_response_tupples(item_responses_tupples, 5):
+        logging.info("Scoring batch {} of {}".format(counter, len(item_responses_tupples) // 5))
+        score = score_aut_responses(batch)
+        scores.append(score)
+        counter += 1
+    scores = pd.concat(scores, ignore_index=True)
+    scores.to_csv(scores_fn, index=False)
 
-        logging.info(f"Number of items scored: {len(scores)}")
+    logging.info(f"Number of items scored: {len(scores)}")
 
-        response2score = {row['response_id']: row['originality'] for _, row in scores.iterrows()}
-        with open("../../data/experiment_data/response2score.pkl", 'wb') as f:
-            pickle.dump(response2score, f)
+    response2score = {row['response_id']: row['originality'] for _, row in scores.iterrows()}
+    with open("../../data/experiment_data/response2score.pkl", 'wb') as f:
+        pickle.dump(response2score, f)
 
 def batch_response_tupples(response_tupples, n):
     for i in range(0, len(response_tupples), n):
