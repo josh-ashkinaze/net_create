@@ -5,6 +5,7 @@ import os
 import pickle
 import argparse
 import logging
+from urllib.parse import quote
 
 
 
@@ -15,31 +16,31 @@ class RateLimitError(Exception):
                 wait=tenacity.wait_fixed(60),
                 retry=tenacity.retry_if_exception_type(RateLimitError),
                 reraise=True)
-def score_aut_responses(response_tupples):
+def score_aut_responses(response_tuples):
     base_url = "https://openscoring.du.edu/llm"
     model = "gpt-davinci-paper_alpha"
     input_type = "csv"
     elab_method = "none"
 
     input_params = []
-    for prompt, answer, response_id in response_tupples:
-        input_params.append(f"{prompt},{answer}")
+    for prompt, answer, participant_id in response_tuples:
+        # Wrap prompt and answer in double quotes to handle commas
+        input_params.append(quote(f'"{prompt}","{answer}",{participant_id}'))
 
     input_str = "&".join([f"input={x}" for x in input_params])
 
     url = f"{base_url}?model={model}&{input_str}&input_type={input_type}&elab_method={elab_method}"
 
-    response = requests.get(url, headers={'accept': 'application/json'})
+    response = requests.post(url, headers={'accept': 'application/json'})
 
     if response.status_code == 200:
         data = response.json()
         scores = data["scores"]
-
-        result = pd.DataFrame(scores, columns=["prompt", "response", "originality"])
-        result["response_id"] = [tup[2] for tup in response_tupples]
+        result = pd.DataFrame(scores)
+        result = result.rename(columns = {'participant_id':'response_id'})
         return result
     elif response.status_code == 429:
-        raise RateLimitError("Rate limit error")
+        print("rate limit error")
     else:
         return None
 
@@ -58,6 +59,7 @@ def fetch_missed_scores():
         if missing_response_ids:
             logging.info(f"Number of missing items to score: {len(missing_response_ids)}")
             item_responses_tupples = [(row['item'], row['response_text'], row['response_id']) for _, row in expr_data.iterrows() if row['response_id'] in missing_response_ids]
+            logging.info(item_responses_tupples[:5])
             for batch in batch_response_tupples(item_responses_tupples, 5):
                 score = score_aut_responses(batch)
                 if score is not None:
