@@ -40,7 +40,8 @@ def score_aut_responses(response_tuples):
         result = result.rename(columns = {'participant_id':'response_id'})
         return result
     elif response.status_code == 429:
-        print("rate limit error")
+        logging.info("rate limit error")
+        raise RateLimitError("Rate limit error")
     else:
         return None
 
