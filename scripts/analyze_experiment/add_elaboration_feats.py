@@ -25,12 +25,9 @@ def get_tfidf_file():
 
 def process_text(tfidf_filtered, tokens, stopwords):
     n_tokens = len(tokens)
-    non_stopword_count = sum(1 for token in tokens if token not in stopwords)
     idf_scores_ibf = tfidf_filtered[tfidf_filtered['token'].isin(tokens)]['IBF'].values
     sum_ibf = np.sum(idf_scores_ibf)
-    idf_scores_ipf = tfidf_filtered[tfidf_filtered['token'].isin(tokens)]['IPF'].values
-    sum_ipf = np.sum(idf_scores_ipf)
-    return sum_ibf, sum_ipf, non_stopword_count, n_tokens
+    return sum_ibf, n_tokens
 
 
 if __name__ == "__main__":
@@ -60,7 +57,7 @@ if __name__ == "__main__":
         all_docs)
 
 
-    df['elab_ibf'], df['elab_ipf'], df['elab_not_sw'], df['elab_n_tokens'] = zip(*results)
+    df['elab_ibf'], df['elab_n_tokens'] = zip(*results)
     logging.info("length of df" + str(len(df)))
     logging.info("Elaboration features added")
     df.to_csv("../../data/experiment_data/data_clean_with_elab.csv", index=False)
