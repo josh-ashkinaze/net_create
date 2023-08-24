@@ -5,7 +5,7 @@ date: "2023-07-06"
 output: html_document
 ---
 
-# Load Packages (FINALIZED)
+# Load Packages 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -176,14 +176,21 @@ df$create_gap_cut <- as.integer((df$creativity_human > df$creativity_ai)*1)
 
 # Multiply dist_cent by 100 for interpretation
 df$cent_dist2 <- df$cent_dist*100
-df$mean_dist2 <- df$med_dist*100
+df$mean_dist2 <- df$mean_dist*100
+df$med_dist2 <- df$med_dist*100
+
+
 df$ai_max_sim2 <- df$ai_max_sim*100
+df$ai_mean_sim2 <- df$ai_mean_sim*100
+df$ai_med_sim2 <- df$ai_med_sim*100
 
 
 ```
 
 # Model Selection (FINALIZED)
+
 ## REAL
+
 ```{r}
 
 # Test interactions
@@ -266,172 +273,60 @@ print(latex_code, include.rownames=FALSE, sanitize.text.function=identity, hline
 
 
 
+# Fit base models 
+###################################################
+###################################################
+
+
+# Define make_model function
+make_model <- function(df, dv, formula) {
+  full_formula <- paste(dv, "~", formula)
+  model <- lmer(as.formula(full_formula), data = df)
+  return(model)
+}
+
+
+# Make model and formula lists
+model_list = list()
+formula_list = list()
+
+formula_list[['dist']] <- "condition + condition*creativity_human + condition*create_gap + creativity_human + trial_no + create_gap + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)"
+
+formula_list[['sim']] <- "condition + condition*creativity_human + condition*create_gap + condition*interest_group + creativity_human + trial_no + create_gap + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)"
+
+formula_list[['orig']] <-  "condition + condition*creativity_human + condition*create_gap + condition*interest_group + creativity_human + trial_no + create_gap + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)"
+
+# Map dvs to eqns
+dv_formula_map <- list(
+  "cent_dist2" = "dist",
+  "mean_dist2" = "dist",
+  "med_dist2" = "dist",
+  "ai_max_sim2" = "sim",
+  "ai_mean_sim2" = "sim",
+  "ai_med_sim2" = "sim",
+  "originality" = "orig"
+)
+
+# Fit models
+for (dv in names(dv_formula_map)) {
+  formula_name <- dv_formula_map[[dv]]
+  formula <- formula_list[[formula_name]]
+  model <- make_model(df, dv, formula)
+  model_list[[paste(dv)]] <- model
+}
+
+
+
+
+###################################################
+###################################################
+
+
 
 ```
 
 
 
-
-
-
-
-
-# Fit Models (DEPRACATED)
-
-```{r fit_models}
-library(lme4)
-library(combinat)
-
-# Define the grid search function
-grid_search_interaction <- function(dv, df, variables) {
-  # Base model formula
-  base_formula <- as.formula(
-    paste(
-      dv,
-      "~ condition +
-                creativity_human*condition +
-                trial_no*condition +
-                ai_feeling + 
-                interest_group +
-                condition_order +
-                create_gap_cut +
-                log_duration +
-                (1|participant_id) +
-                (1|item_condition/response_chain_id)"
-    )
-  )
-  
-  # Generate the power set of interactions
-  all_combinations <- list()
-  for (i in 1:length(variables)) {
-    all_combinations <-
-      append(all_combinations, combn(variables, i, simplify = FALSE))
-  }
-  all_combinations <- unlist(all_combinations, recursive = FALSE)
-  interaction_combinations <-
-    lapply(all_combinations, function(combo) {
-      paste(paste(combo, "condition", sep = ":"), collapse = " + ")
-    })
-  
-  # Fit the base model once. Then init lists for BIC and models 
-  base_model <- lmer(base_formula, data = df)
-  base_bic <- AIC(base_model)
-  models <- list(base_model)
-  bics <- c(base_bic)
-  
-  # Grid search over interactions
-  for (i in seq_along(interaction_combinations)) {
-      formula_i <- update(base_formula, paste(". ~ . +", interaction_combinations[[i]]))
-      models[[i+1]] <- lmer(formula_i, data = df) # i+1 since we already have the base model
-      bics[i+1] <- AIC(models[[i+1]])
-  }
-  best_model_index <- which.min(bics)
-  print(models)
-  best_model <- models[[best_model_index]]
-  print(paste("Selected model with lowest BIC:", 
-              ifelse(best_model_index == 1, "Base model", interaction_combinations[[best_model_index - 1]])))
-  print(summary(best_model))
-  return(best_model)
-}
-
-models <- list()
-possible_interactions <- c("create_gap_cut", "ai_feeling")
-dvs <- c('cent_dist2', 'originality', 'ai_max_sim2')
-
-for (dv in dvs) {
-  models[[dv]] <-
-    grid_search_interaction(dv, df, possible_interactions)
-}
-
-names(models) <-
- c("Diversity", "Originality", "AI Adoption")
-
-```
-
-# Save emmeans (DEPRACATED)
-
-So the basic issue is that it takes a long time to fit emmeans reference
-grids with crossed random intercepts and I need a bunch of them. To save
-time, I will get the models now.
-
-```{r save_emmeans}
-
-model_names <- as.character(names(models))
-
-# Functions to get stuff from models
-#####################################
-#####################################
-
-# Function to get interactions from the model
-get_interactions <- function(model_name) {
-  model <- models[[model_name]]
-  model_terms <- attr(terms(model), "term.labels")
-  vars_of_interest <-
-    c("ai_feeling", "creativity_human_binned", "creativity_ai_binned", "interest_group", "trial_no", "gap")
-  interactions <-
-    model_terms[str_detect(model_terms, "condition") &
-                  str_detect(model_terms, paste(vars_of_interest, collapse = "|"))]
-  interactions <- str_remove(interactions, "condition:")
-  return(interactions)
-}
-
-# Function to get emmeans from the model
-get_emmeans <- function(model_name) {
-  model <- models[[model_name]]
-  interactions <-
-    c(interaction_list[[model_name]],
-      "creativity_human_binned + creativity_ai_binned")
-  emmeans_results <- list()
-  emmeans_results['overall'] = emmeans(model, specs = ~ condition)
-  for (interaction in interactions) {
-    if (interaction != "trial_no") {
-      em_formula <- as.formula(paste0("~ condition*", interaction))
-      em.temp <- emmeans::emmeans(model, specs = em_formula)
-    } else {
-      em.temp <-
-        emmeans::emtrends(model,
-                          ~ condition |
-                            trial_no,
-                          var = "trial_no",
-                          )
-    }
-    emmeans_results[[interaction]] = em.temp
-  }
-  return(emmeans_results)
-}
-#####################################
-#####################################
-#~ machine | diameter, var = "sqrt(diameter)", 
-        # at = list(diameter = c(20, 30))
-# Get stuff from models if didn't get yet
-#####################################
-#####################################
-if (!file.exists("models.rds")) {
-  
-  interaction_list <- list()
-  emmeans_list <- list()
-  joint_tests_list <- list() 
-  
-  for (model_name in model_names) {
-    interaction_list[[model_name]] <- get_interactions(model_name)
-     emmeans_list[[model_name]] <- get_emmeans(model_name)
-    joint_tests_list[[model_name]] <-  joint_tests(models[[model_name]], rg.limit=30000)
-  }
-  
-  saveRDS(models, "models.rds")
-  saveRDS(emmeans_list, "emmeans_list.rds")
-  saveRDS(interaction_list, "interaction_list.rds")
-  saveRDS(joint_tests_list, "joint_tests.rds")
-} else{
-  models <- readRDS("models.rds")
-  emmeans_list <- readRDS("emmeans_list.rds")
-  interaction_list <- readRDS("interaction_list.rds")
-  joint_tests <- readRDS("joint_tests.rds")
-
-}
-#####################################
-#####################################
-```
 
 # Core Functions
 
@@ -447,10 +342,10 @@ create_plot <- function(model_name) {
     )
   condition_labels <- c(
     "Control" = "Human\nControl",
-    "Hi_Label" = "Hi Exposure\n(Labeled)",
-    "Lo_Label" = "Lo Exposure\n(Labeled)",
-    "Hi_Unlabel" = "Hi Exposure\n(Unlabeled)",
-    "Lo_Unlabel" = "Lo Exposure\n(Unlabeled)"
+    "HiExposure_Label  " = "Hi Exposure\n(Labeled)",
+    "LoExposure_Label" = "Lo Exposure\n(Labeled)",
+    "HiExposure_Unlabel" = "Hi Exposure\n(Unlabeled)",
+    "LoExposure_Unlabel" = "Lo Exposure\n(Unlabeled)"
   )
   
   # Get emmeans and CIs
@@ -546,7 +441,6 @@ overall_fx <- function(model_name) {
 ```
 
 # Adoption
-
 
 ```{r}
 overall_fx("AI Adoption")
@@ -703,7 +597,6 @@ df %>%
 
 Show that people are most influenced by AI for the hardest tasks
 
-
 ```{r}
 
 # Get data
@@ -776,8 +669,6 @@ ggsave("cor_adopt.png", dpi=400)
 ##################################################
 ##################################################
 ```
-
-
 
 # Diversity
 
@@ -1130,7 +1021,6 @@ ggplot(data=d, aes(x=condition, y=emmean, colour=log_creativity_human, group=log
 
 ```
 
-
 ```{r}
 
 jt.m <- joint_tests(mean_dist)
@@ -1148,8 +1038,8 @@ a <- em.cut %>%
  
 ```
 
+### SIM
 
-### SIM 
 ```{r}
 df$mean_lcs_sim_neg <- -1*df$mean_lcs_sim
 
@@ -1197,7 +1087,6 @@ stargazer(max_ai_sim2, mean_ai_sim2,type='text',  report=('vc*t'))
 
 ```
 
-
 ```{r}
 
 grid = list(
@@ -1211,7 +1100,6 @@ em <- emmeans(max_ai_sim2, ~condition*creativity_human, at = grid)
 # df %>% ggplot(data=., aes(x=create_gap_cut, y=ai_max_sim)) + facet_wrap(~condition) + geom_boxplot()  
 
 ```
-
 
 ```{r}
 dodge = 0.3
@@ -1235,8 +1123,6 @@ df %>% filter(condition %in% c("HiExposure_Label", "HiExposure_Unlabel")) %>%
   ggplot(data=., aes(x=creativity_human_binned, y=m)) + geom_point(size=5) + geom_errorbar(aes(ymin=m - se, ymax=m+se)) + facet_wrap(~condition) + theme_nice()
 ```
 
-
-
 ```{r}
 library(psych)
 library(dplyr)
@@ -1257,6 +1143,7 @@ library(dplyr)
 
 
 ```
+
 ```{r}
 
 
@@ -1294,9 +1181,10 @@ ggplot(data = melted_cor_matrix, aes(x = Var1, y = Var2, fill = value)) +
 ```
 
 # Heatmap Obs
-* mean, human_max, ai_max lcs_sims are correlated with each other
-* ai semantic sims are correlated with each other
-* 
+
+-   mean, human_max, ai_max lcs_sims are correlated with each other
+-   ai semantic sims are correlated with each other
+-   
 
 ```{r}
 library(gplots)
@@ -1335,7 +1223,6 @@ heatmap.2(cor_matrix,
 dev.off()
 
 ```
-
 
 # Evolution of Diversity (FINALIZED)
 
@@ -1434,6 +1321,7 @@ em2 %>%
 ##########################################################################
 
 ```
+
 ```{r}
 conditions2 <-
   c("Control", "LoExposureLabeled", "HiExposureUnlabeled", "HiExposureLabeled", "HiExposureUnlabeled")
@@ -1469,7 +1357,7 @@ em2 %>%
 
 
 ```
+
 ```{r}
 b <- emtrends(mean_pw_dist, ~condition, var='trial_no')
 ```
-
