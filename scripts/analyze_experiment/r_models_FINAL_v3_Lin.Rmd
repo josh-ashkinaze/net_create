@@ -1,0 +1,1475 @@
+---
+title: "expr_analysis"
+author: "Joshua Ashkinaze"
+date: "2023-07-06"
+output: html_document
+---
+
+# Load Packages (FINALIZED)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(emmeans)
+library(dplyr)
+library(plm)
+library(sandwich)
+library(stringr)
+library(jtools)
+library(xtable)
+library(readr)
+library(sandwich)
+library(stargazer)
+library(lubridate)
+library(ggthemes)
+library(lme4)
+library(rjson)
+library(forcats)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(tidyverse)
+
+
+emm_options(lmerTest.limit = 17000)
+emm_options(pbkrtest.limit = 17000)
+knitr::opts_chunk$set(echo = TRUE)
+
+# @TODO: Make sure Python graphs use same color scheme 
+hex_color_list = c(
+    "#826AED",  # Medium slate blue
+    "#00A896",  # Persian green
+    "#D41876",  # Telemagenta
+    "#020887",  # Pale azure
+    "#F7B2AD",  # Melon
+    "#342E37",  # Dark grayish-purple
+    "#7DCD85",  # Emerald
+    "#E87461",  # Medium-bright orange
+    "#E3B505",  # Saffron
+    "#2C3531",  # Dark charcoal gray with a green undertone
+    "#D4B2D8",  # Pink lavender
+    "#7E6551",  # Coyote
+    "#F45B69",  # Vibrant pinkish-red
+    "#020887",   # Phhtalo Blue,
+    "#F18805"  # Tangerine
+
+)
+
+
+# UTILITY FUNCTIONS
+
+relabel_func <- function(x) {
+  x %>% 
+    str_replace_all("_", " ") %>%
+    tools::toTitleCase()
+}
+
+create_bins_labels <- function(df, num_bins, variables) {
+  breaks = seq(0, 100, by = 100 / num_bins)
+  short_labels = paste0("Q", 1:num_bins)
+  long_labels = paste0("Q", 1:num_bins, "\n(", breaks[-length(breaks)], "-", as.integer(breaks[-1]), " Percentile)")
+  for (var in variables) {
+    df[[paste0(var, "_binned")]] <-
+      cut(
+        df[[var]],
+        breaks = breaks,
+        labels = short_labels,
+        include.lowest = TRUE
+      )
+    df[[paste0(var, "_binned_long")]] <-
+      cut(
+        df[[var]],
+        breaks = breaks,
+        labels = long_labels,
+        include.lowest = TRUE
+      )
+  }
+  return(df)
+}
+
+
+# Human-AI copying
+```
+
+# Set Up Data (FINALIZED)
+
+```{r get_data}
+
+# Set birthday
+set.seed(416)
+
+# Read the CSV files
+expr_data <- read_csv("../../data/experiment_data/experiment_aut_scores.csv")
+elab_and_div_scores <- read_csv("../../data/experiment_data/data_clean_with_elab_div_metrics.csv")
+
+# Merge the DataFrames on the response_id column
+# Earlier logic (`get_data.ipynb`) describes the logic for who to exclude from analysis. # For context, it's ~30 responses.
+df <- merge(expr_data, elab_and_div_scores, by = "response_id", all.x = TRUE)
+df <- df %>%
+  filter(exclude_from_analysis == 0)# Display the merged DataFrame
+print(df)
+
+# Interest group indexes the category in which the source came from
+df <- df %>%
+  mutate(interest_group = case_when(
+    source %in% c('Creative Mornings newsletter', 'r/writing', 'r/poetry') ~ "creative",
+    source %in% c('r/artificial', 'r/chatgpt', 'r/InternetIsBeautiful', 'r/singularity') ~ "technology",
+    source %in% c('share', 'facebook', 'r/samplesize', 'other') ~ 'neutral',
+    TRUE ~ "error"
+  ))
+df$interest_group <- relevel(factor(df$interest_group), ref = "neutral")
+
+
+# Fix duration with log(duration) --> squashes extreme values
+df <- df %>% mutate(log_duration = log(duration))
+
+# Make condition a factor 
+df$condition <- as.factor(df$condition)
+df$condition <- factor(df$condition, levels=c('h', 'f_l', 'f_u', 'm_l', 'm_u'))
+df$condition <- relevel(df$condition, ref = "h")
+
+
+# Add columns that break condition into transparency and exposed
+df <- df %>%
+  mutate(exposure = case_when(
+    condition %in% c('h') ~ 'Control',
+    condition %in% c('m_l', 'm_u') ~ 'Hi',
+    condition %in% c('f_l', 'f_u', 'h') ~ 'Low',
+  ),
+  transparency = case_when(
+    condition %in% c('h') ~ 'Control',
+    condition %in% c('m_l', 'f_l') ~ 'Labeled',
+    condition %in% c('m_u', 'f_u') ~ 'Unlabeled',
+  ))
+df$exposure <- relevel(factor(df$exposure), ref = "Control")
+df$transparency <- relevel(factor(df$transparency), ref = "Unlabeled")
+
+# Recode with celan names
+df <- df %>% mutate(condition = recode(condition,
+  "h" = "Control", 
+  "f_l" = "LoExposure_Label", 
+  "f_u" = "LoExposure_Unlabel",
+  "m_l" = "HiExposure_Label", 
+  "m_u" = "HiExposure_Unlabel"
+))
+
+# Create a `response_chain_id` which is the block a participant submitted a
+# particular trial in
+df$response_chain_no <- df$response_chain
+df$response_chain_id <- paste(df$response_chain_no, df$condition, df$item)
+df$item_condition <-  paste(df$condition, df$item)
+
+
+# Relevel ai_feeling so neutral is baseline
+# Label condition as a factor
+df <- df %>%
+  mutate(ai_feeling = ifelse(ai_feeling == "", NA, ai_feeling))
+df$ai_feeling <- as.factor(df$ai_feeling)
+df$ai_feeling <- factor(df$ai_feeling, levels=c('concerned', 'neutral', 'excited'))
+df$ai_feeling <- relevel(df$ai_feeling, ref = 'neutral')
+
+variables = c("creativity_ai", "creativity_human")
+df <- create_bins_labels(df, 4, variables)
+df$create_gap <- df$creativity_human - df$creativity_ai
+df$create_gap_cut <- as.integer((df$creativity_human > df$creativity_ai)*1)
+
+
+# Multiply dist_cent by 100 for interpretation
+df$cent_dist2 <- df$cent_dist*100
+df$mean_dist2 <- df$med_dist*100
+df$ai_max_sim2 <- df$ai_max_sim*100
+
+
+```
+
+# Model Selection (FINALIZED)
+## REAL
+```{r}
+
+# Test interactions
+###################################################
+###################################################
+fs <- "condition +
+          creativity_human + 
+          trial_no + 
+          create_gap + 
+          ai_feeling +
+          interest_group +
+          condition_order +
+          log_duration +
+          n_seeds + 
+          (1|participant_id) +
+          (1|item_condition/response_chain_id)"
+
+test_interactions <- function(data, dv, clean_dv, fs) {
+  
+  variables <- c("creativity_human", "create_gap", "ai_feeling", "interest_group")
+  clean_names <- c("Self-Perceived Human Creativity", "AI - Human Creativity", "AI Feeling", "Interest Group")
+  
+  formula_base <- as.formula(paste0(dv, " ~ ", fs))
+  base <- lmer(formula_base, data=data, REML=FALSE)
+  
+  results <- data.frame(Variable_Added=character(), Chisq=numeric(), Df=numeric(), Pr_ChiSq=numeric(), stringsAsFactors=FALSE)
+  
+  # Test each predictor's interaction with condition
+  for (i in seq_along(variables)) {
+    interaction_formula <- as.formula(paste0(dv, " ~ ", fs, " + ", variables[i], ":condition"))
+    interaction_model <- lmer(interaction_formula, data=data, REML=FALSE)
+    
+    anova_res <- anova(base, interaction_model)
+    
+    results <- rbind(results, data.frame(
+      DV = clean_dv,
+      Potential_Moderator = clean_names[i],
+      ChiSq = round(anova_res$Chisq[2],2),
+      Df = round(anova_res$Df[2],0),
+      Pr_ChiSq = round(anova_res$`Pr(>Chisq)`[2],4),
+      Added_Interaction = ifelse(anova_res$`Pr(>Chisq)`[2]<0.05, "YES", "NO")
+    ))
+  }
+  
+  return(results)
+}
+
+inters.cent_dist <- test_interactions(df, "cent_dist2", "Avg Distance From Examples", fs)
+inters.max_sim <- test_interactions(df, "ai_max_sim2", "Max Similarity to AI Examples", fs)
+inters.originality <- test_interactions(df, "originality", "Originality", fs)
+inters_df <- rbind(inters.cent_dist, inters.max_sim, inters.originality)
+###################################################
+###################################################
+
+# Make latex table
+###################################################
+###################################################
+# Determine where the DV changes for line breaks
+dv_changes <- which(!duplicated(inters_df$DV))
+
+# Remove the repeated DV names
+inters_df$DV[duplicated(inters_df$DV)] <- ""
+
+# Create custom add.to.row list
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$command <- c()
+
+for (i in dv_changes) { 
+  addtorow$pos[[length(addtorow$pos) + 1]] <- c(i - 1)
+  addtorow$command <- c(addtorow$command, "\\hline ")
+}
+
+latex_code <- xtable(inters_df, label="chisq_inters", caption="To determine which moderating variables to include, we conducted likelihood ratio tests comparing the baseline specification to a model including an interaction between a potential moderator and the treatment condition. If the likelihood ratio test indicated the interaction improved the fit at $p<0.05$, we included this interaction in our model.", type="latex")
+colnames(latex_code) <- c("DV", "Potential Moderator", "$\\chi^2$", "Df", "$p < \\chi^2$",  "Added Interaction")
+
+print(latex_code, include.rownames=FALSE, sanitize.text.function=identity, hline.after=c(-1), add.to.row=addtorow, type="latex")
+###################################################
+###################################################
+
+
+
+
+```
+
+
+
+
+
+
+
+
+# Fit Models (DEPRACATED)
+
+```{r fit_models}
+library(lme4)
+library(combinat)
+
+# Define the grid search function
+grid_search_interaction <- function(dv, df, variables) {
+  # Base model formula
+  base_formula <- as.formula(
+    paste(
+      dv,
+      "~ condition +
+                creativity_human*condition +
+                trial_no*condition +
+                ai_feeling + 
+                interest_group +
+                condition_order +
+                create_gap_cut +
+                log_duration +
+                (1|participant_id) +
+                (1|item_condition/response_chain_id)"
+    )
+  )
+  
+  # Generate the power set of interactions
+  all_combinations <- list()
+  for (i in 1:length(variables)) {
+    all_combinations <-
+      append(all_combinations, combn(variables, i, simplify = FALSE))
+  }
+  all_combinations <- unlist(all_combinations, recursive = FALSE)
+  interaction_combinations <-
+    lapply(all_combinations, function(combo) {
+      paste(paste(combo, "condition", sep = ":"), collapse = " + ")
+    })
+  
+  # Fit the base model once. Then init lists for BIC and models 
+  base_model <- lmer(base_formula, data = df)
+  base_bic <- AIC(base_model)
+  models <- list(base_model)
+  bics <- c(base_bic)
+  
+  # Grid search over interactions
+  for (i in seq_along(interaction_combinations)) {
+      formula_i <- update(base_formula, paste(". ~ . +", interaction_combinations[[i]]))
+      models[[i+1]] <- lmer(formula_i, data = df) # i+1 since we already have the base model
+      bics[i+1] <- AIC(models[[i+1]])
+  }
+  best_model_index <- which.min(bics)
+  print(models)
+  best_model <- models[[best_model_index]]
+  print(paste("Selected model with lowest BIC:", 
+              ifelse(best_model_index == 1, "Base model", interaction_combinations[[best_model_index - 1]])))
+  print(summary(best_model))
+  return(best_model)
+}
+
+models <- list()
+possible_interactions <- c("create_gap_cut", "ai_feeling")
+dvs <- c('cent_dist2', 'originality', 'ai_max_sim2')
+
+for (dv in dvs) {
+  models[[dv]] <-
+    grid_search_interaction(dv, df, possible_interactions)
+}
+
+names(models) <-
+ c("Diversity", "Originality", "AI Adoption")
+
+```
+
+# Save emmeans (DEPRACATED)
+
+So the basic issue is that it takes a long time to fit emmeans reference
+grids with crossed random intercepts and I need a bunch of them. To save
+time, I will get the models now.
+
+```{r save_emmeans}
+
+model_names <- as.character(names(models))
+
+# Functions to get stuff from models
+#####################################
+#####################################
+
+# Function to get interactions from the model
+get_interactions <- function(model_name) {
+  model <- models[[model_name]]
+  model_terms <- attr(terms(model), "term.labels")
+  vars_of_interest <-
+    c("ai_feeling", "creativity_human_binned", "creativity_ai_binned", "interest_group", "trial_no", "gap")
+  interactions <-
+    model_terms[str_detect(model_terms, "condition") &
+                  str_detect(model_terms, paste(vars_of_interest, collapse = "|"))]
+  interactions <- str_remove(interactions, "condition:")
+  return(interactions)
+}
+
+# Function to get emmeans from the model
+get_emmeans <- function(model_name) {
+  model <- models[[model_name]]
+  interactions <-
+    c(interaction_list[[model_name]],
+      "creativity_human_binned + creativity_ai_binned")
+  emmeans_results <- list()
+  emmeans_results['overall'] = emmeans(model, specs = ~ condition)
+  for (interaction in interactions) {
+    if (interaction != "trial_no") {
+      em_formula <- as.formula(paste0("~ condition*", interaction))
+      em.temp <- emmeans::emmeans(model, specs = em_formula)
+    } else {
+      em.temp <-
+        emmeans::emtrends(model,
+                          ~ condition |
+                            trial_no,
+                          var = "trial_no",
+                          )
+    }
+    emmeans_results[[interaction]] = em.temp
+  }
+  return(emmeans_results)
+}
+#####################################
+#####################################
+#~ machine | diameter, var = "sqrt(diameter)", 
+        # at = list(diameter = c(20, 30))
+# Get stuff from models if didn't get yet
+#####################################
+#####################################
+if (!file.exists("models.rds")) {
+  
+  interaction_list <- list()
+  emmeans_list <- list()
+  joint_tests_list <- list() 
+  
+  for (model_name in model_names) {
+    interaction_list[[model_name]] <- get_interactions(model_name)
+     emmeans_list[[model_name]] <- get_emmeans(model_name)
+    joint_tests_list[[model_name]] <-  joint_tests(models[[model_name]], rg.limit=30000)
+  }
+  
+  saveRDS(models, "models.rds")
+  saveRDS(emmeans_list, "emmeans_list.rds")
+  saveRDS(interaction_list, "interaction_list.rds")
+  saveRDS(joint_tests_list, "joint_tests.rds")
+} else{
+  models <- readRDS("models.rds")
+  emmeans_list <- readRDS("emmeans_list.rds")
+  interaction_list <- readRDS("interaction_list.rds")
+  joint_tests <- readRDS("joint_tests.rds")
+
+}
+#####################################
+#####################################
+```
+
+# Core Functions
+
+## Make overall plot
+
+```{r create_plot}
+create_plot <- function(model_name) {
+  custom_colors <-
+    c(
+      "Control (None)" = "black",
+      "Low" = "#826AED",
+      "High" = "#D41876"
+    )
+  condition_labels <- c(
+    "Control" = "Human\nControl",
+    "Hi_Label" = "Hi Exposure\n(Labeled)",
+    "Lo_Label" = "Lo Exposure\n(Labeled)",
+    "Hi_Unlabel" = "Hi Exposure\n(Unlabeled)",
+    "Lo_Unlabel" = "Lo Exposure\n(Unlabeled)"
+  )
+  
+  # Get emmeans and CIs
+  #####################################
+  em <- emmeans(emmeans_list[[model_name]]$overall, ~condition)
+  em_df <- em %>% as.data.frame(.) %>% tidy(.)
+  conf_df <- confint(em, adjust='none')
+  combined_df <-cbind(em_df,
+          lower = conf_df$lower.CL,
+          upper = conf_df$upper.CL)
+  #####################################
+  
+  
+  # Do some data wrangling 
+  #####################################
+  combined_df <- combined_df %>%
+    mutate(
+      clean_label = condition_labels[match(condition, names(condition_labels))],
+      exposure = ifelse(grepl("Lo_", condition), "Low",
+                        ifelse(grepl("Hi_", condition), "High", "Control (None)")),
+      transparency = ifelse(
+        grepl("Label", condition),
+        "Labeled",
+        ifelse(grepl("Unlabel", condition), "Unlabeled", "Control")
+      )
+    )
+    #####################################
+  
+  
+  # Make plot
+  #####################################
+  p <-
+    ggplot(combined_df,
+           aes(
+             x = reorder(clean_label, estimate),
+             y = estimate,
+             color = exposure,
+             shape = transparency
+           )) +
+    geom_point(size = 3) +
+    geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
+    labs(x = "Condition", y = model_name) +  # Use the model name as the y-axis label
+    scale_color_manual(values = custom_colors) +
+    theme_nice(base_family = 'Arial') +
+    labs(
+      title = paste("How AI Exposure and Transparency Affect", model_name),
+      subtitle = "Estimated marginal means and 95% CIs from mixed model."
+    )
+  ggsave(paste0(model_name, "_overall.png"), dpi=300)
+  
+  return(p)
+  #####################################
+}
+```
+
+## Overall FX
+
+```{r overall_fx}
+overall_fx <- function(model_name) {
+  
+  set.seed(123)
+  if (model_name != 'AI Adoption') {
+    con <- list(
+      "AI - Human" = c(-0.5, 0.125, 0.125, 0.125, 0.125),
+      "Hi Exposure - Low Exposure" = c(0, -0.25, -0.25, 0.25, 0.25),
+      "Labeled - Unlabeled" = c(0, 0.25, -0.25, 0.25, -0.25)
+    )
+  }
+  # f_l, f_u, m_l, m_u
+  else {
+      con <- list(
+      "Hi Exposure - Low Exposure" = c(-0.25, -0.25, 0.25, 0.25),
+      "Labeled - Unlabeled" = c(0.25, -0.25, 0.25, -0.25)
+    )
+  }
+  
+  adj = 'holm'
+  
+  model <- models[[model_name]]
+  em.original <- emmeans_list[[model_name]]$overall
+  print(contrast(em.original, adj=adj))
+  
+  em.f_test <- joint_tests[[model_name]]
+  print(em.f_test)
+  
+  em.contrast <- emmeans(em.original, ~condition, contr=con, adj=adj)
+  print(em.contrast$contrasts)
+  
+  em.pw <- emmeans(em.original, ~condition, adj=adj)
+  print(pairs(em.pw), adj=adj)
+  
+}
+```
+
+# Adoption
+
+
+```{r}
+overall_fx("AI Adoption")
+create_plot("AI Adoption")
+```
+
+## Group Differences
+
+Adoption does differ by condition X creativity (F(9, 1949.71) = 3.317)
+and interest group (F(2, 545.79)= 3.209).
+
+```{r}
+overall_fx("AI Adoption")
+
+```
+
+### Creativity
+
+```{r}
+
+mean_value <- mean(df$ai_max_sim2, na.rm=TRUE)
+
+
+edf <-
+  emmeans(emmeans_list$`AI Adoption`$creativity_human_binned,
+           by = 'creativity_human_binned', ~condition*creativity_human_binned,
+           adj = 'none') %>%
+  as.data.frame(.) %>%
+  tibble(.) %>%
+  filter(condition %in% c("Hi_Label", "Hi_Unlabel")) %>%
+  mutate(condition = recode(condition,
+                           "Hi_Label" = "High Exposure (Labeled)",
+                           "Hi_Unlabel" = "High Exposure (Unlabeled)"))
+
+ggplot(data=edf, aes(x=creativity_human_binned, y=emmean)) +
+  labs(title="The relationship between AI transparency and AI idea adoption\nby creativity", 
+       subtitle="Marginal means +- SE by creativity quartile; dashed line for overall mean",
+       x="Creativity Quartile",
+       y="Estimated Marginal Mean of AI Adoption ") +
+  scale_color_brewer(palette = "Paired", direction=-1) + 
+geom_hline(aes(yintercept=mean_value), color="black", linetype="dashed", size=1) +
+  geom_point(size = 5, position=position_dodge(0)) +
+  facet_wrap(~condition) + 
+  geom_line(aes(group=creativity_human_binned), size=1) +
+    geom_errorbar(aes(ymin=emmean-SE, ymax=emmean+SE), width=0.5, position=position_dodge(0.5), alpha=0.4) +
+
+
+  theme_nice(base_family='Arial')
+```
+
+### Interactions: Contrast of contrasts or contrast of EMMs?
+
+```{r calc-interactions}
+
+ema <- emmeans(emmeans_list$`AI Adoption`$creativity_human_binned,  by='creativity_human_binned', ~condition)
+
+# # Contrast of contrasts
+# em2 <- contrast(emmeans_list$`AI Adoption`$creativity_human_binned,  by='creativity_human_binned', adjust='holm')
+# em3 <- pairs(em2, simple='creativity_human_binned', adjust='holm')
+# print(em3)
+
+```
+
+```{r pretty-plots}
+library(RColorBrewer)
+
+
+# AI ADOPTION: Snaking Lines
+############################
+mean_value <- mean(df$ai_max_sim2, na.rm=TRUE)
+edf <-
+  emmeans(emmeans_list$`AI Adoption`$creativity_human_binned,
+           by = 'creativity_human_binned', ~condition*creativity_human_binned,
+           adj = 'none') %>%
+  as.data.frame(.) %>%
+  tibble(.) %>%
+  filter(condition %in% c("Hi_Label")) %>%
+  mutate(condition = recode(condition,
+                           "Hi_Label" = "High Exposure (Labeled)",
+                           "Hi_Unlabel" = "High Exposure (Unlabeled)"))
+
+ggplot(data=edf, aes(x=creativity_human_binned, y=emmean)) +
+  labs(title="How self-percieved creativity moderates the effect of AI transparency\non idea adoption in the (High Exposure, Labeled) condition", 
+       subtitle="Marginal means +- SE; dashed line for overall mean",
+       x="Self-Percieved Human Creativity",
+       y="Estimated Marginal Mean of AI Adoption ") +
+geom_hline(aes(yintercept=mean_value), color="black", linetype="dashed", size=1) +
+  geom_point(size = 5, position=position_dodge(0)) +
+  geom_errorbar(aes(ymin=emmean-SE, ymax=emmean+SE), width=0.5, position=position_dodge(0.5), alpha=1) +
+  geom_line(aes(group=condition), size=1) +
+
+  theme_nice(base_family='Arial')
+############################
+
+
+
+# AI ADOPTION: Crossed Lines
+############################
+mean_value <- mean(df$ai_max_sim2, na.rm=TRUE)
+edf <-
+  emmeans(emmeans_list$`AI Adoption`$creativity_human_binned,
+           by = 'creativity_human_binned', ~condition*creativity_human_binned,
+           adj = 'none') %>%
+  as.data.frame(.) %>%
+  tibble(.) %>%
+  filter(condition %in% c("Hi_Label", "Hi_Unlabel")) %>%
+  mutate(condition = recode(condition,
+                           "Hi_Label" = "High Exposure (Labeled)",
+                           "Hi_Unlabel" = "High Exposure (Unlabeled)"))
+
+ggplot(data=edf, aes(x=condition, y=emmean, colour=creativity_human_binned)) +
+  labs(title="How self-percieved creativity moderates the effect of AI transparency\non idea adoption", 
+       subtitle="Marginal means by creativity quartile; dashed line for overall mean",
+       x="Condition",
+       y="Estimated Marginal Mean of AI Adoption ") +
+  scale_color_brewer(palette = "RdBu") + 
+geom_hline(aes(yintercept=mean_value), color="black", linetype="dashed", size=1) +
+  geom_point(size = 5, position=position_dodge(0)) +
+  geom_line(aes(group=creativity_human_binned), size=1) +
+    theme_nice(base_family='Arial')
+
+############################
+
+
+
+
+```
+
+### Show this replicates within interest groups
+
+```{r}
+overall_mean <- mean(df$ai_max_sim2, na.rm=TRUE)
+df %>% 
+  group_by(interest_group, transparency) %>%
+  summarise(m = mean(ai_max_sim2, na.rm = TRUE), 
+            sd = sd(ai_max_sim2, na.rm = TRUE), 
+            n = n(), 
+            se = sd / sqrt(n)) %>%
+  na.omit() %>%
+  ggplot(aes(x = interest_group, y = m)) + 
+  geom_point(size = 5) + 
+  facet_wrap(~transparency) + 
+  theme_nice(base_family='Arial') + 
+  geom_errorbar(aes(ymin = m - se, ymax = m + se)) + 
+  labs(x="Interest Group", y="Mean AI Adoption", title="AI Adoption by Interest Group", subtitle = "Mean +- SE of AI Adoption by interest group where 'interest group' describes\n the source of participants. The horizontal line is overall mean.") + 
+  geom_hline(aes(yintercept=overall_mean), color="black", linetype="dashed", size=1) 
+
+
+
+
+```
+
+# Adoption of items
+
+Show that people are most influenced by AI for the hardest tasks
+
+
+```{r}
+
+# Get data
+##################################################
+##################################################
+df.originality <- df %>% 
+  filter(condition %in% c("Control")) %>% 
+  group_by(item) %>% 
+  summarise(m = mean(originality)) %>% 
+  ungroup() %>%
+  mutate(rank_orig = rank(m))
+
+df.adoption.unlabel <- df %>% 
+  filter(condition %in% c("HiExposure_Unlabel")) %>% 
+  group_by(item, condition) %>% 
+  summarise(m = -1*mean(ai_max_sim)) %>% 
+  ungroup() %>% 
+  mutate(rank_unlabel = rank(m))
+
+df.adoption.label <- df %>% 
+  filter(condition %in% c("HiExposure_Label")) %>% 
+  group_by(item, condition) %>% 
+  summarise(m = -1*mean(ai_max_sim)) %>% 
+  ungroup () %>% 
+  mutate(rank_label = rank(m))  
+
+merged_df <- df.originality %>% 
+  left_join(df.adoption.unlabel, by = "item") %>%
+  left_join(df.adoption.label, by = "item")
+##################################################
+##################################################
+
+# Get Correlations
+##################################################
+##################################################
+correlation <- stats::cor(merged_df$rank_orig, merged_df$rank_label, method="spearman")
+correlation.unlabel <- stats::cor(merged_df$rank_orig, merged_df$rank_unlabel, method="spearman")
+
+print("Correlation for labeled")
+print(correlation)
+
+print("Correlation for unlabeled")
+print(correlation.unlabel)
+##################################################
+##################################################
+
+
+
+# Make graph 
+##################################################
+##################################################
+cor_plot <- ggplot(merged_df, aes(x = rank_orig, y = rank_label)) +
+  geom_point(aes(color = item), size = 10) + 
+  scale_color_discrete(guide = guide_legend(override.aes = list(size = 6))) + 
+  geom_smooth(method = "lm", size=2, se = FALSE, color = "black") +  # Add a simple straight line
+
+  annotate("text", x = max(merged_df$rank_orig), y = min(merged_df$rank_label), 
+           label = paste("Spearman rho =", round(correlation, 2)), vjust=-3, hjust = 1) +  
+  labs(
+    title = "Adoption of AI Ideas by Difficulty of AUT Prompt",
+    subtitle = "Prompt difficulty for an item was measured by the inverse rank of average originality\nin the control condition (i.e: lower average originality suggests a more difficult prompt).\n\nAdoption was measued by the rank of cosine similarity of participant responses\nto AI examples in the (High Exposure, Labeled) condition.",
+    x = "Rank of Difficulty of Prompt (1-5)",
+    y = "Rank of AI Adoption (1-5)",
+    color = "Item"
+  ) + 
+  theme_tufte(base_family="Helvetica") + 
+  scale_color_manual(values = hex_color_list, guide = guide_legend(override.aes = list(size = 10)))
+cor_plot
+ggsave("cor_adopt.png", dpi=400)
+##################################################
+##################################################
+```
+
+
+
+# Diversity
+
+## Overall fx = null
+
+```{r}
+overall_fx("Diversity")
+create_plot("Diversity")
+```
+
+## Same difference for High Labeled as adoption
+
+```{r}
+
+edf <-
+  emmeans(emmeans_list$`Diversity`$creativity_human_binned,
+           by = 'creativity_human_binned', ~condition*creativity_human_binned,
+           adj = 'none') %>%
+  as.data.frame(.) %>%
+  tibble(.) %>% filter(condition %in% c('Hi_Label', 'Hi_Unlabel'))
+
+ggplot(data=edf, aes(x=creativity_human_binned, y=emmean)) +
+  labs(title="The relationship between AI transparency and AI idea adoption\nby creativity", 
+       subtitle="Marginal means +- SE by creativity quartile; dashed line for overall mean",
+       x="Creativity Quartile",
+       y="Estimated Marginal Mean of AI Adoption ") +
+  scale_color_brewer(palette = "Paired", direction=-1) + 
+  geom_point(size = 5, position=position_dodge(0)) +
+  facet_wrap(~condition) + 
+  geom_line(aes(group=creativity_human_binned), size=1) +
+    geom_errorbar(aes(ymin=emmean-SE, ymax=emmean+SE), width=0.5, position=position_dodge(0.5), alpha=0.4) +theme_nice(base_family='Arial')
+```
+
+## Temporal fx st high exposure lower loss of diversity over time
+
+```{r}
+stargazer(models$Diversity, type='text')
+
+df %>% group_by(condition, exposure, transparency, trial_no) %>% filter(trial_no <=20) %>%
+  summarise(m = mean(cent_dist2)) %>%
+  ggplot(data=., aes(x=trial_no, y=m)) + geom_point() + facet_wrap(~condition) + geom_smooth(method='lm') + theme_nice() + labs(title="Semantic Diversity over Time by Condition", subtitle="Each dot represents the condition-level mean centroid distance for a trial number\nacross all items and response chains") + theme_nice(base_family="Arial")
+  
+```
+
+```{r}
+
+
+# # WORD COUNT OVER EXPR TRIALS  
+# df %>%
+#   filter(trial_no <= 20) %>% filter(trial_no >= 0) %>% 
+#   group_by(trial_no, condition) %>%
+#   summarise(m = mean(originality, na.rm = TRUE)) %>% 
+#   ggplot(aes(x = trial_no, y = m, group = interaction(condition))) +
+#   facet_wrap(~ condition, scales = 'fixed') + 
+#   theme_nice() + 
+#   geom_point() + 
+# geom_smooth(method = 'loess', se=TRUE, alpha=0.01)
+
+
+# WORD COUNT OVER EXPR TRIALS
+df %>%
+  filter(trial_no <= 20) %>% filter(trial_no >= 0) %>%
+  group_by(trial_no, condition) %>%
+  summarise(m = mean(originality, na.rm = TRUE)) %>%
+  ggplot(aes(x = trial_no, y = m, group = interaction(condition))) +
+  facet_wrap(~ condition, scales = 'fixed') +
+  theme_nice() +
+  geom_point() +
+geom_smooth(method = 'lm', se=FALSE, alpha=0.01)
+
+```
+
+# Robustness Checks
+
+## Does creativity finding still hold lookign acrss ai creativity?
+
+```{r}
+df %>% 
+  group_by(creativity_human_binned, creativity_ai_binned, condition, ai_feeling) %>%
+  summarise(m = mean(ai_max_sim2, na.rm = TRUE)) %>%
+  na.omit() %>%
+  ggplot(data=., aes(x=creativity_human_binned, y=m, colour=creativity_ai_binned, group=interaction(creativity_ai_binned, condition))) + 
+  facet_grid(condition ~ ai_feeling) + geom_point(size=3) + 
+  theme_nice() 
+
+```
+
+## Creativity Sit
+
+```{r}
+
+quartiles_creativity_ai <- quantile(df$creativity_ai, probs = c(0, 0.25, 0.5, 0.75, 1), na.rm=TRUE)
+df$creativity_ai_ebinned <- as.factor(cut(df$creativity_ai, breaks = quartiles_creativity_ai, include.lowest = TRUE, labels = FALSE))
+
+quartiles_creativity_human <- quantile(df$creativity_human, probs = c(0, 0.25, 0.5, 0.75, 1), na.rm=TRUE)
+df$creativity_human_ebinned <- as.factor(cut(df$creativity_human, breaks = quartiles_creativity_human, include.lowest = TRUE, labels = FALSE))
+
+
+base.inter <-   lmer("ai_max_sim2 ~ condition +
+                creativity_human_binned*condition +
+                ai_feeling*condition +
+                interest_group +
+                condition_order +
+                trial_no*condition +
+                log_duration +
+                create_gap + 
+                creativity_ai_binned*condition+ 
+                (1|participant_id) +
+                (1|item_condition/response_chain_id)", data=df)
+
+
+base.simpler <-   lmer("ai_max_sim2 ~ condition +
+                creativity_human_binned*condition +
+                ai_feeling*condition +
+                interest_group +
+                condition_order +
+                trial_no*condition +
+                log_duration +
+                create_gap + 
+                creativity_ai_binned + 
+                (1|participant_id) +
+                (1|item_condition/response_chain_id)", data=df)
+
+base.cinter <-   lmer("ai_max_sim2 ~ condition +
+                creativity_human_ebinned*condition +
+                ai_feeling*condition +
+                interest_group +
+                condition_order +
+                trial_no*condition +
+                log_duration +
+                create_gap + 
+                creativity_ai_ebinned*condition + 
+                (1|participant_id) +
+                (1|item_condition/response_chain_id)", data=df)
+
+base <-   lmer("ai_max_sim2 ~ condition +
+                creativity_human_ebinned*condition +
+                ai_feeling*condition +
+                interest_group +
+                condition_order +
+                trial_no*condition +
+                log_duration +
+                create_gap + 
+                creativity_ai_ebinned*condition + 
+                (1|participant_id) +
+                (1|item_condition/response_chain_id)", data=df)
+
+base.no_inter <-   lmer("ai_max_sim2 ~ condition +
+                creativity_human_binned*condition +
+                ai_feeling*condition +
+                interest_group +
+                condition_order +
+                trial_no*condition +
+                log_duration +
+                create_gap + 
+                creativity_ai_binned + 
+                (1|participant_id) +
+                (1|item_condition/response_chain_id)", data=df)
+
+eb <- lmer("ai_max_sim2 ~ condition +
+                creativity_human_ebinned*condition +
+                ai_feeling*condition +
+                interest_group +
+                condition_order +
+                trial_no*condition +
+                log_duration +
+                create_gap + 
+                condition + 
+                creativity_ai_ebinned + 
+                (1|participant_id) +
+                (1|item_condition/response_chain_id)", data=df)
+
+
+stargazer(list(base.inter, base.simpler, base.cinter, base, base.no_inter, eb), type='text', report=('vct*'))
+```
+
+```{r}
+em %>% as.data.frame(.) %>% tibble(.) %>% 
+  filter(condition %in% c('Hi_Label', 'Hi_Unlabel')) %>% 
+  ggplot(data=., aes(x=creativity_human_binned, y=emmean, colour=creativity_ai_binned, group=interaction(condition, creativity_ai_binned))) + 
+  geom_point() + 
+  geom_smooth(method='lm', se=FALSE) + 
+  facet_wrap(~condition) 
+  theme_nice()
+```
+
+```{r}
+
+df$log_creativity_human <- log(df$creativity_human + 1)
+df$log_creativity_ai <- log(df$creativity_ai + 1)
+
+base.inter <-   lmer("ai_max_sim2 ~ condition +
+                ai_feeling*condition +
+                interest_group +
+                condition_order +
+                trial_no*condition +
+                log_duration +
+                condition*creativity_human + 
+                condition*creativity_ai + 
+                (1|participant_id) +
+                (1|item_condition/response_chain_id)", data=df)
+
+
+base.inter2 <-   lmer("ai_max_sim2 ~ condition +
+                ai_feeling*condition +
+                interest_group +
+                condition_order +
+                trial_no*condition +
+                log_duration +
+                condition*creativity_human_binned + 
+                condition*creativity_ai_binned + 
+                (1|participant_id) +
+                (1|item_condition/response_chain_id)", data=df)
+
+stargazer(base.inter, base.inter2, type='text')
+```
+
+```{r}
+emtrends(base.inter, specs = c("condition"), var = "creativity_human_center", 
+          at = list(creativity_human_center = c(5,20)))
+```
+
+## Gap analysis
+
+```{r}
+df$creativity_ai_centered <- df$creativity_ai - 50
+df$creativity_human_centered <- df$creativity_human - 50
+ols <- lm(ai_max_sim2 ~ ai_feeling + condition_order + condition*creativity_ai_binned + condition*creativity_human_binned, data=df)
+summary(ols)
+```
+
+## Trends
+
+```{r}
+em <- emtrends(models$Diversity, ~condition*trial_no, var="trial_no", at=list(trial_no=10))
+```
+
+```{r}
+edf <- em %>% as.data.frame(.) %>% tidy(.)%>% tidyr::crossing(no = 0:20) %>% mutate(est = 20 + no*trial_no.trend) 
+ggplot(data=edf, aes(x=no, y=est, colour=condition)) + geom_line() + facet_wrap(~condition)
+```
+
+```{r}
+df$creativity_ai_center <- df$creativity_ai - 50
+df$creativity_human_center <- df$creativity_human - 50
+```
+
+```{r}
+df %>% group_by(condition, creativity_human_binned, creativity_ai_binned) %>% summarize(m = mean(ai_max_sim2), sizey=n()) %>% na.omit() %>% ggplot(data =
+                                                                                                                                          .,
+                                                                                                                                        aes(x = creativity_human_binned, y = m, colour = creativity_ai_binned, group=interaction(creativity_ai_binned, condition))) + facet_wrap( ~
+                                                                                                                                                                                                                                condition) + geom_point(size = 4) + geom_line()
+```
+
+```{r}
+df %>% group_by(condition, creativity_human_binned, create_gap_cut) %>% summarize(m = mean(ai_max_sim2), sizey=n()) %>% na.omit() %>% ggplot(data =
+                                                                                                                                          .,
+                                                                                                                                        aes(x = creativity_human_binned, y = m, colour = create_gap_cut, group=interaction(create_gap_cut, condition))) + facet_wrap( ~
+                                                                                                                                                                                                                                condition) + geom_point(size = 4) 
+```
+
+```{r}
+# Create Gap 
+
+variables = c("creativity_ai", "creativity_human")
+df$create_gap_cut <- (df$creativity_ai > df$creativity_human)*1
+```
+
+```{r}
+em <- emmeans(models$`AI Adoption`, ~condition|creativity_human_binned,weights='cell')
+
+em2 <- emmeans(emmeans_list$`AI Adoption`$creativity_human_binned, ~condition|creativity_human_binned)
+```
+
+# DEBUGGING
+
+## REGRESSIONS
+
+### DISTANCE
+
+```{r}
+
+df$mean_lcs_sim_neg <- -1*df$mean_lcs_sim
+
+df$log_creativity_human <- log(df$creativity_human+1)
+df$log_creativity_ai <- log(df$creativity_ai+1)
+
+df$creativity_human_centered <- df$creativity_human - 50
+df$creativity_ai_centered <- df$creativity_ai - 50
+
+df$log_duration_centered <- scale(df$log_duration)
+df$trial_no_centered <- scale(df$trial_no)
+df$max_dist2 <- df$max_dist*100
+df$mean_lcs_simn <- -1*df$mean_lcs_sim
+
+df$max_dist3 <- scale(df$max_dist2)
+df$cent_dist3 <- scale(df$cent_dist)
+df$mean_dist3 <- scale(df$mean_dist)
+df$med_dist3 <- scale(df$med_dist)
+df$lcs_dist3 <- scale(-1*df$mean_lcs_sim)
+df$ai_max_sim3 <- scale(df$ai_max_sim2)
+
+fs <-  "~  condition +
+                creativity_human_binned*condition +
+                create_gap*condition + 
+                interest_group +
+                condition_order +
+                ai_feeling + 
+                interest_group +
+                n_seeds + 
+                trial_no + 
+                log_duration +
+                (1|participant_id) +
+                (1|item_condition/response_chain_id)"
+
+df2 <- df %>% filter(trial_no > 0)
+
+cent_dist <-  lmer(as.formula(paste0("cent_dist2", fs)), data=df2)
+
+mean_dist <-  lmer(as.formula(paste0("mean_dist2", fs)), data=df2)
+
+max_dist <-   lmer(as.formula(paste0("ai_max_sim2", fs)), data=df2)
+
+mean_sim <-   lmer(as.formula(paste0("ai_avg_sim", fs)), data=df2)
+
+
+med_dist <-   lmer(as.formula(paste0("med_dist3", fs)), data=df2)
+
+
+
+stargazer(mean_sim, max_dist, cent_dist, mean_dist, med_dist, type='text',  report=('vc*t'))
+```
+
+#### Emmeans
+
+```{r}
+grid <- 
+  list(
+    log_creativity_human = c(log(25+1), log(75+1)), # First quartile and third quartile 
+    condition = c("LoExposure_Label", "LoExposure_Unlabel", "HiExposure_Label", "HiExposure_Unlabel")
+  )
+em <- emmeans(max_dist, ~condition*log_creativity_human, at=grid, adjust='none')
+```
+
+```{r}
+d <- em %>% as.data.frame(.) %>% tibble(.) %>% mutate(log_creativity_human = as.factor(log_creativity_human)) %>% filter(condition %in% c("HiExposure_Label", "HiExposure_Unlabel"))
+
+
+ggplot(data=d, aes(x=condition, y=emmean, colour=log_creativity_human, group=log_creativity_human)) +  geom_point(size=5) + geom_line()
+
+```
+
+
+```{r}
+
+jt.m <- joint_tests(mean_dist)
+jt.s <- joint_tests(max_sim)
+
+
+```
+
+```{r}
+a <- em.cut %>% 
+  as.data.frame(.) %>% 
+  tibble(.) %>% 
+  ggplot(data=., aes(x=condition, y=emmean, colour=create_gap_cut)) +
+  geom_point() 
+ 
+```
+
+
+### SIM 
+```{r}
+df$mean_lcs_sim_neg <- -1*df$mean_lcs_sim
+
+df$log_creativity_human <- log(df$creativity_human+1)
+df$log_creativity_ai <- scale(log(df$creativity_ai+1))
+
+df$creativity_human_centered <- df$creativity_human - 50
+df$creativity_ai_centered <- df$creativity_ai - 50
+
+df$log_duration_centered <- scale(df$log_duration)
+df$trial_no_centered <- scale(df$trial_no)
+df$max_dist2 <- df$max_dist*100
+df$mean_lcs_simn <- -1*df$mean_lcs_sim
+
+df$max_dist3 <- scale(df$max_dist2)
+df$cent_dist3 <- scale(df$cent_dist)
+df$mean_dist3 <- scale(df$mean_dist)
+df$med_dist3 <- scale(df$med_dist)
+df$lcs_dist3 <- scale(-1*df$mean_lcs_sim)
+df$ai_max_sim3 <- scale(df$ai_max_sim2)
+df$ai_avg_sim3 <- scale(df$ai_avg_sim)
+df$ai_med_sim3 <- scale(df$ai_med_sim)
+
+fs <-  "~  condition +
+                creativity_human_binned*condition + 
+                trial_no + 
+                create_gap*condition + 
+                interest_group*condition +
+                condition_order +
+                n_seeds + 
+                log_duration +
+                (1|participant_id) +
+                (1|response_chain_id)"
+
+max_ai_sim2 <-   lmer(as.formula(paste0("ai_max_sim2", fs)), data=df)
+
+mean_ai_sim2 <-   lmer(as.formula(paste0("ai_avg_sim", fs)), data=df)
+
+
+
+
+
+
+stargazer(max_ai_sim2, mean_ai_sim2,type='text',  report=('vc*t'))
+
+```
+
+
+```{r}
+
+grid = list(
+  creativity_human = c(25,75),
+  condition = c("LoExposure_Label", "LoExposure_Unlabel", "HiExposure_Label", "HiExposure_Unlabel")
+)
+em <- emmeans(max_ai_sim2, ~condition*creativity_human, at = grid)
+# # df$create_gap_cut <- as.integer((df$creativity_ai >= df$creativity_human)*1)
+# # df %>%group_by(condition, create_gap_cut, creativity_human_binned) %>% summarise(m = mean(ai_med_sim)) %>% na.omit() %>% ggplot(data=., aes(x=create_gap_cut, y=m)) + facet_wrap(creativity_human_binned~condition) + geom_point(size=5) 
+# 
+# df %>% ggplot(data=., aes(x=create_gap_cut, y=ai_max_sim)) + facet_wrap(~condition) + geom_boxplot()  
+
+```
+
+
+```{r}
+dodge = 0.3
+em %>%
+  as.data.frame() %>%
+  mutate(`Self Percieved Creativity Percentile` = as.factor(creativity_human)) %>% 
+  filter(condition %in% c("HiExposure_Label", "HiExposure_Unlabel")) %>%
+  ggplot(aes(x = reorder(condition, -1*emmean), y = emmean, colour = `Self Percieved Creativity Percentile`, group=`Self Percieved Creativity Percentile`)) + 
+  geom_point(position = position_dodge(width = dodge), size = 5) + 
+  theme_nice() + 
+  geom_line(position = position_dodge(width = dodge), size=1) + 
+  geom_errorbar(aes(ymin=emmean-SE, ymax=emmean+SE),position = position_dodge(width = dodge), width=0.1) + 
+  labs(x="Condition", y="Adoption") + 
+  labs(title = "AI Adoption by Experiment Condition and Self Percieved Creativity", subtitle="Estimated Marginal Means +- SE")
+```
+
+```{r}
+df %>% filter(condition %in% c("HiExposure_Label", "HiExposure_Unlabel")) %>% 
+  group_by(condition, creativity_human_binned) %>% summarise(m=mean(ai_max_sim2), se = sd(ai_max_sim2)/n()) %>% 
+  na.omit() %>% 
+  ggplot(data=., aes(x=creativity_human_binned, y=m)) + geom_point(size=5) + geom_errorbar(aes(ymin=m - se, ymax=m+se)) + facet_wrap(~condition) + theme_nice()
+```
+
+
+
+```{r}
+library(psych)
+library(dplyr)
+
+ df %>% 
+                dplyr::select(cent_dist, mean_dist, med_dist, max_dist) %>%
+                na.omit(.) %>% 
+                standardize(.) %>% 
+                ltm::cronbach.alpha(., CI=TRUE)
+ 
+
+ df %>% 
+                dplyr::select(ai_max_sim, ai_avg_sim, ai_med_sim) %>%
+                   na.omit(.) %>% 
+                standardize(.) %>% 
+                ltm::cronbach.alpha(., CI=TRUE)
+
+
+
+```
+```{r}
+
+
+library(ggplot2)
+library(reshape2)
+library(ComplexUpset)
+
+# Get the correlation matrix
+selected_cols <- grep("(sim|dist)", names(df), value = TRUE)
+cor_matrix <- cor(df[, selected_cols], use = "complete.obs")
+
+# Melt the correlation matrix for ggplot
+melted_cor_matrix <- melt(cor_matrix)
+
+# Perform hierarchical clustering
+row_order <- hclust(dist(1 - cor_matrix))$orderinstall.packages("heatmaply")
+library(heatmaply)
+
+col_order <- hclust(dist(1 - t(cor_matrix)))$order
+
+# Reorder melted matrix according to dendrogram
+melted_cor_matrix$Var1 <- factor(melted_cor_matrix$Var1, levels = rownames(cor_matrix)[row_order])
+melted_cor_matrix$Var2 <- factor(melted_cor_matrix$Var2, levels = colnames(cor_matrix)[col_order])
+
+# Create the heatmap
+ggplot(data = melted_cor_matrix, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = sprintf("%.2f", value)), size = 3, vjust = 0.5, hjust = 0.5) +  # Annotate tiles with correlation values
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Correlation Heatmap", fill = "Correlation")
+
+
+```
+
+# Heatmap Obs
+* mean, human_max, ai_max lcs_sims are correlated with each other
+* ai semantic sims are correlated with each other
+* 
+
+```{r}
+library(gplots)
+library(reshape2)
+
+selected_cols <- grep("(sim|dist)", names(df), value = TRUE)
+cor_matrix <- cor(df[, selected_cols], use = "complete.obs", method='spearman')
+
+# Specify the filename and the resolution
+output_filename <- "heatmap.png"
+dpi <- 400
+
+# Set the width and height based on the desired resolution
+width_in_inches <- 10  # Adjust as needed
+height_in_inches <- 10  # Adjust as needed
+
+# Open the graphics device
+png(filename = output_filename, width = width_in_inches * dpi, height = height_in_inches * dpi, res = dpi)
+
+# Create the heatmap with dendrogram using heatmap.2
+heatmap.2(cor_matrix, 
+          trace="none", 
+          margins = c(8,8), 
+          col=colorRampPalette(c("blue", "white", "red"))(25),
+          dendrogram="both",
+          key=TRUE,
+          density.info="none",
+          main="Correlation Heatmap",
+          srtCol=90, offsetCol=-0.5, cexCol=0.8,
+          srtRow=0, offsetRow=0.5, cexRow=0.8,
+          cellnote=round(cor_matrix, 2),  # add correlation values as cell labels
+          notecol="black",
+          notecex=0.8)
+
+# Close the graphics device
+dev.off()
+
+```
+
+
+# Evolution of Diversity (FINALIZED)
+
+```{r}
+
+
+# Get, wrangle data
+##########################################################################
+##########################################################################
+ag <- read.csv("../../data/experiment_data/ag_time.csv")
+
+ag$condition <- as.factor(ag$condition)
+ag$condition <- factor(ag$condition, levels=c('h', 'f_u', 'f_l', 'm_u', 'm_l'))
+ag$condition <- relevel(ag$condition, ref = "h")
+
+
+# Add columns that break condition into transparency and exposed
+ag <- ag %>%
+  mutate(exposure = case_when(
+    condition %in% c('h') ~ 'Control',
+    condition %in% c('m_l', 'm_u') ~ 'Hi',
+    condition %in% c('f_l', 'f_u', 'h') ~ 'Low',
+  ),
+  transparency = case_when(
+    condition %in% c('h') ~ 'Control',
+    condition %in% c('m_l', 'f_l') ~ 'Labeled',
+    condition %in% c('m_u', 'f_u') ~ 'Unlabeled',
+  ))
+ag$exposure <- relevel(factor(ag$exposure), ref = "Control")
+ag$transparency <- relevel(factor(ag$transparency), ref = "Unlabeled")
+
+# Recode with clean names
+ag <- ag %>% mutate(condition = recode(condition,
+  "h" = "Control", 
+  "f_l" = "LoExposureLabeled", 
+  "f_u" = "LoExposureUnlabeled",
+  "m_l" = "HiExposureLabeled", 
+  "m_u" = "HiExposureUnlabeled"
+))
+##########################################################################
+##########################################################################
+
+
+
+# Fit regression
+##########################################################################
+##########################################################################
+
+# Logic for trial_no > 6 is that seeds should be exhausted after trial_no 6
+# Logic for controlling for nobs: Seems that dist_metrics(X1...XN) depend on how many vectors, 
+# there are, so we control for this when making comparisons. 
+
+mean_pw_dist <- lmer(avg_pw_dist ~ nobs + condition*trial_no + (1|item) + trial_no, data=ag %>% filter(trial_no > 6 ))
+median_pw_dist <- lmer(median_pw_dist ~ nobs + condition*trial_no + (1|item) + trial_no, data=ag %>% filter(trial_no > 6 ))
+mean_cent_dist <- lmer(mean_cent_dist ~ nobs + condition*trial_no + (1|item) + trial_no, data=ag %>% filter(trial_no > 6 ))
+
+stargazer(mean_pw_dist, median_pw_dist, mean_cent_dist, type='text', label="sem_evo", caption="Evolution of semantic diversity by condition. We first grouped the ideas for each (condition, item, trial number) tupple [e.g: (Control, Pants, Trial #10)] into a set. We  then calculated various semantic diversity metrics on this set: average pairwise distance between ideas, median pairwise distance between ideas, and average distnace from the centroid of the group. We added a random intercept for item, controlled for the number of observations in each set, and only look at data past the 6th trial to avoid the confounding effect of seeds (since after trial number 6, seeds are exhausted). The reference level for experimental conditions is the control condition.", style='default')
+##########################################################################
+##########################################################################
+
+
+# Make graph of slopes
+##########################################################################
+##########################################################################
+conditions2 <-
+  c("Control", "LoExposureLabeled", "HiExposureUnlabeled", "HiExposureLabeled", "HiExposureUnlabeled")
+trials2 <- seq(6, 20)
+
+pred_grid <-
+  expand.grid(condition = conditions2, trial_no = trials2)
+
+em2 <-
+  emmeans(mean_pw_dist, ~ condition * trial_no, at = list(trial_no = trials2))
+
+em2 %>%
+  as.data.frame() %>%
+  mutate(newline_condition = stringr::str_replace(condition, "(Labeled|Unlabeled)", "\n\\1")) %>%
+  ggplot(data = ., aes(x = trial_no, y = emmean)) + 
+  geom_line(size = 2, color = 'red', linetype = 'solid') + 
+  facet_grid(~ reorder(newline_condition, emmean)) +
+  geom_ribbon(aes(ymin = emmean - SE, ymax = emmean + SE), alpha = 0.1) +
+  theme_nice(base_family = "Arial") +
+  theme(
+    panel.grid.major = element_blank(),
+    text = element_text(colour = "#2A2A2A"),
+    axis.text.y = element_text(colour = "#2A2A2A"),
+    axis.text.x = element_text(colour = "#2A2A2A")
+  ) +
+  labs(
+    title = "Evolution of Semantic Diversity by Condition",
+    y = "Mean Pairwise Distance\nBetween Ideas",
+    x = "Iteration",
+    subtitle = "Predictions from mixed model +- SE\n"
+  ) 
+##########################################################################
+##########################################################################
+
+```
+```{r}
+conditions2 <-
+  c("Control", "LoExposureLabeled", "HiExposureUnlabeled", "HiExposureLabeled", "HiExposureUnlabeled")
+trials2 <- seq(6, 20)
+
+pred_grid <-
+  expand.grid(condition = conditions2, trial_no = trials2)
+
+em2 <-
+  emmeans(mean_pw_dist, ~ condition * trial_no, at = list(trial_no = trials2))
+
+em2 %>%
+  as.data.frame() %>%
+  mutate(newline_condition = stringr::str_replace(condition, "(Labeled|Unlabeled)", "\n\\1")) %>%
+  ggplot(data = ., aes(x = trial_no, y = emmean)) + 
+  geom_line(size = 2, color = 'red', linetype = 'solid') + 
+  facet_grid(~ reorder(newline_condition, emmean)) +
+  geom_ribbon(aes(ymin = emmean - SE, ymax = emmean + SE), alpha = 0.1) +
+  theme_nice(base_family = "Arial") +
+  theme(
+    panel.grid.major = element_blank(),
+    text = element_text(colour = "#2A2A2A"),
+    axis.text.y = element_text(colour = "#2A2A2A"),
+    axis.text.x = element_text(colour = "#2A2A2A")
+  ) +
+  labs(
+    title = "Evolution of Semantic Diversity by Condition",
+    y = "Mean Pairwise Distance\nBetween Ideas",
+    x = "Iteration",
+    subtitle = "Predictions from mixed model +- SE\n"
+  ) 
+  
+
+
+```
+```{r}
+b <- emtrends(mean_pw_dist, ~condition, var='trial_no')
+```
+
