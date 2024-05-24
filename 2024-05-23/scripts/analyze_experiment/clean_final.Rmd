@@ -1,0 +1,1354 @@
+---
+title: "expr_analysis"
+author: "Joshua Ashkinaze"
+date: "2023-07-06"
+output: html_document
+---
+
+# Load Packages 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(emmeans)
+library(dplyr)
+library(stringr)
+library(jtools)
+library(xtable)
+library(readr)
+library(stargazer)
+library(lubridate)
+library(ggthemes)
+library(kableExtra)
+library(lme4)
+library(rjson)
+library(forcats)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(tidyverse)
+library(pbkrtest)
+
+
+# Replicated on 2024-05-24 16:22:51 and saving session state
+
+#  setting  value
+#  version  R version 4.3.3 (2024-02-29)
+#  os       macOS Sonoma 14.4.1
+#  system   x86_64, darwin20
+#  ui       RStudio
+#  language (EN)
+#  collate  en_US.UTF-8
+#  ctype    en_US.UTF-8
+#  tz       America/Detroit
+#  date     2024-05-24
+#  rstudio  1.4.1717 Juliet Rose (desktop)
+#  pandoc   2.11.4 @ /Applications/RStudio.app/Contents/MacOS/pandoc/ (via rmarkdown)
+# 
+# ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#  package      * version    date (UTC) lib source
+#  backports      1.4.1      2021-12-13 [1] CRAN (R 4.3.0)
+#  bit            4.0.5      2022-11-15 [1] CRAN (R 4.3.0)
+#  bit64          4.0.5      2020-08-30 [1] CRAN (R 4.3.0)
+#  boot           1.3-29     2024-02-19 [1] CRAN (R 4.3.3)
+#  broom          1.0.6      2024-05-17 [1] CRAN (R 4.3.3)
+#  cli            3.6.2      2023-12-11 [1] CRAN (R 4.3.0)
+#  colorspace     2.1-0      2023-01-23 [1] CRAN (R 4.3.0)
+#  crayon         1.5.2      2022-09-29 [1] CRAN (R 4.3.0)
+#  digest         0.6.35     2024-03-11 [1] CRAN (R 4.3.2)
+#  dplyr        * 1.1.4      2023-11-17 [1] CRAN (R 4.3.0)
+#  emmeans      * 1.10.2     2024-05-20 [1] CRAN (R 4.3.3)
+#  estimability   1.5.1      2024-05-12 [1] CRAN (R 4.3.3)
+#  evaluate       0.23       2023-11-01 [1] CRAN (R 4.3.0)
+#  fansi          1.0.6      2023-12-08 [1] CRAN (R 4.3.0)
+#  farver         2.1.2      2024-05-13 [1] CRAN (R 4.3.3)
+#  fastmap        1.2.0      2024-05-15 [1] CRAN (R 4.3.3)
+#  forcats      * 1.0.0      2023-01-29 [1] CRAN (R 4.3.0)
+#  generics       0.1.3      2022-07-05 [1] CRAN (R 4.3.0)
+#  ggplot2      * 3.5.1      2024-04-23 [1] CRAN (R 4.3.2)
+#  ggthemes     * 5.1.0      2024-02-10 [1] CRAN (R 4.3.2)
+#  glue           1.7.0      2024-01-09 [1] CRAN (R 4.3.0)
+#  gtable         0.3.5      2024-04-22 [1] CRAN (R 4.3.2)
+#  hms            1.1.3      2023-03-21 [1] CRAN (R 4.3.0)
+#  htmltools      0.5.8.1    2024-04-04 [1] CRAN (R 4.3.2)
+#  jtools       * 2.2.2      2023-07-11 [1] CRAN (R 4.3.0)
+#  kableExtra   * 1.4.0      2024-01-24 [1] CRAN (R 4.3.2)
+#  knitr          1.45       2023-10-30 [1] CRAN (R 4.3.0)
+#  labeling       0.4.3      2023-08-29 [1] CRAN (R 4.3.0)
+#  lattice        0.22-5     2023-10-24 [1] CRAN (R 4.3.3)
+#  lifecycle      1.0.4      2023-11-07 [1] CRAN (R 4.3.0)
+#  lme4         * 1.1-35.3   2024-04-16 [1] CRAN (R 4.3.2)
+#  lubridate    * 1.9.3      2023-09-27 [1] CRAN (R 4.3.0)
+#  magrittr       2.0.3      2022-03-30 [1] CRAN (R 4.3.0)
+#  MASS           7.3-60.0.1 2024-01-13 [1] CRAN (R 4.3.3)
+#  Matrix       * 1.6-5      2024-01-11 [1] CRAN (R 4.3.3)
+#  mgcv           1.9-1      2023-12-21 [1] CRAN (R 4.3.3)
+#  minqa          1.2.6      2023-09-11 [1] CRAN (R 4.3.0)
+#  munsell        0.5.1      2024-04-01 [1] CRAN (R 4.3.2)
+#  mvtnorm        1.2-5      2024-05-21 [1] CRAN (R 4.3.3)
+#  nlme           3.1-164    2023-11-27 [1] CRAN (R 4.3.3)
+#  nloptr         2.0.3      2022-05-26 [1] CRAN (R 4.3.0)
+#  pander         0.6.5      2022-03-18 [1] CRAN (R 4.3.0)
+#  pbkrtest     * 0.5.2      2023-01-19 [1] CRAN (R 4.3.0)
+#  pillar         1.9.0      2023-03-22 [1] CRAN (R 4.3.0)
+#  pkgconfig      2.0.3      2019-09-22 [1] CRAN (R 4.3.0)
+#  purrr        * 1.0.2      2023-08-10 [1] CRAN (R 4.3.0)
+#  R6             2.5.1      2021-08-19 [1] CRAN (R 4.3.0)
+#  ragg           1.3.2      2024-05-15 [1] CRAN (R 4.3.3)
+#  Rcpp           1.0.12     2024-01-09 [1] CRAN (R 4.3.0)
+#  readr        * 2.1.5      2024-01-10 [1] CRAN (R 4.3.0)
+#  rjson        * 0.2.21     2022-01-09 [1] CRAN (R 4.3.0)
+#  rlang          1.1.3      2024-01-10 [1] CRAN (R 4.3.0)
+#  rmarkdown      2.27       2024-05-17 [1] CRAN (R 4.3.3)
+#  rstudioapi     0.16.0     2024-03-24 [1] CRAN (R 4.3.2)
+#  scales         1.3.0      2023-11-28 [1] CRAN (R 4.3.0)
+#  sessioninfo    1.2.2      2021-12-06 [1] CRAN (R 4.3.0)
+#  stargazer    * 5.2.3      2022-03-04 [1] CRAN (R 4.3.0)
+#  stringi        1.8.4      2024-05-06 [1] CRAN (R 4.3.2)
+#  stringr      * 1.5.1      2023-11-14 [1] CRAN (R 4.3.0)
+#  svglite        2.1.3      2023-12-08 [1] CRAN (R 4.3.0)
+#  systemfonts    1.1.0      2024-05-15 [1] CRAN (R 4.3.3)
+#  textshaping    0.3.7      2023-10-09 [1] CRAN (R 4.3.0)
+#  tibble       * 3.2.1      2023-03-20 [1] CRAN (R 4.3.0)
+#  tidyr        * 1.3.1      2024-01-24 [1] CRAN (R 4.3.2)
+#  tidyselect     1.2.1      2024-03-11 [1] CRAN (R 4.3.2)
+#  tidyverse    * 2.0.0      2023-02-22 [1] CRAN (R 4.3.0)
+#  timechange     0.3.0      2024-01-18 [1] CRAN (R 4.3.0)
+#  tzdb           0.4.0      2023-05-12 [1] CRAN (R 4.3.0)
+#  utf8           1.2.4      2023-10-22 [1] CRAN (R 4.3.0)
+#  vctrs          0.6.5      2023-12-01 [1] CRAN (R 4.3.0)
+#  viridisLite    0.4.2      2023-05-02 [1] CRAN (R 4.3.0)
+#  vroom          1.6.5      2023-12-05 [1] CRAN (R 4.3.0)
+#  withr          3.0.0      2024-01-16 [1] CRAN (R 4.3.0)
+#  xfun           0.44       2024-05-15 [1] CRAN (R 4.3.3)
+#  xml2           1.3.6      2023-12-04 [1] CRAN (R 4.3.0)
+#  xtable       * 1.8-4      2019-04-21 [1] CRAN (R 4.3.0)
+#  yaml           2.3.8      2023-12-11 [1] CRAN (R 4.3.0)
+
+
+emm_options(lmerTest.limit = 17000)
+emm_options(pbkrtest.limit = 17000)
+knitr::opts_chunk$set(echo = TRUE)
+
+# @TODO: Make sure Python graphs use same color scheme 
+hex_color_list = c(
+    "#826AED",  # Medium slate blue,
+    "#D41876",  # Telemagenta
+    "#00A896",  # Persian green
+    "#020887",  # Pale azure
+    "#F7B2AD",  # Melon
+    "#342E37",  # Dark grayish-purple
+    "#7DCD85",  # Emerald
+    "#E87461",  # Medium-bright orange
+    "#E3B505",  # Saffron
+    "#2C3531",  # Dark charcoal gray with a green undertone
+    "#D4B2D8",  # Pink lavender
+    "#7E6551",  # Coyote
+    "#F45B69",  # Vibrant pinkish-red
+    "#020887",   # Phhtalo Blue,
+    "#F18805"  # Tangerine
+
+)
+
+
+# UTILITY FUNCTIONS
+
+
+round_my_df <- function(x, round_digits = 2) {
+  return(x %>% mutate(across(where(is.numeric), ~round(.x, digits = round_digits))))
+}
+
+relabel_func <- function(x) {
+  x %>% 
+    str_replace_all("_", " ") %>%
+    tools::toTitleCase()
+}
+
+create_bins_labels <- function(df, num_bins, variables) {
+  breaks = seq(0, 100, by = 100 / num_bins)
+  short_labels = paste0("Q", 1:num_bins)
+  long_labels = paste0("Q", 1:num_bins, "\n(", breaks[-length(breaks)], "-", as.integer(breaks[-1]), " Percentile)")
+  for (var in variables) {
+    df[[paste0(var, "_binned")]] <-
+      cut(
+        df[[var]],
+        breaks = breaks,
+        labels = short_labels,
+        include.lowest = TRUE
+      )
+    df[[paste0(var, "_binned_long")]] <-
+      cut(
+        df[[var]],
+        breaks = breaks,
+        labels = long_labels,
+        include.lowest = TRUE
+      )
+  }
+  return(df)
+}
+
+
+my_theme <- function() {
+  theme_minimal(base_size = 16) +
+    theme(
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.y = element_line(
+        linewidth = 0.5,
+        colour = 'lightgray',
+        linetype = 'dashed'
+      ),
+      panel.grid.major.x = element_line(
+        linewidth = 0.5,
+        colour = 'lightgray',
+        linetype = 'dashed'
+      ),
+      panel.grid.minor.x = element_blank(),
+      plot.title = element_text(face = "bold")
+    )
+}
+
+my_custom_scales <- function() {
+  list(
+    scale_color_manual(values = hex_color_list),
+    scale_fill_manual(values = hex_color_list)
+  )
+}
+
+
+my_settings <- function() {
+  my_theme() +
+    my_custom_scales()
+}
+
+# Human-AI copying
+```
+
+# Set Up Data (FINALIZED)
+
+```{r get_data}
+
+# Set birthday
+set.seed(416)
+
+# Read the CSV files
+expr_data <- read_csv("../../data/experiment_data/experiment_aut_scores.csv")
+elab_and_div_scores <- read_csv("../../data/experiment_data/data_clean_with_elab_div_metrics.csv")
+
+# Merge the DataFrames on the response_id column
+# Earlier logic (`get_data.ipynb`) describes the logic for who to exclude from analysis. # For context, it's ~30 responses.
+df <- merge(expr_data, elab_and_div_scores, by = "response_id", all.x = TRUE)
+df <- df %>%
+  filter(exclude_from_analysis == 0)# Display the merged DataFrame
+print(df)
+
+# Interest group indexes the category in which the source came from
+df <- df %>%
+  mutate(interest_group = case_when(
+    source %in% c('Creative Mornings newsletter', 'r/writing', 'r/poetry') ~ "creative",
+    source %in% c('r/artificial', 'r/chatgpt', 'r/InternetIsBeautiful', 'r/singularity') ~ "technology",
+    source %in% c('share', 'facebook', 'r/samplesize', 'other') ~ 'neutral',
+    TRUE ~ "error"
+  ))
+df$interest_group <- relevel(factor(df$interest_group), ref = "neutral")
+
+
+# Fix duration with log(duration) --> squashes extreme values
+df <- df %>% mutate(log_duration = log(duration))
+
+# Make condition a factor 
+df$condition <- as.factor(df$condition)
+df$condition <- factor(df$condition, levels=c('h', 'f_l', 'f_u', 'm_l', 'm_u'))
+df$condition <- relevel(df$condition, ref = "h")
+
+
+# Add columns that break condition into disclosure and exposed
+df <- df %>%
+  mutate(exposure = case_when(
+    condition %in% c('h') ~ 'Control',
+    condition %in% c('m_l', 'm_u') ~ 'Hi',
+    condition %in% c('f_l', 'f_u', 'h') ~ 'Low',
+  ),
+  disclosure = case_when(
+    condition %in% c('h') ~ 'Control',
+    condition %in% c('m_l', 'f_l') ~ 'Disclosed',
+    condition %in% c('m_u', 'f_u') ~ 'Undisclosed',
+  ))
+df$exposure <- relevel(factor(df$exposure), ref = "Control")
+df$disclosure <- relevel(factor(df$disclosure), ref = "Undisclosed")
+
+# Recode with celan names
+df <- df %>% mutate(condition = dplyr::recode(condition,
+  "h" = "Control", 
+  "f_l" = "LoExposure_Disclosed", 
+  "f_u" = "LoExposure_Undisclosed",
+  "m_l" = "HiExposure_Disclosed", 
+  "m_u" = "HiExposure_Undisclosed"
+))
+
+# Create a `response_chain_id` which is the block a participant submitted a
+# particular trial in
+df$response_chain_no <- df$response_chain
+df$response_chain_id <- paste(df$response_chain_no, df$condition, df$item)
+df$item_condition <-  paste(df$condition, df$item)
+
+
+# Relevel ai_feeling so neutral is baseline
+# Label condition as a factor
+df <- df %>%
+  mutate(ai_feeling = ifelse(ai_feeling == "", NA, ai_feeling))
+df$ai_feeling <- as.factor(df$ai_feeling)
+df$ai_feeling <- factor(df$ai_feeling, levels=c('concerned', 'neutral', 'excited'))
+df$ai_feeling <- relevel(df$ai_feeling, ref = 'neutral')
+
+variables = c("creativity_ai", "creativity_human")
+df <- create_bins_labels(df, 4, variables)
+df$ai_rel_create <- df$creativity_human - df$creativity_ai
+df$ai_rel_create_cut <- as.integer((df$creativity_human > df$creativity_ai)*1)
+
+
+# Multiply dist_cent by 100 for interpretation
+df$cent_dist2 <- df$cent_dist*100
+df$mean_dist2 <- df$mean_dist*100
+df$med_dist2 <- df$med_dist*100
+
+
+df$ai_max_sim2 <- df$ai_max_sim*100
+df$ai_mean_sim2 <-df$ai_mean_sim*100
+df$ai_med_sim2 <- df$ai_med_sim*100
+
+df$creativity <- df$originality #relabel for paper
+```
+
+
+# Model Selection (FINALIZED)
+
+```{r}
+
+# Test interactions
+###################################################
+###################################################
+fs <- "condition +
+        creativity_human + 
+         trial_no + 
+          ai_rel_create + 
+          ai_feeling +
+          interest_group +
+          condition_order +
+          log_duration +
+          n_seeds + 
+          (1|participant_id) +
+          (1|item_condition/response_chain_id)"
+
+test_interactions <- function(data, dv, clean_dv, fs) {
+  opt = "nloptwrap"
+  
+  variables <- c("creativity_human", "ai_rel_create", "ai_feeling", "interest_group")
+  clean_names <- c("Self-Perceived Human Creativity", "AI - Human Creativity", "AI Feeling", "Interest Group")
+  
+  formula_base <- as.formula(paste0(dv, " ~ ", fs))
+  base <- lmer(formula_base, data=data, REML=FALSE, control=lmerControl(optimizer=opt))
+  
+  results <- data.frame(Variable_Added=character(), Chisq=numeric(), Df=numeric(), Pr_ChiSq=numeric(), stringsAsFactors=FALSE)
+  
+  # Test each predictor's interaction with condition
+  for (i in seq_along(variables)) {
+    interaction_formula <- as.formula(paste0(dv, " ~ ", fs, " + ", variables[i], ":condition"))
+    interaction_model <- lmer(interaction_formula, data=data, REML=FALSE,control=lmerControl(optimizer=opt))
+    
+    anova_res <- anova(base, interaction_model)
+    
+    results <- rbind(results, data.frame(
+      DV = clean_dv,
+      Potential_Moderator = clean_names[i],
+      ChiSq = round(anova_res$Chisq[2],2),
+      Df = round(anova_res$Df[2],0),
+      Pr_ChiSq = round(anova_res$`Pr(>Chisq)`[2],4),
+      Added_Interaction = ifelse(anova_res$`Pr(>Chisq)`[2]<0.05, "YES", "NO")
+    ))
+  }
+  
+  return(results)
+}
+
+inters.cent_dist <- test_interactions(df, "med_dist2", "Idea Diversity", fs)
+inters.max_sim <- test_interactions(df, "ai_max_sim2", "AI Adoption", fs)
+inters.creativity <- test_interactions(df, "creativity", "Creativity", fs)
+inters_df <- rbind(inters.cent_dist, inters.creativity, inters.max_sim)
+###################################################
+###################################################
+
+# Make latex table
+###################################################
+###################################################
+# Determine where the DV changes for line breaks
+dv_changes <- which(!duplicated(inters_df$DV))
+
+# Remove the repeated DV names
+inters_df$DV[duplicated(inters_df$DV)] <- ""
+
+# Create custom add.to.row list
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$command <- c()
+
+for (i in dv_changes) { 
+  addtorow$pos[[length(addtorow$pos) + 1]] <- c(i - 1)
+  addtorow$command <- c(addtorow$command, "\\hline ")
+}
+
+latex_code <- xtable(inters_df, label="chisq_inters", caption="To determine which moderating variables to include, we conducted likelihood ratio tests comparing the baseline specification to a model including an interaction between a potential moderator and the treatment condition. If the likelihood ratio test indicated the interaction improved the fit at $p<0.05$, we included this interaction in our model.", type="latex")
+colnames(latex_code) <- c("DV", "Potential Moderator", "$\\chi^2$", "Df", "$p < \\chi^2$",  "Added Interaction")
+
+print(latex_code, include.rownames=FALSE, sanitize.text.function=identity, hline.after=c(-1), add.to.row=addtorow, type="latex")
+###################################################
+###################################################
+
+
+
+# Fit base models 
+###################################################
+###################################################
+
+
+# Define make_model function
+make_model <- function(df, dv, formula) {
+  full_formula <- paste(dv, "~", formula)
+  model <- lmer(as.formula(full_formula), data = df)
+  return(model)
+}
+
+
+# Make model and formula lists
+model_list = list()
+formula_list = list()
+
+formula_list[['dist']] <- "condition + condition*creativity_human + condition*ai_rel_create + creativity_human + trial_no + ai_rel_create + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)"
+
+formula_list[['sim']] <- "condition + condition*creativity_human + condition*ai_rel_create + condition*interest_group + creativity_human + trial_no + ai_rel_create + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)"
+
+formula_list[['orig']] <-  "condition + creativity_human + ai_rel_create + interest_group + trial_no + ai_feeling + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)"
+
+# Map dvs to eqns
+dv_formula_map <- list(
+  "cent_dist2" = "dist",
+  "mean_dist2" = "dist",
+  "mean_dist" = "dist",
+  "med_dist2" = "dist",
+  "ai_max_sim2" = "sim",
+  "ai_mean_sim2" = "sim",
+  "ai_med_sim2" = "sim",
+  "creativity" = "orig"
+)
+
+# Fit models
+for (dv in names(dv_formula_map)) {
+  formula_name <- dv_formula_map[[dv]]
+  formula <- formula_list[[formula_name]]
+  model <- make_model(df, dv, formula)
+  model_list[[paste(dv)]] <- model
+}
+
+
+
+
+###################################################
+###################################################
+
+
+```
+
+
+
+# Core Functions
+
+
+```{r funcs}
+
+
+summarize_reg <- function(lmer_object, conf_level = 0.95, round_digits = 2) {
+  deg_freedom <- df.residual(lmer_object)
+  
+  # Extract fixed effects summary
+  fixed_effects_summary <- summary(lmer_object)$coefficients
+  
+  # Calculate t-values
+  t_values <- fixed_effects_summary[, "t value"]
+  
+  # Calculate confidence intervals using the default method
+  ci <- confint(lmer_object, level = conf_level)
+  
+  # Extract only those rows from ci that are present in fixed_effects_summary
+  ci <- ci[rownames(fixed_effects_summary), , drop = FALSE]
+  
+  # Output summary in LaTeX format
+  rownames_list <- rownames(fixed_effects_summary)
+  
+  for(i in 1:nrow(fixed_effects_summary)) {
+    cat(
+      rownames_list[i], 
+      "($\\beta = ", round(fixed_effects_summary[i, "Estimate"], round_digits), 
+      "$, $t(", deg_freedom, ") = ", round(t_values[i], round_digits),  # Added deg_freedom here
+      "$, ", conf_level * 100, "\\%CI = $[", 
+      round(ci[i, 1], round_digits), ", ", round(ci[i, 2], round_digits), 
+      "]$)\n"
+    )
+  }
+}
+
+
+
+create_plot <- function(model_name, title) {
+  custom_colors <-
+    c(
+      "Control (None)" = "black",
+      "Low" = "#826AED",
+      "High" = "#D41876"
+    )
+  condition_labels <- c(
+    "Control" = "Human\nControl",
+    "HiExposure_Disclosed" = "Hi Exposure\n(Disclosed)",
+    "LoExposure_Disclosed" = "Lo Exposure\n(Disclosed)",
+    "HiExposure_Undisclosed" = "Hi Exposure\n(Undisclosed)",
+    "LoExposure_Undisclosed" = "Lo Exposure\n(Undisclosed)"
+  )
+  
+  # Get emmeans and CIs
+  #####################################
+  em <- emmeans(model_list[[model_name]], ~condition)
+  em_df <- em %>% as.data.frame(.) %>% tidy(.)
+  print(em_df)
+  conf_df <- confint(em, adjust='none')
+  combined_df <-cbind(em_df,
+          lower = conf_df$lower.CL,
+          upper = conf_df$upper.CL)
+  #####################################
+  
+  
+  # Do some data wrangling 
+  #####################################
+ combined_df <- combined_df %>%
+    mutate(
+      clean_label = condition_labels[match(condition, names(condition_labels))],
+      exposure = ifelse(grepl("LoExposure", condition), "Low",
+                        ifelse(grepl("HiExposure", condition), "High", "Control (None)")),
+      disclosure = ifelse(
+        grepl("Label", condition),
+        "Disclosed",
+        ifelse(grepl("Undisclosed", condition), "Undisclosed", "Control")
+      )
+    )
+    #####################################
+  
+  
+  # Make plot
+  #####################################
+  p <-
+    ggplot(combined_df,
+           aes(
+             x = reorder(clean_label, estimate),
+             y = estimate,
+             color = exposure,
+             shape = disclosure
+           )) +
+    
+    geom_point(size = 3) +
+    geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
+    labs(x = "Condition", y = title) +  # Use the model name as the y-axis label
+    scale_color_manual(values = custom_colors) +
+    theme_nice(base_family = 'Arial') +
+    labs(
+      title = paste("How AI Exposure and Disclosure Affect", title),
+      subtitle = "Estimated marginal means and 95% CIs from mixed model."
+    )
+  ggsave(paste0(model_name, "_overall.png"), dpi=300)
+  
+  return(p)
+  #####################################
+}
+create_plot("creativity", "Creativity")
+```
+
+# Adoption
+
+## Local 
+
+### Emmeans tests
+```{r}
+mod <- model_list$ai_max_sim2
+mod_sigma <- sqrt(sum(as.data.frame(VarCorr(mod))$vcov)) # used for cohens d
+     
+     
+em <- emmeans(mod, ~condition + interest_group + ai_feeling)
+em.create <- emtrends(mod, ~condition, var="creativity_human")
+em.gap <- emtrends(mod, ~condition, var="ai_rel_create")
+all_tests <- rbind(joint_tests(em), joint_tests(em.create), joint_tests(em.gap))
+
+my_list <- list(
+  condition = c("LoExposure_Undisclosed", "HiExposure_Undisclosed", "LoExposure_Disclosed","HiExposure_Disclosed"), 
+  creativity_human = c(10, 90)
+)
+
+my_list2 <- list(
+  condition = c("LoExposure_Undisclosed", "HiExposure_Undisclosed", "LoExposure_Disclosed","HiExposure_Disclosed"), 
+  ai_rel_create = c(10, 90)
+)
+
+em.grid.create <- emmeans(model_list$ai_max_sim2, ~condition*creativity_human, at=my_list)
+em.grid.rel <- emmeans(model_list$ai_max_sim2, ~condition*ai_rel_create, at=my_list2)
+
+print(round_my_df(all_tests))
+print(round_my_df(all_tests, 3))
+
+```
+
+```{r joint-tests}
+print(round_my_df(all_tests))
+print(round_my_df(all_tests, 3))
+
+#create_plot("ai_max_sim2", "AI Adoption")
+```
+
+```{r creativity-plots}
+
+# PLOTS FOR SELF PERCIEVED CREATIVITY
+
+
+
+# Set custom colors and condition labels
+custom_colors <- c(
+  "Control (None)" = "black",
+  "Low" = "#826AED",
+  "High" = "#D41876"
+)
+condition_labels <- c(
+  "Control" = "Human\nControl",
+  "HiExposure_Disclosed" = "Hi Exposure\n(Disclosed)",
+  "LoExposure_Disclosed" = "Lo Exposure\n(Disclosed)",
+  "HiExposure_Undisclosed" = "Hi Exposure\n(Undisclosed)",
+  "LoExposure_Undisclosed" = "Lo Exposure\n(Undisclosed)"
+)
+
+
+# Assuming 'em.grid.create' exists and can be converted to a data frame
+d <- as.data.frame(em.grid.create) %>%
+  dplyr::mutate(
+    creativity_factor = dplyr::if_else(creativity_human == 10, "Bottom 10%", "Top 10%")
+  ) %>% dplyr::mutate(
+    clean_label = condition_labels[match(condition, names(condition_labels))],
+    exposure = dplyr::case_when(
+      grepl("LoExposure", condition) ~ "Low",
+      grepl("HiExposure", condition) ~ "High",
+      TRUE ~ "Control (None)"
+    ),
+    disclosure = dplyr::case_when(
+      grepl("Disclosed", condition) ~ "Disclosed",
+      grepl("Undisclosed", condition) ~ "Undisclosed",
+      TRUE ~ "Control"
+    )
+  )
+
+dodge = 0.4
+ggplot(data=d, aes(y=emmean, x=creativity_factor, colour=exposure, shape=disclosure)) + 
+  geom_point(size=5, position = position_dodge(width = dodge)) +
+  geom_errorbar(aes(ymin=emmean-SE, ymax=emmean + SE), position = position_dodge(width = dodge)) +
+my_settings() +  scale_color_manual(values = hex_color_list) + 
+  labs(title="AI Adoption by Condition and Self-Percieved Creativity", x="Self Percieved Creativity", y="AI Adoption", subtitle="Predictions from estimated marginal means +- SE")
+ggsave("all_pts_adopt.png", dpi=400,height=6, width=12)
+
+dodge = 0.4
+ggplot(data=d %>% filter(exposure=='High'), aes(y=emmean, x=creativity_factor, colour=disclosure)) + 
+  geom_line(position =  position_dodge(width = dodge), aes(group=interaction(disclosure))) +  
+  geom_point(size=8, position = position_dodge(width = dodge)) +
+  geom_errorbar(aes(ymin=emmean-SE, ymax=emmean + SE), position = position_dodge(width = dodge), width=0.1) + my_settings() +  scale_color_manual(values = hex_color_list) + 
+  labs(title="AI Adoption by Condition and Self-Percieved\nCreativity (High Exposure Conditions)", 
+       x="Self Percieved Creativity", 
+       y="AI Adoption", 
+       subtitle="Predictions from estimated marginal means +- SE")
+
+ggsave("hi_adopt_emm.png", dpi=400, height=6, width=9) 
+
+
+df %>%  group_by(creativity_human_binned, condition) %>%
+  summarise(m = mean(ai_max_sim2, na.rm = TRUE),
+            sd = sd(ai_max_sim2, na.rm = TRUE),
+            se = sd(ai_max_sim2, na.rm = TRUE) / sqrt(n())) %>% na.omit() %>% 
+  filter(condition == "HiExposure_Disclosed") %>% 
+  ggplot(data=., aes(x=creativity_human_binned, y=m)) + geom_point(size=8) + 
+  my_settings() +  scale_color_manual(values = hex_color_list) + 
+  geom_errorbar(aes(ymin=m - se, ymax=m+se),width=0.1) + labs(x="Self-Percieved Creativity Quartile", y="AI Adoption", title="AI Adoption by Self-Percieved Creativity in the\n(High Exposure, Disclosed) Condition", subtitle="Group means +- SE") 
+ggsave("hi_adopt_raw.png", dpi=400,height=6, width=9) 
+
+
+
+```
+
+```{r creativity-contrasts,  results='asis'}
+library(kableExtra)
+con <- list(
+  "Interaction" = c(-1, 1, 1, -1)
+) 
+
+my_con <- emmeans(em.grid.create, ~condition|creativity_human, contr=con)
+print(my_con)
+
+print(eff_size(my_con, edf=df.residual(mod), sigma=mod_sigma))
+
+pairwise_comp <- pairs(em.grid.create, by = "creativity_human", adjust = 'holm') %>% as.data.frame() %>% tibble(.)
+eff_sizes <- eff_size(em.grid.create, edf = df.residual(mod), sigma = mod_sigma, by="creativity_human") %>% as.data.frame() %>% tibble(.)
+pairwise_comp$`Cohen's d` <- eff_sizes$effect.size
+
+pg <- pairwise_comp %>% rename("Perceived Creativity Percentile" = creativity_human) %>% 
+  rename("Adjusted P Value" = p.value) 
+
+
+cat(kable(pg, caption = "Estimated marginal means contrasts of AI adoption, using a mixed model to compare predictions for top 10 percentile and bottom 10 percentile of participants by self-perceived human creativity. AI Adoption is the max cosine similarity of a participant's response and AI examples. P-values are adjusted for multiple comparisons using Holm-Bonferroni method.", label = "adopt_create", format = "latex", digits=3, booktabs = TRUE) %>%  kable_styling(latex_options="scale_down"))
+
+```
+
+```{r rel-plots}
+
+# Set custom colors and condition labels
+custom_colors <- c(
+  "Control (None)" = "black",
+  "Low" = "#826AED",
+  "High" = "#D41876"
+)
+condition_labels <- c(
+  "Control" = "Human\nControl",
+  "HiExposure_Disclosed" = "Hi Exposure\n(Disclosed)",
+  "LoExposure_Disclosed" = "Lo Exposure\n(Disclosed)",
+  "HiExposure_Undisclosed" = "Hi Exposure\n(Undisclosed)",
+  "LoExposure_Undisclosed" = "Lo Exposure\n(Undisclosed)"
+)
+
+
+# Assuming 'em.grid.create' exists and can be converted to a data frame
+d <- as.data.frame(em.grid.rel) %>%
+  dplyr::mutate(
+    creativity_factor = dplyr::if_else(ai_rel_create == 10, "Bottom 10%", "Top 10%")
+  ) %>% dplyr::mutate(
+    clean_label = condition_labels[match(condition, names(condition_labels))],
+    exposure = dplyr::case_when(
+      grepl("LoExposure", condition) ~ "Low",
+      grepl("HiExposure", condition) ~ "High",
+      TRUE ~ "Control (None)"
+    ),
+    disclosure = dplyr::case_when(
+      grepl("Label", condition) ~ "Disclosed",
+      grepl("Undisclosed", condition) ~ "Undisclosed",
+      TRUE ~ "Control"
+    )
+  )
+
+dodge = 0.4
+ggplot(data=d, aes(y=emmean, x=creativity_factor, colour=exposure, shape=disclosure)) + 
+  geom_point(size=5, position = position_dodge(width = dodge)) +
+  geom_errorbar(aes(ymin=emmean-SE, ymax=emmean + SE), position = position_dodge(width = dodge)) +
+my_settings() +  scale_color_manual(values = hex_color_list) + 
+  labs(title="AI Adoption by Perceived Relative AI Creativity", x="Self Percieved Creativity", y="AI Adoption", subtitle="Predictions from estimated marginal means +- SE")
+ggsave("all_pts_rel_adopt.png", dpi=400,height=6, width=9)
+```
+
+
+
+
+```{r rel-contrasts}
+
+
+con <- list(
+  "Disclosed - Undisclosed" = c(0.25, -0.25, 0.25, -0.25)
+) 
+
+
+# Test whether disclosure moderates exposure
+custom_con <- emmeans(em.grid.rel, ~condition|ai_rel_create, contr=con)
+custom_con.ef <- eff_size(custom_con, edf=df.residual(mod), sigma=mod_sigma)
+print(custom_con, custom_con.ef)
+
+
+###### BY PERCENTILE ###### 
+pairwise_comp <- pairs(em.grid.rel, by = "ai_rel_create", adjust = 'holm') %>% as.data.frame() %>% tibble(.)
+eff_sizes <- eff_size(em.grid.rel, edf = df.residual(mod), sigma = mod_sigma, by="ai_rel_create") %>% as.data.frame() %>% tibble(.)
+pairwise_comp$d <- eff_sizes$effect.size
+pg <- pairwise_comp %>% rename("Relative AI Creativity" = ai_rel_create) %>% 
+  rename("Adjusted P Value" = p.value) 
+
+cat(kable(pg, caption = "Estimated marginal means contrasts of AI adoption, using a mixed model to compare predictions for top 10 percentile and bottom 10 percentile of participants by belief in relative AI creativity. This metric captures how creative participants think AI is relative to humans (higher values means more creative than humans). AI Adoption is the max cosine similarity of a participant's response and AI examples. P-values adjusted for multiple comparisons using Holm-Bonferroni method.", label = "adopt_rel", format = "latex", digits=3, booktabs = TRUE) %>%  kable_styling(latex_options="scale_down"))
+
+###### BY CONDITION ###### 
+pairwise_comp <- pairs(em.grid.rel, by = "condition", adjust = 'holm') %>% as.data.frame() %>% tibble(.)
+eff_sizes <- eff_size(em.grid.rel, edf = df.residual(mod), sigma = mod_sigma, by="condition") %>% as.data.frame() %>% tibble(.)
+pairwise_comp$d <- eff_sizes$effect.size
+pg <- pairwise_comp %>% 
+  rename("Adjusted P Value" = p.value) 
+
+cat(kable(pg, caption = "Estimated marginal means contrasts of AI adoption, using a mixed model to compare predictions for top 10 percentile and bottom 10 percentile of participants by belief in relative AI creativity. This metric captures how creative participants think AI is relative to humans (higher values means more creative than humans). AI Adoption is the max cosine similarity of a participant's response and AI examples. P-values adjusted for multiple comparisons using Holm-Bonferroni method.", label = "adopt_rel_c", format = "latex", digits=3, booktabs = TRUE) %>%  kable_styling(latex_options="scale_down"))
+
+```
+
+```{r adoption}
+
+# Get data
+##################################################
+##################################################
+df.creativity <- df %>% 
+  filter(condition %in% c("Control")) %>% 
+  group_by(item) %>% 
+  summarise(m = mean(creativity)) %>% 
+  ungroup() %>%
+  mutate(rank_orig = rank(m))
+
+df.adoption.unlabel <- df %>% 
+  filter(condition %in% c("HiExposure_Undisclosed")) %>% 
+  group_by(item, condition) %>% 
+  summarise(m = -1*mean(ai_max_sim)) %>% 
+  ungroup() %>% 
+  mutate(rank_unlabel = rank(m))
+
+df.adoption.label <- df %>% 
+  filter(condition %in% c("HiExposure_Disclosed")) %>% 
+  group_by(item, condition) %>% 
+  summarise(m = -1*mean(ai_max_sim)) %>% 
+  ungroup () %>% 
+  mutate(rank_label = rank(m))  
+
+merged_df <- df.creativity %>% 
+  left_join(df.adoption.unlabel, by = "item") %>%
+  left_join(df.adoption.label, by = "item")
+##################################################
+##################################################
+
+# Get Correlations
+##################################################
+##################################################
+correlation <- stats::cor(merged_df$rank_orig, merged_df$rank_label, method="spearman")
+correlation.unlabel <- stats::cor(merged_df$rank_orig, merged_df$rank_unlabel, method="spearman")
+
+print("Correlation for labeled")
+print(correlation)
+
+print("Correlation for unlabeled")
+print(correlation.unlabel)
+##################################################
+##################################################
+
+
+
+# Make graph 
+##################################################
+##################################################
+cor_plot <- ggplot(merged_df, aes(x = rank_orig, y = rank_label)) +
+  geom_point(aes(color = item), size = 15) + 
+  scale_color_discrete(guide = guide_legend(override.aes = list(size = 6))) + # 
+  geom_smooth(method = "lm", size=2, se = FALSE, color = "black") +  # Add a simple straight line
+
+  annotate("text", x = max(merged_df$rank_orig), y = min(merged_df$rank_label), 
+           size=6,
+           label = paste("Spearman rho =", round(correlation, 2)), vjust=-3, hjust = 1) +  
+  labs(
+    title = "Adoption of AI Ideas by Difficulty of AUT Prompt",
+    subtitle = "Prompt difficulty for an item was measured by the inverse rank of average creativity\nin the control condition (i.e: lower average creativity suggests a more difficult prompt).\n\nAdoption was measured by the rank of cosine similarity of participant responses\nto AI examples in the [high exposure, disclosed] condition.",
+    x = "Rank of Difficulty of Prompt (1-5)",
+    y = "Rank of AI Adoption (1-5)",
+    color = "Item"
+  ) + 
+  my_theme() + 
+  scale_linetype_manual(values = c("Disclosed" = "solid", "Undisclosed" = "dashed")) +
+  scale_color_manual(values = hex_color_list, guide = guide_legend(override.aes = list(size = 10)))
+
+cor_plot
+ggsave("cor_adopt.png", dpi=400, width=12, height=8)
+##################################################
+##################################################
+```
+
+
+### Regressions
+```{r}
+mod <- model_list$ai_max_sim2
+stargazer(model_list$ai_max_sim2, model_list$ai_mean_sim2, model_list$ai_med_sim2,dep.var.labels = c("Max AI Similarity", "Mean AI Similarity", "Median AI Similarity"), model.names = FALSE, title="Predictors of AI adoption with coefficients and SEs in parentheses. The respective dependent variables are the max, mean, and median cosine similarities between the SBERT embedding of a participant's response and the SBERT embeddings of AI examples the participant saw. All three models have a random intercept for participants crossed with a random intercept for response chains, nested in (item, condition) combinations.",no.space = TRUE,single.row = TRUE, type='latex', report="vc*ts", font.size='footnotesize', header=FALSE, label = "reg_ai_adopt")
+summarize_reg(model_list$ai_max_sim2, round_digits = 2)
+stargazer(model_list$ai_max_sim2, digits = 4, report="vctp", type='text')
+
+
+```
+
+
+# Divergence
+## Local 
+### Emmeans tests
+```{r}
+mod <- model_list$med_dist2
+mod_sigma <- sqrt(sum(as.data.frame(VarCorr(mod))$vcov)) # used for cohens d
+     
+     
+em <- emmeans(mod, ~condition + interest_group + ai_feeling)
+em.create <- emtrends(mod, ~condition, var="creativity_human")
+em.gap <- emtrends(mod, ~condition, var="ai_rel_create")
+all_tests <- rbind(joint_tests(em), joint_tests(em.create), joint_tests(em.gap))
+
+my_list <- list(
+  condition = c("LoExposure_Undisclosed", "HiExposure_Undisclosed", "LoExposure_Disclosed","HiExposure_Disclosed", "Control"), 
+  creativity_human = c(10, 90)
+)
+
+my_list2 <- list(
+  condition = c("LoExposure_Undisclosed", "HiExposure_Undisclosed", "LoExposure_Disclosed","HiExposure_Disclosed", "Control"), 
+  ai_rel_create = c(10, 90)
+)
+
+em.grid.create <- emmeans(model_list$med_dist2, ~condition*creativity_human, at=my_list)
+em.grid.rel <- emmeans(model_list$med_dist2, ~condition*ai_rel_create, at=my_list2)
+
+round_my_df(all_tests)
+```
+
+
+### Regressions
+```{r}
+
+stargazer(
+  model_list$med_dist2,
+  model_list$mean_dist2,
+  model_list$cent_dist2,
+  model.names = FALSE,
+  dep.var.labels = c("Median PW Distance", "Mean PW Distance", "Centroid Distance"),
+  title = "Predictors of idea diversity with coefficients and SEs in parentheses. The DV for models (1) and (2) are the median and mean pairwise distances between a participant's response and examples. Model (3) uses the distance between a participant's response and the centroid of examples. Ideas are embedded using SBERT. All three models have a random intercept for participants crossed with a random intercept for response chains, nested in (item, condition) combinations.",
+  no.space = TRUE,
+  single.row = TRUE,
+  type = 'latex',
+  report = "vc*ts",
+  font.size = 'footnotesize',
+  header = FALSE,
+  label = "reg_ai_diverge"
+)
+
+summarize_reg(model_list$med_dist2, round_digits = 2)
+
+stargazer(model_list$med_dist2, report="vctp", type='text')
+```
+
+```{r plots}
+# Set custom colors and condition labels
+custom_colors <- c(
+  "Control (None)" = "black",
+  "Low" = "#826AED",
+  "High" = "#D41876"
+)
+condition_labels <- c(
+  "Control" = "Human\nControl",
+  "HiExposure_Disclosed" = "Hi Exposure\n(Disclosed)",
+  "LoExposure_Disclosed" = "Lo Exposure\n(Disclosed)",
+  "HiExposure_Undisclosed" = "Hi Exposure\n(Undisclosed)",
+  "LoExposure_Undisclosed" = "Lo Exposure\n(Undisclosed)"
+)
+
+
+# Assuming 'em.grid.create' exists and can be converted to a data frame
+d <- as.data.frame(em.grid.rel) %>%
+  dplyr::mutate(
+    creativity_factor = dplyr::if_else(ai_rel_create == 10, "Bottom 10%", "Top 10%")
+  ) %>% dplyr::mutate(
+    clean_label = condition_labels[match(condition, names(condition_labels))],
+    exposure = dplyr::case_when(
+      grepl("LoExposure", condition) ~ "Low",
+      grepl("HiExposure", condition) ~ "High",
+      TRUE ~ "Control (None)"
+    ),
+    disclosure = dplyr::case_when(
+      grepl("Label", condition) ~ "Disclosed",
+      grepl("Undisclosed", condition) ~ "Undisclosed",
+      TRUE ~ "Control"
+    )
+  )
+
+dodge = 0.4
+ggplot(data=d, aes(y=emmean, x=creativity_factor, colour=exposure, shape=disclosure)) + 
+  geom_point(size=5, position = position_dodge(width = dodge)) +
+  geom_errorbar(aes(ymin=emmean-SE, ymax=emmean + SE), position = position_dodge(width = dodge)) +
+my_settings() +  scale_color_manual(values = hex_color_list) + 
+  labs(title="Divergence And Self-Percieved\nCreativity", x="Self Percieved Creativity", y="AI Adoption", subtitle="Predictions from estimated marginal means +- SE")
+ggsave("all_pts_div.png", dpi=400,height=6, width=9)
+```
+
+```{r contrasts}
+
+
+pairwise_comp <- pairs(em.grid.rel, by = "ai_rel_create", adjust = 'holm') %>% as.data.frame() %>% tibble(.)
+eff_sizes <- eff_size(em.grid.rel, edf = df.residual(mod), sigma = mod_sigma, by="ai_rel_create") %>% as.data.frame() %>% tibble(.)
+pairwise_comp$d <- eff_sizes$effect.size
+pg <- pairwise_comp %>% rename("Relative AI Creativity Percentile" = ai_rel_create) %>% 
+  rename("Adjusted P Value" = p.value) 
+cat(kable(pg, caption = "Estimated marginal means contrasts of local idea diversity, using a mixed model to compare predictions for top 10 percentile and bottom 10 percentile of participants by belief in relative AI creativity. Local idea diversity is computed as the median pairwise distance between a participant's idea and the example ideas. P-values adjusted for multiple comparisons using Holm-Bonferroni method.", label = "diverge_rel", format = "latex", digits=3, booktabs = TRUE) %>%  kable_styling(latex_options="scale_down"))
+print(pg)
+
+
+###########
+pairwise_comp <- pairs(em.grid.rel, by = "condition", adjust = 'none') %>% as.data.frame() %>% tibble(.) # have to manually adjust p values since emmeans will treat as seperate comparisons here
+eff_sizes <- eff_size(em.grid.rel, edf = df.residual(mod), sigma = mod_sigma, by="condition") %>% as.data.frame() %>% tibble(.)
+pairwise_comp$d <- eff_sizes$effect.size
+pg <- pairwise_comp %>% rename("P Value" = p.value) 
+pg$`Adjusted P Value` <- p.adjust(pg$`P Value`, method='holm')
+
+cat(kable(pg, caption = "Estimated marginal means contrasts of local idea diversity, using a mixed model to compare predictions for top 10 percentile and bottom 10 percentile of participants by belief in relative AI creativity. Local idea diversity is computed as the median pairwise distance between a participant's idea and the example ideas. P-values adjusted for multiple comparisons using Holm-Bonferroni method", label = "diverge_rel_c", format = "latex", digits=3, booktabs = TRUE) %>%  kable_styling(latex_options="scale_down"))
+```
+
+# Originality
+## Emmeans tests
+```{r}
+mod <- model_list$creativity
+em <- emmeans(mod, ~condition)
+jt <- joint_tests(em)
+round_my_df(jt)
+```
+
+
+## Regressions
+```{r}
+# Test interaction 
+mod <- model_list$creativity
+mod2 <- lmer(creativity ~ condition + creativity_human + ai_rel_create + interest_group + trial_no*condition + ai_feeling + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id), data=df)
+round_my_df(anova(mod, mod2))
+
+# Display main model 
+stargazer(model_list$creativity, dep.var.labels = c("Creativity"), model.names = FALSE, title="Predictors of creativity with coefficients and SEs in parentheses. This model has a random intercept for participants crossed with a random intercept for response chains, nested in (item, condition) combinations.",no.space = TRUE,single.row = TRUE, type='latex', report="vc*ts", font.size='footnotesize', header=FALSE, label = "reg_creativity")
+summarize_reg(model_list$creativity)
+
+
+# Display model with trial number interaction
+stargazer(mod2, dep.var.labels = c("Creativity"), model.names = FALSE, title="Predictors of creativity with coefficients and SEs in parentheses. This model has a random intercept for participants crossed with a random intercept for response chains, nested in (item, condition) combinations.",no.space = TRUE,single.row = TRUE, type='text', report="vctp", font.size='footnotesize', header=FALSE, label = "reg_creativity")
+summarize_reg(mod2, round_digits = 3)
+```
+
+
+
+
+
+
+
+# Adoption of items
+
+Show that people are most influenced by AI for the hardest tasks
+
+```{r}
+
+# Get data
+##################################################
+##################################################
+df.creativity <- df %>% 
+  filter(condition %in% c("Control")) %>% 
+  group_by(item) %>% 
+  summarise(m = mean(creativity)) %>% 
+  ungroup() %>%
+  mutate(rank_orig = rank(m))
+
+df.adoption.unlabel <- df %>% 
+  filter(condition %in% c("HiExposure_Undisclosed")) %>% 
+  group_by(item, condition) %>% 
+  summarise(m = -1*mean(ai_max_sim)) %>% 
+  ungroup() %>% 
+  mutate(rank_unlabel = rank(m))
+
+df.adoption.label <- df %>% 
+  filter(condition %in% c("HiExposure_Disclosed")) %>% 
+  group_by(item, condition) %>% 
+  summarise(m = -1*mean(ai_max_sim)) %>% 
+  ungroup () %>% 
+  mutate(rank_label = rank(m))  
+
+merged_df <- df.creativity %>% 
+  left_join(df.adoption.unlabel, by = "item") %>%
+  left_join(df.adoption.label, by = "item")
+##################################################
+##################################################
+
+# Get Correlations
+##################################################
+##################################################
+correlation <- stats::cor(merged_df$rank_orig, merged_df$rank_label, method="spearman")
+correlation.unlabel <- stats::cor(merged_df$rank_orig, merged_df$rank_unlabel, method="spearman")
+
+print("Correlation for labeled")
+print(correlation)
+
+print("Correlation for unlabeled")
+print(correlation.unlabel)
+##################################################
+##################################################
+
+
+
+# Make graph 
+##################################################
+##################################################
+cor_plot <- ggplot(merged_df, aes(x = rank_orig, y = rank_label)) +
+  geom_point(aes(color = item), size = 10) + 
+  scale_color_discrete(guide = guide_legend(override.aes = list(size = 6))) + # 
+  geom_smooth(method = "lm", size=2, se = FALSE, color = "black") +  # Add a simple straight line
+
+  annotate("text", x = max(merged_df$rank_orig), y = min(merged_df$rank_label), 
+           size=6,
+           label = paste("Spearman rho =", round(correlation, 2)), vjust=-3, hjust = 1) +  
+  labs(
+    title = "Adoption of AI Ideas by Difficulty of AUT Prompt",
+    subtitle = "Prompt difficulty for an item was measured by the inverse rank of average creativity\nin the control condition (i.e: lower average creativity suggests a more difficult prompt).\n\nAdoption was measured by the rank of cosine similarity of participant responses\nto AI examples in the (High Exposure, Disclosed) condition.",
+    x = "Rank of Difficulty of Prompt (1-5)",
+    y = "Rank of AI Adoption (1-5)",
+    color = "Item"
+  ) + 
+  my_theme() + 
+  scale_linetype_manual(values = c("Disclosed" = "solid", "Undisclosed" = "dashed")) +
+  scale_color_manual(values = hex_color_list, guide = guide_legend(override.aes = list(size = 10)))
+
+cor_plot
+ggsave("cor_adopt.png", dpi=400, width=12, height=8)
+##################################################
+##################################################
+```
+
+
+# Evolution of Diversity (FINALIZED)
+
+```{r}
+
+
+# Get, wrangle data
+##########################################################################
+##########################################################################
+ag <- read.csv("../../data/experiment_data/ag_time.csv")
+
+ag$condition <- as.factor(ag$condition)
+ag$condition <- factor(ag$condition, levels=c('h', 'f_u', 'f_l', 'm_u', 'm_l'))
+ag$condition <- relevel(ag$condition, ref = "h")
+
+
+# Add columns that break condition into disclosure and exposed
+ag <- ag %>%
+  mutate(exposure = case_when(
+    condition %in% c('h') ~ 'Control',
+    condition %in% c('m_l', 'm_u') ~ 'Hi',
+    condition %in% c('f_l', 'f_u', 'h') ~ 'Low',
+  ),
+  disclosure = case_when(
+    condition %in% c('h') ~ 'Control',
+    condition %in% c('m_l', 'f_l') ~ 'Disclosed',
+    condition %in% c('m_u', 'f_u') ~ 'Undisclosed',
+  ))
+ag$exposure <- relevel(factor(ag$exposure), ref = "Control")
+ag$disclosure <- relevel(factor(ag$disclosure), ref = "Undisclosed")
+
+# Recode with clean names
+ag <- ag %>% mutate(condition = recode(condition,
+  "h" = "Control", 
+  "f_l" = "Low ExposureDisclosed", 
+  "f_u" = "Low ExposureUndisclosed",
+  "m_l" = "High ExposureDisclosed", 
+  "m_u" = "High ExposureUndisclosed"
+))
+##########################################################################
+##########################################################################
+
+
+
+# Fit regression
+##########################################################################
+##########################################################################
+
+# Logic for trial_no > 6 is that seeds should be exhausted after trial_no 6
+# Logic for controlling for nobs: Seems that dist_metrics(X1...XN) depend on how many vectors, 
+# there are, so we control for this when making comparisons. 
+
+mean_pw_dist <- lmer(100*avg_pw_dist ~ nobs + condition*trial_no + (1|item) + trial_no, data=ag %>% filter(trial_no > 6 ))
+median_pw_dist <- lmer(100*median_pw_dist ~ nobs + condition*trial_no + (1|item) + trial_no, data=ag %>% filter(trial_no > 6 ))
+mean_cent_dist <- lmer(100*mean_cent_dist ~ nobs + condition*trial_no + (1|item) + trial_no, data=ag %>% filter(trial_no > 6 ))
+
+
+
+  stargazer(
+    median_pw_dist,
+    mean_pw_dist,
+    mean_cent_dist,
+    dep.var.labels = c("Median PW Distance", "Mean PW Distance", "Centroid Distance"),
+    no.space = TRUE,
+    single.row = TRUE,
+    type = 'latex',
+    report = "vc*ts",
+    font.size = 'footnotesize',
+    header = FALSE,
+    model.names = FALSE,
+    label = "sem_evo",
+    title = "Evolution of idea diversity by condition. Each model has a random intercept for item. The reference level for experimental conditions is the control condition."
+  )
+  
+summarize_reg(median_pw_dist)
+stargazer(median_pw_dist, report="vctp", type='text', digits=2)
+
+  ##########################################################################
+##########################################################################
+
+
+# Make graph of slopes
+##########################################################################
+##########################################################################
+conditions2 <-
+  c("Control", "LoExposureDisclosed", "HiExposureUndisclosed", "HiExposureDisclosed", "HiExposureUndisclosed")
+trials2 <- seq(6, 20)
+
+pred_grid <-
+  expand.grid(condition = conditions2, trial_no = trials2)
+
+em2 <-
+  emmeans(median_pw_dist, ~ condition * trial_no, at = list(trial_no = trials2))
+
+em2 %>%
+  as.data.frame() %>%
+  mutate(newline_condition = stringr::str_replace(condition, "(Disclosed|Undisclosed)", "\n\\1")) %>%
+  ggplot(data = ., aes(x = trial_no, y = emmean)) + 
+  geom_line(size = 2, color = 'red', linetype = 'solid') + 
+  facet_grid(~ reorder(newline_condition, emmean)) +
+  geom_ribbon(aes(ymin = emmean - SE, ymax = emmean + SE), alpha = 0.1) +
+  my_theme() + 
+  labs(
+    title = "Evolution of Collective Idea Diversity",
+    y = "Median Pairwise Distance\nBetween Ideas",
+    x = "Trial Number in Response Chain\n(I.e: Experiment Iteration)",
+    subtitle = "Predictions from mixed model +- SE\n"
+  ) 
+ggsave("evo_diversity.png", dpi=400, width=14, height=7)
+##########################################################################
+##########################################################################
+
+```
+
+```{r}
+conditions2 <-
+  c("Control", "LoExposureDisclosed", "HiExposureUndisclosed", "HiExposureDisclosed", "HiExposureUndisclosed")
+trials2 <- seq(6, 20)
+
+pred_grid <-
+  expand.grid(condition = conditions2, trial_no = trials2)
+
+em2 <-
+  emmeans(median_pw_dist, ~ condition * trial_no, at = list(trial_no = trials2))
+
+em2 %>%
+  as.data.frame() %>%
+  mutate(newline_condition = stringr::str_replace(condition, "(Disclosed|Undisclosed)", "\n\\1")) %>%
+  ggplot(data = ., aes(x = trial_no, y = emmean)) + 
+  geom_line(size = 2, color = 'red', linetype = 'solid') + 
+  facet_grid(~ reorder(newline_condition, emmean)) +
+  geom_ribbon(aes(ymin = emmean - SE, ymax = emmean + SE), alpha = 0.1) +
+  theme_nice(base_family = "Arial") +
+  theme(
+    panel.grid.major = element_blank(),
+    text = element_text(colour = "#2A2A2A"),
+    axis.text.y = element_text(colour = "#2A2A2A"),
+    axis.text.x = element_text(colour = "#2A2A2A")
+  ) +
+  labs(
+    title = "Evolution of Semantic Diversity by Condition",
+    y = "Median Pairwise Distance\nBetween Ideas",
+    x = "Iteration",
+    subtitle = "Predictions from mixed model +- SE\n"
+  ) 
+  
+
+
+```
+
+
+# Check if source (sm vs weekly newsletter matters)
+```{r}
+
+df <- df %>% mutate(is_sm = ifelse(grepl("Creative Mornings newsletter", source), 0, 1))
+
+# Local diversity
+dmod.local_divergence <- lmer(med_dist2 ~ condition + condition*creativity_human + condition*ai_rel_create + creativity_human + trial_no + ai_rel_create + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id), data=df)
+
+dmod.local_divergence2 <- lmer(med_dist2 ~ condition + condition*is_sm + condition*creativity_human + condition*ai_rel_create + creativity_human + trial_no + ai_rel_create + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id), data=df)
+
+
+
+# Local adoption
+dmod.local_sim <- lmer(ai_max_sim2 ~ condition + condition*creativity_human + condition*ai_rel_create + condition*interest_group + creativity_human + trial_no + ai_rel_create + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id), data=df)
+
+dmod.local_sim2 <- lmer(ai_max_sim2 ~ condition + condition*is_sm + condition*creativity_human + condition*ai_rel_create + condition*interest_group + creativity_human + trial_no + ai_rel_create + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id), data=df)
+
+
+# Creativity 
+dmod.creativity <-  lmer(creativity ~ condition + creativity_human + ai_rel_create + interest_group + trial_no + ai_feeling + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id), data=df)
+
+dmod.creativity2 <-  lmer(creativity ~ condition + condition*is_sm + creativity_human + ai_rel_create + interest_group + trial_no + ai_feeling + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id), data=df)
+
+stargazer(dmod.creativity2, dmod.local_divergence2, dmod.local_sim2, type='text')
+
+
+```
+
+```{r}
+test_lrt <- function(data, var_name, base_formula, augmented_formula, round_digits=2) {
+  # Returns results of a hierarchical LRT in neat df 
+  
+  # Params
+  # - data (df): Dataframe
+  # - var_name (str): Str of DV
+  # - base_formula (str): Str of Model 1 
+  # - augmented_formula (str): Str of Model 2, which has more parameters than Model 1 
+  
+  # Returns
+  # A df with columns ['var', 'ChiSq', 'Df', 'Pr_ChiSq', 'Significant']
+
+  base_formula <- as.formula(base_formula)
+  augmented_formula <- as.formula(augmented_formula)
+
+  base_model <- lmer(base_formula, data=data)
+  augmented_model <- lmer(augmented_formula, data=data)
+  
+  # Chi-squared test
+  anova_res <- anova(base_model, augmented_model)
+  
+  # Extract and format results
+  results <- data.frame(
+    Var = var_name,
+    ChiSq = round(anova_res$Chisq[2], round_digits),
+    Df = round(anova_res$Df[2], 0),
+    Pr_ChiSq = round(anova_res$`Pr(>Chisq)`[2], round_digits),
+    Significant = ifelse(anova_res$`Pr(>Chisq)`[2] < 0.05, "YES", "NO"),
+    ChangeBIC = round(BIC(augmented_model) - BIC(base_model), round_digits)
+  )
+  
+  return(results)
+}
+
+# Local diversity
+results_diversity <- test_lrt(
+  data = df,
+  var_name = "Local Diversity",
+  base_formula = "med_dist2 ~ condition + condition*creativity_human + condition*ai_rel_create + creativity_human + trial_no + ai_rel_create + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)",
+  augmented_formula = "med_dist2 ~ condition + condition*is_sm + condition*creativity_human + condition*ai_rel_create + creativity_human + trial_no + ai_rel_create + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)"
+)
+
+# Local adoption model
+results_adoption <- test_lrt(
+  data = df,
+  var_name = "AI Adoption",
+  base_formula = "ai_max_sim2 ~condition + condition*creativity_human + condition*ai_rel_create + condition*interest_group + creativity_human + trial_no + ai_rel_create + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)",
+  augmented_formula = "ai_max_sim2 ~condition*is_sm + condition*creativity_human + condition*ai_rel_create + condition*interest_group + creativity_human + trial_no + ai_rel_create + ai_feeling + interest_group + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)"
+)
+
+# Creativity model
+results_creativity <- test_lrt(
+  data = df,
+  var_name = "Creativity",
+  base_formula = "creativity ~ condition + creativity_human + ai_rel_create + interest_group + trial_no + ai_feeling + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)",
+  augmented_formula = "creativity ~ condition + condition*is_sm + creativity_human + ai_rel_create + interest_group + trial_no + ai_feeling + condition_order + log_duration + n_seeds + (1|participant_id) + (1|item_condition/response_chain_id)"
+)
+
+# Combine results
+combined_results <- rbind(results_diversity, results_adoption, results_creativity)
+
+
+
+```
+
+
